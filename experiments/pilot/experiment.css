@@ -1,0 +1,57 @@
+.tangram {
+      
+
+      .jspsych-html-button-response-btngroup{
+        display: grid;
+        flex-wrap: nowrap;
+        width:100%;
+        grid-gap: 20px;
+        justify-content: center;
+
+
+        .jspsych-html-button-response-button{
+          width : 15vw;
+          height : 15vw;
+          max-width: 20vh;
+          max-height: 20vh;
+          flex-grow: 0;
+          flex-shrink: 5;
+          margin: 1rem;
+          justify-content: start;
+          cursor: pointer;
+        }
+    }
+      .tangrams {
+        display: grid;
+        flex-wrap: nowrap;
+        width:100%;
+        grid-gap: 20px;
+        justify-content: center;
+
+        .tangram {
+            width : 15vw;
+            height : 15vw;
+            max-width: 20vh;
+            max-height: 20vh;
+            flex-grow: 0;
+            flex-shrink: 5;
+            margin: 1rem;
+            justify-content: start;
+            cursor: pointer;
+
+            .feedback{
+              align-self: start;
+              padding: 0rem;
+              text-align: left;
+
+            img{
+              height: 3vw;
+              width: 3vw;
+              max-width: 4vh;
+              max-height: vh;
+              background-color: white;
+            }
+          }
+        }
+      }
+  }

@@ -7,7 +7,7 @@ output: html_notebook
 
 library(tidyverse)
 library(here)
-
+library(jsonlite)
 ```
 
 # Get the things!
@@ -102,4 +102,6 @@ prepped |> group_by( condition, allCorrect) |> tally() |> pivot_wider(names_from
   rename(all_correct=`TRUE`, some_error=`FALSE`)
 
 prepped |> select(all_text) |> View()
+
+prepped |> head(12) |> write_json(here("experiments/pilot/test.json"))
 ```
