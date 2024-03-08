@@ -15,6 +15,7 @@
 * draw from ... 2 and 6 p games ? (and then do 2 v 6 v original accuracy?)
 * show each person all 12 descriptions from each of N games? (in blocks?) note that there's a "one you haven't clicked" heuristic issue
 * or just totally randomize across games? this might be the best. 
+* aside from removing the chitchat, try without further clean-up
 
 # Notes on option space (not just for pilot):
 

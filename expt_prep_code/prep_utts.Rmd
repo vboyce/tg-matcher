@@ -1,0 +1,105 @@
+---
+title: "Prepare descriptions"
+output: html_notebook
+---
+
+```{r}
+
+library(tidyverse)
+library(here)
+
+```
+
+# Get the things!
+
+```{r}
+#let's try reading them in from github? since they're in another repo
+
+#based on https://github.com/vboyce/multiparty-tangrams/blob/main/code/prep_ms.R
+
+url <- "https://raw.githubusercontent.com/vboyce/multiparty-tangrams/main/"
+one_chat <- read_csv(str_c(url,"data/study1/chat.csv")) |> mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
+two_a_chat <-  read_csv(str_c(url,"data/study2a/chat.csv")) |> mutate(rotate="no_rotate")
+two_b_chat <- read_csv(str_c(url,"data/study2b/chat.csv")) |> mutate(rotate="full_feedback")
+two_c_chat <- read_csv(str_c(url,"data/study2c/chat.csv")) |> mutate(rotate="emoji")
+three_chat <- read_csv(str_c(url,"data/study3/chat.csv")) |> rename(`_id`="X_id",condition=name)
+  
+combined_chat <- one_chat |> 
+  rbind(two_a_chat) |> 
+  rbind(two_b_chat) |> 
+  rbind(two_c_chat) |> 
+  mutate(activePlayerCount=NA) |> 
+  rename(condition=rotate) |> 
+  rbind(three_chat) |> 
+  select(gameId, trialNum,repNum,tangram, playerId, role, numPlayers, text, condition)
+# so here we instead count non-white space chunks for words 
+
+one_round_results <- read_rds(str_c(url,"data/study1/round_results.rds")) %>% mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
+two_a_round_results <- read_rds(str_c(url,"data/study2a/round_results.rds")) %>% mutate(rotate="no_rotate")
+two_b_round_results <- read_rds(str_c(url,"data/study2b/round_results.rds")) %>% mutate(rotate="full_feedback")
+two_c_round_results <- read_rds(str_c(url,"data/study2c/round_results.rds")) |> mutate(rotate="emoji")
+three_round_results <- read_rds(str_c(url,"data/study3/round_results.rds")) |> rename(`_id`="X_id", condition=name)
+
+combined_results <- one_round_results |> 
+  rbind(two_a_round_results) |> 
+  rbind(two_b_round_results) |> 
+  rbind(two_c_round_results) |> 
+  mutate(activePlayerCount=NA) |> 
+  rename(condition=rotate) |> 
+  rbind(three_round_results) |> 
+  select(realCorrect, gameId, targetNum, repNum, trialNum, condition, numPlayers, activePlayerCount) |> 
+  unique()
+  
+chat <- combined_chat |> left_join(combined_results)
+
+```
+
+# Prep pilot
+
+```{r}
+
+last_round <-  chat |> filter(repNum==5) |> filter(!is.na(text))
+
+last_round |> group_by(gameId, trialNum, numPlayers, condition) |>
+  mutate(listener=role=="listener") |> 
+  summarize(listeners=sum(listener)) |>
+  mutate(has_listeners=listeners>0) |>
+  group_by(has_listeners) |>
+  tally()
+# about 5% of trials have listener talk
+
+last_round |> group_by(gameId, numPlayers, condition) |>
+  mutate(listener=role=="listener") |> 
+  summarize(listeners=sum(listener)) |>
+  mutate(has_listeners=listeners>0) |>
+  group_by(has_listeners) |>
+  tally()
+# and 28% of games have any listener talk in the last round
+
+# so what's the talk
+
+#last_round |> filter(role=="listener") |> select(text) |> View()
+
+# 264 utterances, at least a few are actually ~ chitchat or joking around, others are probably clarifications
+
+# so reasonable to drop the listener bits I think
+
+
+```
+
+```{r}
+# note number of games is not a multiple of 12 because there are 3 games where speaker didn't say anything for one (presumably they said something but it was chitchat?)
+
+prepped <- last_round |> filter(role=="speaker") |> 
+  mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
+  mutate(allCorrect=realCorrect==playerCount-1) |> 
+  group_by(gameId, trialNum, tangram, targetNum, playerCount, numPlayers, allCorrect, realCorrect, condition) |> 
+  summarize(all_text=str_c(text, sep=", ")) |> ungroup()
+
+#3297 descriptions from 275 games
+
+prepped |> group_by( condition, allCorrect) |> tally() |> pivot_wider(names_from = allCorrect, values_from=n) |> 
+  rename(all_correct=`TRUE`, some_error=`FALSE`)
+
+prepped |> select(all_text) |> View()
+```
