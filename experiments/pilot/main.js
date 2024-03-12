@@ -110,19 +110,21 @@ let trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus:jsPsych.timelineVariable("all_text"),
     choices: choices,
-    button_html: function(){
-            
-        var html = '<button class="tangram"><img width="100" src="images/tangram_%choice%.png"> </button>';
+    button_html: choices.map((choice,ind)=>{
+
+        var html = '<button class="tangram">'+
+                    '<img src="images/tangram_'+choice+'.png">'+
+                    '</button>';
         
         return html;
         
-    },
-    prompt: "TODO PROMPT",
+    }),
+    prompt: `<div class=feedback><div>`,
     data:{gameId:jsPsych.timelineVariable("gameId"),
           tangram:jsPsych.timelineVariable("tangram"),
           condition:jsPsych.timelineVariable("condition"),
           text:jsPsych.timelineVariable("all_text")},
-    css_classes: ['tangram'],
+    css_classes: ['tangram-display'],
     on_finish: function(data){
         data.selected=choices[data.response]
         if(jsPsych.pluginAPI.compareKeys(choices[data.response], jsPsych.timelineVariable('tangram'))){
@@ -134,12 +136,23 @@ let trial = {
 }
 
 let feedback ={
-    type: jsPsychHtmlKeyboardResponse,
-    choices: [],
-    stimulus: function(){
+    type: jsPsychHtmlButtonResponse,
+    stimulus:jsPsych.timelineVariable("all_text"),
+    choices: choices,
+    button_html: choices.map((choice,ind)=>{
+
+        var html = '<button class="tangram">'+
+                    '<img src="images/tangram_'+choice+'.png">'+
+                    '</button>';
+        
+        return html;
+        
+    }),
+    css_classes: ['tangram-display'],
+    prompt: function(){
         var last_trial_correct= jsPsych.data.get().last(1).values()[0].correct;
-        if (last_trial_correct){ return ("Correct!")}
-        else {return (`<div style="font-size:60px; color:#FF0000"><p>Incorrect!</p></div>`)}
+        if (last_trial_correct){ return (`<div class="feedback"><p style="color:darkgreen">Correct!</p></div>`)}
+        else {return (`<div class="feedback"><p style=" color:#FF0000">Incorrect!</p></div>`)}
     },
     trial_duration: function(){
         var last_trial_correct= jsPsych.data.get().last(1).values()[0].correct;
