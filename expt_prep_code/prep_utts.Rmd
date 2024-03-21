@@ -18,11 +18,13 @@ library(jsonlite)
 #based on https://github.com/vboyce/multiparty-tangrams/blob/main/code/prep_ms.R
 
 url <- "https://raw.githubusercontent.com/vboyce/multiparty-tangrams/main/"
-one_chat <- read_csv(str_c(url,"data/study1/chat.csv")) |> mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
-two_a_chat <-  read_csv(str_c(url,"data/study2a/chat.csv")) |> mutate(rotate="no_rotate")
-two_b_chat <- read_csv(str_c(url,"data/study2b/chat.csv")) |> mutate(rotate="full_feedback")
-two_c_chat <- read_csv(str_c(url,"data/study2c/chat.csv")) |> mutate(rotate="emoji")
-three_chat <- read_csv(str_c(url,"data/study3/chat.csv")) |> rename(`_id`="X_id",condition=name)
+one_chat <- read_csv(str_c(url,"data/study1/filtered_chat.csv")) |> mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
+two_a_chat <-  read_csv(str_c(url,"data/study2a/filtered_chat.csv")) |> mutate(rotate="no_rotate")
+two_b_chat <- read_csv(str_c(url,"data/study2b/filtered_chat.csv")) |> mutate(rotate="full_feedback") |> select(-`row num`)
+two_c_chat <- read_csv(str_c(url,"data/study2c/filtered_chat.csv")) |> mutate(rotate="emoji") |> select(-type)
+three_chat <- read_csv(str_c(url,"data/study3/filtered_chat.csv"))  |> 
+  inner_join(read_rds(str_c(url, "data/study3/round_results.rds")) |> select(gameId, trialNum, condition=name) |> unique() ) |> 
+  select(-rowid, -type)
   
 combined_chat <- one_chat |> 
   rbind(two_a_chat) |> 
@@ -31,6 +33,12 @@ combined_chat <- one_chat |>
   mutate(activePlayerCount=NA) |> 
   rename(condition=rotate) |> 
   rbind(three_chat) |> 
+  filter(!(is.chitchat)) |> 
+   mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
+         text = gsub("[/?/.]", ' ', text),
+         text = str_squish(text),
+         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
+         tangram = gsub('.png', '', tangram, fixed=TRUE)) %>%
   select(gameId, trialNum,repNum,tangram, playerId, role, numPlayers, text, condition)
 # so here we instead count non-white space chunks for words 
 
@@ -56,52 +64,21 @@ chat <- combined_chat |> left_join(combined_results)
 
 # Prep pilot
 
+Change of plans we're now looking at first and last. 
 ```{r}
 
-last_round <-  chat |> filter(repNum==5) |> filter(!is.na(text))
-
-last_round |> group_by(gameId, trialNum, numPlayers, condition) |>
-  mutate(listener=role=="listener") |> 
-  summarize(listeners=sum(listener)) |>
-  mutate(has_listeners=listeners>0) |>
-  group_by(has_listeners) |>
-  tally()
-# about 5% of trials have listener talk
-
-last_round |> group_by(gameId, numPlayers, condition) |>
-  mutate(listener=role=="listener") |> 
-  summarize(listeners=sum(listener)) |>
-  mutate(has_listeners=listeners>0) |>
-  group_by(has_listeners) |>
-  tally()
-# and 28% of games have any listener talk in the last round
-
-# so what's the talk
-
-#last_round |> filter(role=="listener") |> select(text) |> View()
-
-# 264 utterances, at least a few are actually ~ chitchat or joking around, others are probably clarifications
-
-# so reasonable to drop the listener bits I think
+first_last<-  chat |> filter(repNum==5 | repNum==0) |> filter(!is.na(text)) |> filter(condition %in% c("2_rotate", "6_rotate"))
 
 
+
+prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
+  mutate(allCorrect=realCorrect==playerCount-1) |> 
+  select(-numPlayers, -activePlayerCount, ) |> 
+  nest(text=c(role, playerId, text))
+  
 ```
 
 ```{r}
-# note number of games is not a multiple of 12 because there are 3 games where speaker didn't say anything for one (presumably they said something but it was chitchat?)
 
-prepped <- last_round |> filter(role=="speaker") |> 
-  mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
-  mutate(allCorrect=realCorrect==playerCount-1) |> 
-  group_by(gameId, trialNum, tangram, targetNum, playerCount, numPlayers, allCorrect, realCorrect, condition) |> 
-  summarize(all_text=str_c(text, sep=", ")) |> ungroup()
-
-#3297 descriptions from 275 games
-
-prepped |> group_by( condition, allCorrect) |> tally() |> pivot_wider(names_from = allCorrect, values_from=n) |> 
-  rename(all_correct=`TRUE`, some_error=`FALSE`)
-
-prepped |> select(all_text) |> View()
-
-prepped |> head(12) |> write_json(here("experiments/pilot/test.json"))
+prepped |> filter(gameId=="FfK5QXXSw833vwHKX") |> write_json(here("experiments/expt1/src/test.js"))
 ```

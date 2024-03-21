@@ -1,15 +1,54 @@
+@import "~jspsych/css/jspsych.css";
+
+.jspsych-display-element {
+  background-color: #ffffff;
+}
+
+.jspsych-content {
+  max-width: 1200px; 
+}
+
 .tangram-display {
-  font-size: 30px;
-  margin: 30px;
   margin: auto;
 
       #jspsych-html-button-response-stimulus{
         font-size: 20px;
-        margin: 30px;
+        margin: 10px;
+        margin: auto;
+        width:600px;
+        max-width: calc(80vh + 60px);
+        
+        .bonus{
+          text-align: left;
+        }
+        .stimulus{
+          min-height: 150px;
+
+        dl dt {
+          text-align: left;
+          float: left;
+          width: 100px;
+          font-weight: bold;
+          margin: 0px;
+          display: block;
+        }
+        
+        dl dd {
+          display:block;
+          text-align: left;
+          float: right;
+          width: calc(100% - 100px);
+          margin: 0; 
+
+        }
       }
-      .feedback{
-        min-height: 35px;
+        .feedback{
+          height: 40px;
+          font-size: 30px;
+          margin-bottom: 10px;
+        }
       }
+      
       
       #jspsych-html-button-response-btngroup{
         display: grid;
@@ -17,13 +56,12 @@
         width: 100%;
         grid-gap: 20px;
         justify-content: center;
-        margin-bottom: 30px;
 
         .jspsych-html-button-response-button{
           width : 15vw;
           height : 15vw;
-          max-width: 20vh;
-          max-height: 20vh;
+          max-width: 200px;
+          max-height: 200px;
           flex-grow: 0;
           flex-shrink: 5;
           margin: 2rem;

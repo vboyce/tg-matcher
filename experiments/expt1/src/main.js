@@ -1,60 +1,12 @@
-//import {initJsPsych} from 'jspsych';
-let jsPsych = initJsPsych({
-    override_safe_mode: true
-});
+import FullscreenPlugin from "@jspsych/plugin-fullscreen";
+import HtmlButtonResponsePlugin from "@jspsych/plugin-html-button-response";
+import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
+import CallFunctionPlugin from "@jspsych/plugin-call-function";
+import PreloadPlugin from "@jspsych/plugin-preload";
+import { shuffle, counterbalance, fetchJSONData} from "./helper.js";
 
-function shuffle(arr) {
-    var i = arr.length, j, temp;
-    while(--i > 0){
-      j = Math.floor(Math.random()*(i+1));
-      temp = arr[j];
-      arr[j] = arr[i];
-      arr[i] = temp;
-    }
-  }
-
-function counterbalance(item_types, items){
-    let select_items=[]
-    for (let i = 0; i < item_types.length; i++) { // for each grouping
-        let relevant = items.filter(item => {return (item_types[i].includes(item.item_type))}) // items of this grouping
-
-        let relevant_ids=[];
-        shuffle(relevant_ids)
-        relevant.forEach(item => {
-            if (!relevant_ids.includes(item.id)){relevant_ids.push(item.id)}});
-            for (let j=0; j<item_types[i].length; j++){
-            let item_type=item_types[i][j];
-            let frac=relevant_ids.length/item_types[i].length;
-            let start=Math.floor(j*frac);
-            let end=Math.floor((j+1)*frac);
-            for(let k=start; k<end; k++){
-                let id = relevant_ids[k];
-                relevant.forEach(item=>{
-                    if(item.id==id & item.item_type==item_type){
-                        select_items.push(item)
-                    }});
-            }
-        }    
-    }
-    shuffle(select_items)
-    return(select_items)
-}
-
-function fetchJSONData() {
-    fetch("./sample.json")
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error
-                    (`HTTP error! Status: ${res.status}`);
-            }
-            return res.json();
-        })
-        .then((data) => 
-              console.log(data))
-        .catch((error) => 
-               console.error("Unable to fetch data:", error));
-}
-
+import {stimuli} from "./stimuli.js"
+import {WELCOME_INSTRUCTION} from "./instructions.js"
 //const stimuli = require('./test.json');
 console.log(stimuli)
 
@@ -69,7 +21,7 @@ let all_images=get_images_to_preload()
 
 
 let welcome_screen = {
-    type : jsPsychHtmlButtonResponse,
+    type : HtmlButtonResponsePlugin,
     stimulus : WELCOME_INSTRUCTION,
     choices : ["Continue"],
     response_ends_trial : true,
@@ -80,7 +32,7 @@ let welcome_screen = {
 
 
 let instructions_screen = {
-    type : jsPsychHtmlKeyboardResponse,
+    type : HtmlKeyboardResponsePlugin,
     stimulus : jsPsych.timelineVariable('text'),
     choices : [" "],
     response_ends_trial : true,
@@ -90,14 +42,14 @@ let instructions_screen = {
 };
 
 let end_experiment = {
-    type : jsPsychHtmlButtonResponse,
+    type : HtmlButtonResponsePlugin,
     stimulus : POST_TEST_INSTRUCTION,
     choices : ["Continue"]
 }
 
 
 let send_data ={
-    type: jsPsychCallFunction,
+    type: CallFunctionPlugin,
     async: true,
     func: function(done){
             proliferate.submit({"trials": jsPsych.data.get().values()});
@@ -167,7 +119,7 @@ let preload={
     images: all_images,
 
 }
-function getTimeline() {
+export function getTimeline() {
     //////////////// timeline /////////////////////////////////
     let timeline = [];
 
@@ -184,15 +136,3 @@ function getTimeline() {
     timeline.push(send_data);
     return timeline;
 }
-
-
-function main() {
-    // Make sure you have updated your key in globals.js
-
-    let timeline=getTimeline()
-    jsPsych.run(timeline);
-
-}
-
-window.addEventListener('load', main);
-
