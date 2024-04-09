@@ -6,6 +6,20 @@ shuffle(raw_choices)
 export const choices=raw_choices
 export const all_images=choices.map(c => "assets/images/tangram_"+c+".png")
 
+export function format_spr(stimuli){
+    let prev_speaker="NA"
+    let stuff=[]
+    for (let i=0; i<stimuli.length; i++){
+        let line=stimuli[i]
+        let line_info=[]
+        if (line.playerId!=prev_speaker){line_info.push(line.role)}
+        else{line_info.push("")}
+        line_info.push(line.text)
+        prev_speaker=line.playerId
+        stuff.push(line_info)
+    }
+    return(stuff)
+}
 export function format_stimuli(stimuli){
     let prev_speaker="NA"
     let html=[`<div class="stimulus"><dl>`]

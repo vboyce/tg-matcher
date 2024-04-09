@@ -8,8 +8,9 @@
 
 // You can import stylesheets (.scss or .css).
 import "../styles/main.scss";
+import SelfPacedReadingPlugin from "./jspsych-spr-moving-window.js"
 
-import { initJsPsych } from "jspsych";
+import { initJsPsych} from "jspsych";
 
 import HtmlButtonResponsePlugin from "@jspsych/plugin-html-button-response";
 import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
@@ -20,7 +21,7 @@ import { shuffle, counterbalance, fetchJSONData} from "./helper.js";
 
 import {stimuli} from "./stimuli.js"
 //import {stimuli} from "./test.js"
-import {choices, all_images, format_stimuli, give_feedback} from "./constants.js"
+import {choices, all_images, format_stimuli, format_spr, give_feedback} from "./constants.js"
 
 import {WELCOME_INSTRUCTION, POST_TEST_INSTRUCTION} from "./instructions.js"
 /**
@@ -64,7 +65,15 @@ export async function run({ assetPaths, input = {}, environment, title, version 
             }
       }
   
-      
+  
+  let spr ={
+    type: SelfPacedReadingPlugin,
+    prompt: function(){return(`<div class="bonus">Trial `+done+`/`+ trials+
+    `  Bonus so far: `+countCorrect+`</div>`)},
+    css_classes: ['tangram-display'],
+    stimulus: function(){return(format_spr(jsPsych.timelineVariable("text")))}
+  }
+
   let trial = {
       
       type: HtmlButtonResponsePlugin,
@@ -141,7 +150,7 @@ export async function run({ assetPaths, input = {}, environment, title, version 
       timeline.push(preload)
   
       let test={
-          timeline: [trial, feedback],
+          timeline: [spr, trial, feedback],
           timeline_variables: stimuli,
           randomize_order: true,
       }

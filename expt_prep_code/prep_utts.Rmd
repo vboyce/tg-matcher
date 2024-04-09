@@ -80,5 +80,5 @@ prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), num
 
 ```{r}
 
-prepped |> filter(gameId=="FfK5QXXSw833vwHKX") |> write_json(here("experiments/expt1/src/test.js"))
+prepped |> write_json(here("experiments/expt1/src/test.js"))
 ```
