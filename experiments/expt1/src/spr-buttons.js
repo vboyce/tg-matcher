@@ -162,7 +162,7 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
     let groups = [];            // store groups of indices of words
     // to be presented together.
     let words =[];
-
+    let height
     /**
      * Setup the variables for use at the start of a new trial
      */
@@ -182,18 +182,26 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
         reactiontimes = [];
         groups = [];
             
-        var new_html = '<div id="jspsych-html-button-response-stimulus">' + trial_pars.prompt + "</div>";
-        display_element.innerHTML = new_html;
-        var canvas='<canvas id="jspsych-canvas-stimulus" "></canvas>'
-        display_element.innerHTML+=canvas 
-        var feedback = '<div id="feedback">'+trial_pars.feedback+'</div>'
-        display_element.innerHTML+=feedback
-        makeButtons(display_element, trial_pars)
-
-        createCanvas(document.getElementById("jspsych-canvas-stimulus"), trial_pars);
+        var new_html = '<div class="container">'+
+            '<div class="row">'+
+            '<div class="col-md" id="header">' +trial_pars.prompt + "</div>"+
+            '<div id="feedback" class="col-md">'+trial_pars.feedback+'</div>'+
+            '</div>'+
+            '<div class="row" id="text-buttons">'+
+            '<div class="col-12 col-lg-6">'+
+            '<canvas id="text-canvas"></canvas>'+
+            '</div>'+
+            '<div class="col-sm">'+
+            makeButtons(trial_pars)+
+            '</div>'+
+            '</div>'
+        display_element.innerHTML = new_html;       
+        createCanvas(document.getElementById("text-canvas"), 200);
         ctx.font = font;
         let stimulus = trial_pars.stimulus;
-        [words, groups] =gatherWordInfo(stimulus, trial_pars, ctx);
+        [words, groups, height] =gatherWordInfo(stimulus, trial_pars, ctx, document.getElementById(SPR_CANVAS).width);
+        createCanvas(document.getElementById(SPR_CANVAS), height);
+
     }
 
     /**
@@ -202,14 +210,17 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
      * @param {HTMLElement} display_element
      * @param {Object} trial Object with trial information
      */
-    function createCanvas(canvas, trial_pars) {
-        canvas.setAttribute("width", trial_pars.width);
-        canvas.setAttribute("height", trial_pars.height);
+    function createCanvas(canvas, height) {
+        canvas.style.width='100%';
+        canvas.style.height=height;
+        console.log("width"+canvas.offsetWidth)
+        canvas.width = canvas.offsetWidth;
+        canvas.height = height;
         canvas.setAttribute("id", SPR_CANVAS);
         ctx = canvas.getContext('2d');
     }
 
-    function makeButtons(display_element, trial_pars){
+    function makeButtons(trial_pars){
         var buttons = [];
         var html=""
         if (Array.isArray(trial_pars.button_html)) {
@@ -225,12 +236,18 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
             buttons.push(trial_pars.button_html);
         }
         }
-        html += '<div id="jspsych-html-button-response-btngroup">';
+        html += '<div id="btngroup">';
         for (var i = 0; i < trial_pars.button_choices.length; i++) {
             var str = buttons[i].replace(/%choice%/g, trial_pars.button_choices[i]);
+            let col=i % 4 +1
+            let row=(i+1-col) / 4 +1
             html +=
-                '<div class="jspsych-html-button-response-button" style="display: inline-block;'+
-                '" id="jspsych-html-button-response-button-' +
+                '<div class="button" style="display: inline-block;'+
+                'grid-row: '+
+                row +
+                ';grid-column: '+
+                col+
+                '" id="button-' +
                 i +
                 '" data-choice="' +
                 i +
@@ -239,7 +256,7 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
                 "</div>";
         }
         html += "</div>";
-        display_element.innerHTML+=html
+        return html
     }
 
 
@@ -366,8 +383,6 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
           
                 // after a valid response, the stimulus will have the CSS class 'responded'
                 // which can be used to provide visual feedback that a response was recorded
-                display_element.querySelector("#jspsych-html-button-response-stimulus").className +=
-                  " responded";
     
                 end_trial();
                 
@@ -388,7 +403,7 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
             if (trial_pars.button_enabled){
                 for (var i = 0; i < trial_pars.button_choices.length; i++) {
                     display_element
-                    .querySelector("#jspsych-html-button-response-button-" + i)
+                    .querySelector("#button-" + i)
                     .addEventListener("click", (e) => {
                         var btn_el = e.currentTarget;
                         var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility

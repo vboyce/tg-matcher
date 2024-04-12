@@ -7,8 +7,8 @@ export const choices=raw_choices
 export const all_images=choices.map(c => "assets/images/tangram_"+c+".png")
 
 export function format_header(done, trials, countCorrect){
-    return(`<div class="bonus">Trial `+done+`/`+ trials+
-        ` &emsp; Bonus so far: `+countCorrect+`</div>`)
+    return(`Trial `+done+`/`+ trials+
+        ` &emsp; Bonus so far: `+countCorrect)
 }
 export function format_spr(stimuli){
     let prev_speaker="NA"

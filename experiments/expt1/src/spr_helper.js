@@ -136,7 +136,7 @@ function determineLineHeight(font, font_size) {
  * Processes the lines, it "measures" where each word should be.
  * the output is stored in the global plugin variable words.
  */
-export function gatherWordInfo(stim, trial_pars, ctx) {
+export function gatherWordInfo(stim, trial_pars, ctx, maxwidth) {
 
     function splitIntoTokens(text, re) {
         return text.split(re).filter (
@@ -153,12 +153,11 @@ export function gatherWordInfo(stim, trial_pars, ctx) {
     let y = delta_y * 1.2;
     let word = 0;
     const BASE_Y = delta_y * 1.2 ; // The height on which lines begin.
-    const BASE_X = 150;
+    const BASE_X = 100;
     
     let liney = BASE_Y;
     let runningx=BASE_X;
-    let byline=trial_pars.style=="line"
-    let maxwidth=600 //TODO this should be parameterized somewhere
+    let byline=trial_pars.style=="line"//TODO this should be parameterized somewhere
     let indices=[]
     let groupstring=[]
     let wordnum=0
@@ -167,7 +166,7 @@ export function gatherWordInfo(stim, trial_pars, ctx) {
         let text=stim[i][1]
         //todo address text wrapping here lol
         if (role!=""){
-            let pos = new Pos(50,liney)
+            let pos = new Pos(0,liney)
             let current_word = new TextInfo(role, pos, ctx, "bold "+trial_pars.font_size+"px "+trial_pars.font_family);
             if (!current_word.isWhiteSpace()){
                 words.push(current_word);
@@ -213,5 +212,6 @@ export function gatherWordInfo(stim, trial_pars, ctx) {
             groupstring=[]
         }
     }
-    return [words, groups]
+    console.log(liney)
+    return [words, groups,liney]
 }

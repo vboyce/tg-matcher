@@ -69,12 +69,18 @@ export async function run({ assetPaths, input = {}, environment, title, version 
   let spr ={
     type: SprButtonPlugin,
     prompt: function(){return(format_header(done, trials,countCorrect))},
-    style: "line",
+    style: "word",
     css_classes: ['tangram-display'],
     stimulus: function(){return(format_spr(jsPsych.timelineVariable("text")))},
     feedback: "", 
-    button_choices: [],
-      button_html: [],
+    button_choices: choices,
+      button_html: choices.map((choice,ind)=>{
+          var html = '<button class="tangram">'+
+                      '<img src="assets/images/tangram_'+choice+'.png">'+
+                      '</button>';
+          
+          return html;
+      }),
       enable_button: false
   }
 
@@ -84,6 +90,7 @@ export async function run({ assetPaths, input = {}, environment, title, version 
       prompt: function(){return(format_header(done, trials,countCorrect))},
       style: "all",
       enable_keypress: false, 
+      feedback: "",
       css_classes: ['tangram-display'],
       stimulus: function(){return(format_spr(jsPsych.timelineVariable("text")))},
       button_choices: choices,
@@ -155,7 +162,7 @@ export async function run({ assetPaths, input = {}, environment, title, version 
       timeline.push(preload)
   
       let test={
-          timeline: [spr, trial, feedback],
+          timeline: [trial, feedback],
           timeline_variables: stimuli,
           randomize_order: true,
       }

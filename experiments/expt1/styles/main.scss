@@ -1,64 +1,62 @@
 @import "~jspsych/css/jspsych.css";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
 
 .jspsych-display-element {
   background-color: #ffffff;
 }
 
 .jspsych-content {
-  max-width: 1200px; 
+  max-width: 1500px; 
 }
 
 .tangram-display {
   margin: auto;
   //background-color: blue;
 
-      #jspsych-html-button-response-stimulus{
+      #header{
         font-size: 20px;
-        margin: 10px;
-        margin: auto;
-        width:600px;
-        max-width: calc(80vh + 60px);
-        
-        .bonus{
-          text-align: left;
-          //background-color: lightblue;
-          margin-bottom: 20px;
-        
-      }
-        
-      }
-      
-      #SprCanvas{
-        font-size: 20px;
-        //background-color: purple;
         //margin: 10px;
         //margin: auto;
-        //width:600px;
-        //line-height: 1.6em;
-        min-width:600px;
-        //min-height: 200px;
-        margin-bottom: 30px;
+        background-color: red;
+        
+        text-align: left;
+          //background-color: lightblue;
+        padding-bottom: 10px;
+        
+      
+        
       }
       #feedback{
         height: 40px;
         font-size: 30px;
-        margin-bottom: 10px;
+        padding-bottom: 10px;
+        margin: auto;
       }
       
-      #jspsych-html-button-response-btngroup{
+      
+      #text-buttons{
+        margin:auto;
+
+      }
+      #SprCanvas{
+       margin-bottom: 10px;
+       image-rendering:auto;
+       
+       }
+    
+      
+      #btngroup{
         display: grid;
         flex-wrap: nowrap;
-        width: 100%;
         grid-gap: 0px;
         justify-content: center;
         //background-color: red;
-        height: 600px;
+        aspect-ratio: 4/3;
 
-        .jspsych-html-button-response-button{
-          width : 15vw;
-          height : 15vw;
-          max-width: 200px;
-          max-height: 200px;
+        .button{
+          aspect-ratio: 1/1;
+          width : 90%;
           flex-grow: 0;
           flex-shrink: 5;
           margin: 2rem;
@@ -86,57 +84,6 @@
             }
           }
         }
-        #jspsych-html-button-response-button-0{
-          grid-row: 1;
-          grid-column: 1;
-        }
-        #jspsych-html-button-response-button-1{
-          grid-row: 1;
-          grid-column: 2;
-        }
-        #jspsych-html-button-response-button-2{
-          grid-row: 1;
-          grid-column: 3;
-        }
-        #jspsych-html-button-response-button-3{
-          grid-row: 1;
-          grid-column: 4;
-        }
-        #jspsych-html-button-response-button-4{
-          grid-row: 2;
-          grid-column: 1;
-        }
-        #jspsych-html-button-response-button-5{
-          grid-row: 2;
-          grid-column: 2;
-        }
-        #jspsych-html-button-response-button-6{
-          grid-row: 2;
-          grid-column: 3;
-        }
-        #jspsych-html-button-response-button-7{
-          grid-row: 2;
-          grid-column: 4;
-        }
-        #jspsych-html-button-response-button-8{
-          grid-row: 3;
-          grid-column: 1;
-        }
-        #jspsych-html-button-response-button-9{
-          grid-row: 3;
-          grid-column: 2;
-        }
-        #jspsych-html-button-response-button-10{
-          grid-row: 3;
-          grid-column: 3;
-        }
-
-        #jspsych-html-button-response-button-11{
-          grid-row: 3;
-          grid-column: 4;
-        }
-
-      
         }
       }
     
