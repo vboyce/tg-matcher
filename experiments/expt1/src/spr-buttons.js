@@ -213,7 +213,7 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
     function createCanvas(canvas, height) {
         canvas.style.width='100%';
         canvas.style.height=height;
-        console.log("width"+canvas.offsetWidth)
+        //console.log("width"+canvas.offsetWidth)
         canvas.width = canvas.offsetWidth;
         canvas.height = height;
         canvas.setAttribute("id", SPR_CANVAS);
@@ -390,7 +390,7 @@ import {range, Pos, TextInfo, GroupInfo, gatherWordInfo} from "./spr_helper.js"
               
               
             let end_trial=()=> {
-                console.log("fhdasjgh")
+                //console.log("fhdasjgh")
                 this.jsPsych.pluginAPI.clearAllTimeouts();
                 this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
         

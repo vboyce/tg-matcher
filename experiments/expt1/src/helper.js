@@ -10,6 +10,26 @@ export function shuffle(arr) {
     }
   }
 
+export function subset(items, total){
+    let select_items=[]
+    let types=["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"]
+    let per=total/types.length
+    shuffle(items)
+    for (let i=0; i<types.length; i++){
+        let k=0
+        for (let j=0;j<items.length; j++){
+            let item=items[j]
+            if (types[i]==(item.size_round)){
+                select_items.push(item)
+                k++;
+                if(k>=per){break}
+            }
+        }
+        
+    }
+    shuffle(select_items)
+    return select_items
+}
 export function counterbalance(item_types, items){
     let select_items=[]
     for (let i = 0; i < item_types.length; i++) { // for each grouping

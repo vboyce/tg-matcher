@@ -212,6 +212,6 @@ export function gatherWordInfo(stim, trial_pars, ctx, maxwidth) {
             groupstring=[]
         }
     }
-    console.log(liney)
+    //console.log(liney)
     return [words, groups,liney]
 }

@@ -16,44 +16,58 @@ import HtmlButtonResponsePlugin from "@jspsych/plugin-html-button-response";
 import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 import PreloadPlugin from "@jspsych/plugin-preload";
 import CallFunctionPlugin from "@jspsych/plugin-call-function";
+import SurveyTextPlugin from "@jspsych/plugin-survey-text";
 
-import { shuffle, counterbalance, fetchJSONData} from "./helper.js";
+import {proliferate} from "./proliferate.js"
+import {subset, shuffle, counterbalance, fetchJSONData} from "./helper.js";
 
 import {stimuli} from "./stimuli.js"
-//import {stimuli} from "./test.js"
 import {choices, all_images, format_stimuli, format_spr, give_feedback, format_header} from "./constants.js"
 
-import {WELCOME_INSTRUCTION, POST_TEST_INSTRUCTION} from "./instructions.js"
+import {CONSENT, POST_SURVEY_QS, POST_SURVEY_TEXT, DEBRIEF, INSTRUCTIONS} from "./instructions.js"
 /**
  * This function will be executed by jsPsych Builder and is expected to run the jsPsych experiment
  *
  * @type {import("jspsych-builder").RunFunction}
  */
 
-shuffle(stimuli)
-const trials=stimuli.length
+const NUM_ITEMS=36
+const BONUS=10
+
+let select_stimuli=subset(stimuli,NUM_ITEMS)
+const trials=select_stimuli.length
 export async function run({ assetPaths, input = {}, environment, title, version }) {
-  const jsPsych = initJsPsych();
+  const jsPsych = initJsPsych({
+    on_close: function (data) {
+        proliferate.submit({"trials": data.values}, ()=>{});
+    },
+  });
   
   let countCorrect=0;
   let done=1;
-  let welcome_screen = {
+  let consent = {
       type : HtmlButtonResponsePlugin,
-      stimulus : WELCOME_INSTRUCTION,
+      stimulus : CONSENT,
       choices : ["Continue"],
       response_ends_trial : true,
   };
-   
-  let instructions_screen = {
-      type : HtmlKeyboardResponsePlugin,
-      stimulus : jsPsych.timelineVariable('text'),
-      choices : [" "],
-      response_ends_trial : true,
-  };
+
+  let instructions = {
+    type : HtmlButtonResponsePlugin,
+    stimulus : INSTRUCTIONS,
+    choices : ["Continue"],
+    response_ends_trial : true,
+};
   
+  let post_test_questions ={
+    type: SurveyTextPlugin,
+    preamble: POST_SURVEY_TEXT,
+    questions: POST_SURVEY_QS
+
+  }
   let end_experiment = {
       type : HtmlButtonResponsePlugin,
-      stimulus : POST_TEST_INSTRUCTION,
+      stimulus : DEBRIEF,
       choices : ["Continue"]
   }
   
@@ -68,7 +82,7 @@ export async function run({ assetPaths, input = {}, environment, title, version 
   
   let spr ={
     type: SprButtonPlugin,
-    prompt: function(){return(format_header(done, trials,countCorrect))},
+    prompt: function(){return(format_header(done, trials,countCorrect, BONUS))},
     style: "word",
     css_classes: ['tangram-display'],
     stimulus: function(){return(format_spr(jsPsych.timelineVariable("text")))},
@@ -87,7 +101,7 @@ export async function run({ assetPaths, input = {}, environment, title, version 
   let trial = {
       
       type: SprButtonPlugin,
-      prompt: function(){return(format_header(done, trials,countCorrect))},
+      prompt: function(){return(format_header(done, trials,countCorrect, BONUS))},
       style: "all",
       enable_keypress: false, 
       feedback: "",
@@ -102,9 +116,10 @@ export async function run({ assetPaths, input = {}, environment, title, version 
           return html;
       }),
       data:{gameId:jsPsych.timelineVariable("gameId"),
-            tangram:jsPsych.timelineVariable("tangram"),
+            correct_tangram:jsPsych.timelineVariable("tangram"),
             condition:jsPsych.timelineVariable("condition"),
-            text:jsPsych.timelineVariable("text")},
+            text:jsPsych.timelineVariable("text"),
+            type: "selection"},
       on_finish: function(data){
           data.selected=choices[data.response]
           console.log(choices[data.response])
@@ -125,10 +140,11 @@ export async function run({ assetPaths, input = {}, environment, title, version 
         var last_trial_correct= jsPsych.data.get().last(1).values()[0].correct;
         console.log("evaluate")
         return(give_feedback(last_trial_correct))},
-        prompt: function(){return(format_header(done, trials,countCorrect))},
+        prompt: function(){return(format_header(done, trials,countCorrect, BONUS))},
         style: "all",
         enable_keypress: false, 
         css_classes: ['tangram-display'],
+        data: {type: "feedback"},
         stimulus: function(){return(format_spr(jsPsych.timelineVariable("text")))},
         button_choices: choices,
         button_html: choices.map((choice,ind)=>{
@@ -161,12 +177,15 @@ export async function run({ assetPaths, input = {}, environment, title, version 
       //timeline.push(welcome_screen);
       timeline.push(preload)
   
+      timeline.push(consent)
+      timeline.push(instructions)
       let test={
           timeline: [trial, feedback],
-          timeline_variables: stimuli,
+          timeline_variables: select_stimuli,
           randomize_order: true,
       }
       timeline.push(test)
+      timeline.push(post_test_questions);
       timeline.push(end_experiment);
       timeline.push(send_data);
       return timeline;

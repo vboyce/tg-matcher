@@ -10,6 +10,26 @@
   max-width: 1500px; 
 }
 
+#legal{
+  max-width: 800px;
+}
+
+#intro{
+  max-width: 800px;
+  img{
+    border: 3px solid #555;
+    padding: 5px;
+  }
+}
+
+.jspsych-survey-text-preamble{
+  max-width:800px;
+}
+.jspsych-survey-text-question{
+  max-width:800px;
+  align-items: center;
+
+}
 .tangram-display {
   margin: auto;
   //background-color: blue;
@@ -18,7 +38,7 @@
         font-size: 20px;
         //margin: 10px;
         //margin: auto;
-        background-color: red;
+        //background-color: red;
         
         text-align: left;
           //background-color: lightblue;

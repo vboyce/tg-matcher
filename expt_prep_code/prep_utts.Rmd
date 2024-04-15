@@ -73,7 +73,8 @@ first_last<-  chat |> filter(repNum==5 | repNum==0) |> filter(!is.na(text)) |> f
 
 prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
   mutate(allCorrect=realCorrect==playerCount-1) |> 
-  select(-numPlayers, -activePlayerCount, ) |> 
+  mutate(size_round=str_c(condition, "_", as.character(repNum+1))) |> 
+  select(-numPlayers, -activePlayerCount) |> 
   nest(text=c(role, playerId, text))
   
 ```
