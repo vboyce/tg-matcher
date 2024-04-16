@@ -154,8 +154,6 @@ export async function run({
     },
     on_finish: function (data) {
       data.selected = choices[data.response];
-      console.log(choices[data.response]);
-      console.log(jsPsych.timelineVariable("tangram"));
       if (
         jsPsych.pluginAPI.compareKeys(
           choices[data.response],
@@ -163,7 +161,6 @@ export async function run({
         )
       ) {
         data.correct = true;
-        console.log("correct");
       } else {
         data.correct = false;
       }
@@ -177,7 +174,6 @@ export async function run({
     type: SprButtonPlugin,
     feedback: function () {
       var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
-      console.log("evaluate");
       return give_feedback(last_trial_correct);
     },
     prompt: function () {
@@ -191,9 +187,20 @@ export async function run({
       return format_spr(jsPsych.timelineVariable("text"));
     },
     button_choices: choices,
+    button_style: function () {
+      var chosen = jsPsych.data.get().last(1).values()[0].selected;
+      var highlight = jsPsych.data.get().last(1).values()[0].correct
+        ? "border: 4px solid #006400; border-radius: 4px;"
+        : "border: 4px solid #FF0000; border-radius: 4px;";
+      let style = choices.map((choice, ind) => {
+        return chosen == choice ? highlight : "";
+      });
+      return style;
+    },
     button_html: choices.map((choice, ind) => {
       var html =
-        '<button class="tangram">' +
+        '<button class="tangram"' +
+        ">" +
         '<img src="assets/images/tangram_' +
         choice +
         '.png">' +
@@ -222,11 +229,10 @@ export async function run({
     //////////////// timeline /////////////////////////////////
     let timeline = [];
 
-    //timeline.push(welcome_screen);
     timeline.push(preload);
 
-    timeline.push(consent);
-    timeline.push(instructions);
+    //timeline.push(consent);
+    //timeline.push(instructions);
     let test = {
       timeline: [trial, feedback],
       timeline_variables: select_stimuli,

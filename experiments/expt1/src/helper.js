@@ -15,28 +15,26 @@ function pop_random(items) {
   return items[id];
 }
 export function no_repetitions(items) {
-  let old_items = items.slice();
+  let curr_items = items.slice();
   let happy_items = [];
-  happy_items.push(old_items[0]);
-  let curr_items = old_items.splice(0, 1);
+  happy_items.push(curr_items[0]);
+  curr_items.splice(0, 1);
   while (happy_items.length < items.length) {
     let valid_ops = curr_items.filter((i) => {
-      console.log(happy_items);
-      i.tangram != happy_items[happy_items.length - 1].tangram;
+      return i.tangram != happy_items[happy_items.length - 1].tangram;
     });
     if (valid_ops.length > 0) {
       let chosen = pop_random(valid_ops);
       happy_items.push(chosen);
-      curr_items = curr_items.splice(curr_items.indexOf(chosen), 1);
+      curr_items.splice(curr_items.indexOf(chosen), 1);
     } else {
       const to_insert = curr_items[0];
-      const valid_idxs = Array(happy_items.length)
-        .keys()
-        .filter(
-          (i) =>
-            happy_items[i].tangram != to_insert.tangram &&
-            happy_items[i - 1].tangram != to_insert.tangram
-        );
+      const valid_idxs = [...Array(happy_items.length).keys()].filter(
+        (i) =>
+          i > 1 &&
+          happy_items[i].tangram != to_insert.tangram &&
+          happy_items[i - 1].tangram != to_insert.tangram
+      );
       const insert_idx = Math.floor(Math.random() * valid_idxs.length);
       happy_items =
         happy_items.slice(0, insert_idx) +
@@ -45,9 +43,6 @@ export function no_repetitions(items) {
       curr_items = curr_items.splice(0, 1);
     }
   }
-  happy_items.map((i) => {
-    console.log(i.tangram);
-  });
   return happy_items;
 }
 export function subset(items, total) {
