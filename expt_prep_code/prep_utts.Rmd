@@ -74,12 +74,46 @@ first_last<-  chat |> filter(repNum==5 | repNum==0) |> filter(!is.na(text)) |> f
 prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
   mutate(allCorrect=realCorrect==playerCount-1) |> 
   mutate(size_round=str_c(condition, "_", as.character(repNum+1))) |> 
-  select(-numPlayers, -activePlayerCount) |> 
-  nest(text=c(role, playerId, text))
+  select(-numPlayers, -activePlayerCount) #|> 
+  #nest(text=c(role, playerId, text))
   
 ```
 
-```{r}
+# Potential censorship
 
-prepped |> write_json(here("experiments/expt1/src/test.js"))
+```{r}
+# from https://www.cs.cmu.edu/~biglou/resources/bad-words.txt
+# but we allow "bigger", "kid", "crime", "crimes", "butt", "laid", "god", "crack" etc
+bad <- read_lines(here("expt_prep_code/bad-words-modified.txt"))  |> str_c(collapse="|")
+
+bad_regex <- str_c("\\b(",bad,")\\b")
+
+is_bad <- function(text){
+  
+  return(str_detect(str_to_lower(text),bad_regex)[1])
+}
+
+bad_strings <- prepped |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad==T)
+
+#bad_strings |>  View()
+
+nrow(prepped) # 2749
+nrow(bad_strings) #18
+
+prepped |> nest(text=c(role, playerId, text)) |> nrow() #787
+
+bad_strings |>  nest(text=c(role, playerId, text)) |> nrow() #16
+
+# get some of the boobs and fat ones out 
+# regex isn't perfect since we might be missing plurals but whatever if we anchor only start of word it flags "bit" and "hood" ... sigh
 ```
+
+```{r}
+good_strings <- prepped |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad==F) |> 
+  select(-has_bad) |> 
+  nest(text=c(role, playerId, text)) 
+
+good_strings |> write_json(here("experiments/expt1/src/test.js"))
+
+```
+

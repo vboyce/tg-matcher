@@ -19,6 +19,9 @@ export const INSTRUCTIONS ='<h3>Please read these instructions carefully!</h3> <
 'Some of the transcripts may be much shorter or longer than others. '+
 'Some of the descriptions may be hard to understand -- just take a guess if you are not sure.</p>'+
 '<p>You will get a bonus of <b>10 cents</b> for each image you get right! </p>'+
+'<p> <b>Note:</b> These descriptions came from real people and may contain inappropriate or '+
+'offensive language. If you find a description innappropriate, please let us know via Prolific '+
+'message or in the exit survey, so we can filter it out in the future.</p>'
 '<p>Click "Continue" to start the experiment.</p></div>'
 export const POST_SURVEY_TEXT =
 "<h1>End of the experiment.</h1>"+
