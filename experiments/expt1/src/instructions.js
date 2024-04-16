@@ -11,7 +11,7 @@ export const CONSENT =
 export const INSTRUCTIONS =
   "<h3>Please read these instructions carefully!</h3> </br>" +
   '<div id="intro"> <p>In this task, you will see a <b>transcript of a conversation</b> some previous participants had ' +
-  "where a <b>speaker identified one the images to some listeners</b>.</p>" +
+  "where a <b>speaker identified one of the images to some listeners</b>.</p>" +
   '</br><center><img width="600px" src="assets/demo.png" /></center></br>' +
   "<p>Your goal is to <b>read the transcript</b> and <b>figure out which image</b> is being described! </p>" +
   "<p>You will <b>click the image</b> you think is being described, and then you will <b>find out if you were right</b>.<p>" +
@@ -21,7 +21,7 @@ export const INSTRUCTIONS =
   "Some of the descriptions may be hard to understand -- just take a guess if you are not sure.</p>" +
   "<p>You will get a bonus of <b>5 cents</b> for each image you get right! </p>" +
   "<p> <b>Note:</b> These descriptions came from real people and may contain inappropriate or " +
-  "offensive language. If you find a description innappropriate, please let us know via Prolific " +
+  "offensive language. If you find a description inappropriate, please let us know via Prolific " +
   "message or in the exit survey, so we can filter it out in the future.</p>";
 ('<p>Click "Continue" to start the experiment.</p></div>');
 export const POST_SURVEY_TEXT =

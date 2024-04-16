@@ -43,6 +43,9 @@ export function no_repetitions(items) {
       curr_items = curr_items.splice(0, 1);
     }
   }
+  happy_items.map((i) => {
+    console.log(i.tangram);
+  });
   return happy_items;
 }
 export function subset(items, total) {
@@ -63,8 +66,6 @@ export function subset(items, total) {
       }
     }
   }
-  shuffle(select_items);
-
   return no_repetitions(select_items);
 }
 export function counterbalance(item_types, items) {
