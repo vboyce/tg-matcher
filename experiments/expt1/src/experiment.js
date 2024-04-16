@@ -231,8 +231,8 @@ export async function run({
 
     timeline.push(preload);
 
-    //timeline.push(consent);
-    //timeline.push(instructions);
+    timeline.push(consent);
+    timeline.push(instructions);
     let test = {
       timeline: [trial, feedback],
       timeline_variables: select_stimuli,
