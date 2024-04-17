@@ -45,7 +45,7 @@ import {
 const NUM_ITEMS = 60;
 const BONUS = 5;
 
-let select_stimuli = subset(stimuli, NUM_ITEMS);
+const select_stimuli = subset(stimuli, NUM_ITEMS);
 const trials = select_stimuli.length;
 export async function run({
   assetPaths,
@@ -56,11 +56,11 @@ export async function run({
 }) {
   const jsPsych = initJsPsych({
     on_close: function () {
-      console.log("start the thing");
+      //console.log("start the thing");
       var data = jsPsych.data.get().values();
-      console.log("middle");
-      console.log(data);
-      console.log(data[0]);
+      //console.log("middle");
+      //console.log(data);
+      //console.log(data[0]);
       proliferate.submit(
         { trials: data },
         () => {
@@ -143,7 +143,7 @@ export async function run({
     feedback: "",
     css_classes: ["tangram-display"],
     stimulus: function () {
-      console.log(jsPsych.timelineVariable("text"));
+      console.log(jsPsych.timelineVariable("tangram"));
       return format_spr(jsPsych.timelineVariable("text"));
     },
     button_choices: choices,
@@ -241,11 +241,11 @@ export async function run({
     //////////////// timeline /////////////////////////////////
     let timeline = [];
 
-    //timeline.push(preload);
+    timeline.push(preload);
 
-    timeline.push(consent);
-    timeline.push(instructions);
-    let test = {
+    //timeline.push(consent);
+    //timeline.push(instructions);
+    const test = {
       timeline: [trial, feedback],
       timeline_variables: select_stimuli,
     };

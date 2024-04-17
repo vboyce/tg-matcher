@@ -36,11 +36,12 @@ export function no_repetitions(items) {
           happy_items[i - 1].tangram != to_insert.tangram
       );
       const insert_idx = Math.floor(Math.random() * valid_idxs.length);
-      happy_items =
-        happy_items.slice(0, insert_idx) +
-        [to_insert] +
-        happy_items.slice(insert_idx + 1, happy_items.length);
-      curr_items = curr_items.splice(0, 1);
+      happy_items = [
+        ...happy_items.slice(0, insert_idx),
+        to_insert,
+        ...happy_items.slice(insert_idx),
+      ];
+      curr_items.splice(0, 1);
     }
   }
   return happy_items;
