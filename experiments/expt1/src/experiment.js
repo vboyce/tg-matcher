@@ -60,13 +60,14 @@ export async function run({
       var data = jsPsych.data.get().values();
       console.log("middle");
       console.log(data);
+      console.log(data[0]);
       proliferate.submit(
         { trials: data },
         () => {
           console.log("doing the thing");
         },
-        () => {
-          console.log("doing the other thing");
+        (i) => {
+          console.log(i);
         }
       );
     },

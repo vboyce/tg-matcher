@@ -90,7 +90,6 @@ export var proliferate = {
       .done(function (data) {
         if (success_fct != null) {
           success_fct(data);
-          console.log("success");
           return;
         }
 
