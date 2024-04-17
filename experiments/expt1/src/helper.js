@@ -43,9 +43,6 @@ export function no_repetitions(items) {
       curr_items = curr_items.splice(0, 1);
     }
   }
-  happy_items.map((i) => {
-    console.log(i.tangram);
-  });
   return happy_items;
 }
 export function subset(items, total) {
@@ -100,16 +97,4 @@ export function counterbalance(item_types, items) {
   }
   shuffle(select_items);
   return select_items;
-}
-
-export function fetchJSONData() {
-  fetch("./sample.json")
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((data) => console.log(data))
-    .catch((error) => console.error("Unable to fetch data:", error));
 }

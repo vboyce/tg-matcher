@@ -67,7 +67,7 @@ export var proliferate = {
       div.html(
         "<p><b>Debug mode</b></p>Here is the data that would have been submitted: <ul>" +
           data_html +
-          "</ul>",
+          "</ul>"
       );
       $("body").append(div);
       return;
@@ -76,7 +76,7 @@ export var proliferate = {
     if ($("#thanks").length > 0 && $("#uploading-text").length == 0) {
       $("#thanks").html(
         '<p class="big" id="uploading-text">Uploading data... Please don\'t close this window!</p>' +
-          '<p class="big" id="thanks-text">Thanks for your time!</p>',
+          '<p class="big" id="thanks-text">Thanks for your time!</p>'
       );
     }
 
@@ -90,6 +90,7 @@ export var proliferate = {
       .done(function (data) {
         if (success_fct != null) {
           success_fct(data);
+          console.log("success");
           return;
         }
 
@@ -120,13 +121,13 @@ export var proliferate = {
           $("#thanks").html(
             "<p><strong>Oooops, an error occurred!</strong></p>" +
               "<p>Please message the researcher to get compensated. " +
-              "We apologize for any inconvenience caused.</p>",
+              "We apologize for any inconvenience caused.</p>"
           );
         } else {
           alert(
             "Oooops, an error occurred! \n\n" +
               "Please message the researcher to get compensated. " +
-              "We apologize for any inconvenience caused.",
+              "We apologize for any inconvenience caused."
           );
         }
       });
@@ -152,7 +153,7 @@ $(document).ready(function () {
       };
       var ping_url = PROLIFERATE_PING_URL.replace(
         "{exp_id}",
-        get_url_param("experiment_id", "NONE"),
+        get_url_param("experiment_id", "NONE")
       );
       $.post(ping_url, formdata);
     }, 60000);

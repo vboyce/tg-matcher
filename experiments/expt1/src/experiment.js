@@ -13,19 +13,17 @@ import SprButtonPlugin from "./spr-buttons.js";
 import { initJsPsych } from "jspsych";
 
 import HtmlButtonResponsePlugin from "@jspsych/plugin-html-button-response";
-import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 import PreloadPlugin from "@jspsych/plugin-preload";
 import CallFunctionPlugin from "@jspsych/plugin-call-function";
 import SurveyTextPlugin from "@jspsych/plugin-survey-text";
 
 import { proliferate } from "./proliferate.js";
-import { subset, shuffle, counterbalance, fetchJSONData } from "./helper.js";
+import { subset } from "./helper.js";
 
 import { stimuli } from "./stimuli.js";
 import {
   choices,
   all_images,
-  format_stimuli,
   format_spr,
   give_feedback,
   format_header,
@@ -57,8 +55,20 @@ export async function run({
   version,
 }) {
   const jsPsych = initJsPsych({
-    on_close: function (data) {
-      proliferate.submit({ trials: data.values }, () => {});
+    on_close: function () {
+      console.log("start the thing");
+      var data = jsPsych.data.get().values();
+      console.log("middle");
+      console.log(data);
+      proliferate.submit(
+        { trials: data },
+        () => {
+          console.log("doing the thing");
+        },
+        () => {
+          console.log("doing the other thing");
+        }
+      );
     },
   });
 
