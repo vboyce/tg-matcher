@@ -143,6 +143,7 @@ export async function run({
     feedback: "",
     css_classes: ["tangram-display"],
     stimulus: function () {
+      console.log(jsPsych.timelineVariable("text"));
       return format_spr(jsPsych.timelineVariable("text"));
     },
     button_choices: choices,
@@ -240,14 +241,13 @@ export async function run({
     //////////////// timeline /////////////////////////////////
     let timeline = [];
 
-    timeline.push(preload);
+    //timeline.push(preload);
 
     timeline.push(consent);
     timeline.push(instructions);
     let test = {
       timeline: [trial, feedback],
       timeline_variables: select_stimuli,
-      randomize_order: true,
     };
     timeline.push(test);
     timeline.push(post_test_questions);
