@@ -56,18 +56,19 @@ export async function run({
 }) {
   const jsPsych = initJsPsych({
     on_close: function () {
-      //console.log("start the thing");
+      console.log("start the thing");
       var data = jsPsych.data.get().values();
-      //console.log("middle");
-      //console.log(data);
-      //console.log(data[0]);
+      console.log("middle");
+      console.log(data);
+      console.log(data[0]);
       proliferate.submit(
         { trials: data },
         () => {
           console.log("doing the thing");
         },
         (i) => {
-          console.log(i);
+          console.log("waaaah");
+          console.log(JSON.stringify(i));
         }
       );
     },
