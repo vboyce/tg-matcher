@@ -161,7 +161,7 @@ export async function run({
     data: {
       gameId: jsPsych.timelineVariable("gameId"),
       correct_tangram: jsPsych.timelineVariable("tangram"),
-      condition: jsPsych.timelineVariable("condition"),
+      condition: jsPsych.timelineVariable("size_round"),
       text: jsPsych.timelineVariable("text"),
       type: "selection",
     },
@@ -244,8 +244,8 @@ export async function run({
 
     timeline.push(preload);
 
-    //timeline.push(consent);
-    //timeline.push(instructions);
+    timeline.push(consent);
+    timeline.push(instructions);
     const test = {
       timeline: [trial, feedback],
       timeline_variables: select_stimuli,
