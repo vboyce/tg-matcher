@@ -1,0 +1,378 @@
+---
+title: "tg-matcher 1: Preliminary analysis"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+knitr::opts_chunk$set(echo = F)
+library(tidyverse)
+library(viridis)
+library(Replicate)
+library(metafor)
+library(esc)
+library(here)
+library(brms)
+library(rstan)
+library(googledrive)
+library(glmnet)
+library(tidybayes)
+library(ggstance)
+library("lattice")
+library(reshape2)
+library(ggrepel)
+library(ggthemes)
+library(knitr)
+library(cowplot)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
+theme_set(theme_bw())
+
+dat_loc <- "data/expt1_full_data.csv"
+model_location <- "code/models"
+```
+
+# Read in data
+
+```{r}
+raw <- read_csv(here(dat_loc)) |>
+  select(-proliferate.condition) |>
+  filter(!is.na(response))
+
+free_response <- raw |>
+  filter(is.na(correct_tangram)) |>
+  select(workerid, stimulus, response, rt)
+
+good_stuff <- raw |>
+  filter(!is.na(correct_tangram)) |>
+  select(
+    workerid, button_rt, condition, correct, correct_tangram,
+    gameId, selected, text, trial_index
+  ) |>
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(rt_sec = button_rt / 1000) |>
+  separate(condition, c("group_size", NA, "round")) |>
+  mutate(
+    group_size = str_c(group_size, "_player"),
+    round = str_c("round_", round),
+    correct = as.numeric(correct)
+  ) |>
+  group_by(workerid) |>
+  mutate(trial_order = row_number()) |>
+  ungroup()
+```
+
+# Bonus
+```{r, eval=F}
+worker <- read_csv(here("data/tg_matcher_expt_1_full_data-workerids.csv")) |> mutate(workerid = as.factor(workerid))
+
+bonuses <- good_stuff |>
+  group_by(workerid) |>
+  summarize(bonus = round(sum(correct) * .05, 2)) |>
+  left_join(worker) |>
+  select(prolific_participant_id, bonus) |>
+  write_csv(here("bonus.csv"))
+
+cost <- bonuses |>
+  mutate(cost = bonus * 4 / 3) |>
+  summarize(s = sum(cost))
+```
+
+# Timing
+
+This is clock time over the whole experiment (paying attention or not)
+
+```{r}
+total_rt <- raw |>
+  group_by(workerid) |>
+  summarize(m = max(time_elapsed) / 1000 / 60)
+# want to know about outliers... since some participants might have paused at some point
+
+ggplot(total_rt, aes(x = m)) +
+  geom_histogram() +
+  labs(x = "Total elapsed time in minutes")
+```
+
+How long are individual trials taking? 
+```{r}
+# good_stuff |> group_by(workerid) |> mutate(winsor_time=ifelse(rt_sec>60, 60, rt_sec)) |> summarize(total_trial = sum(rt_sec)/60) |>
+# ggplot(aes(x=total_trial))+geom_histogram()
+good_stuff |>
+  ggplot(aes(x = trial_order, y = rt_sec)) +
+  labs(y = "Time in seconds", x = "Trial") +
+  geom_point(alpha = .1) +
+  facet_grid(group_size ~ round)
+```
+
+if we exclude the > than 1 minute ones (as plausible got distracted doing other things), mean rts: 
+
+
+```{r}
+good_stuff |>
+  group_by(workerid) |>
+  filter(rt_sec < 60) |>
+  summarize(mean_time = mean(rt_sec)) |>
+  ggplot(aes(x = mean_time)) +
+  geom_histogram() +
+  labs(x = "Mean per-participant response time in seconds")
+```
+
+So, 10-20 seconds per trial generally. 
+
+# Accuracy
+
+```{r}
+acc_by_participant <- good_stuff |>
+  group_by(workerid) |>
+  summarize(acc = sum(correct) / n())
+
+
+
+acc_by_type <- good_stuff |>
+  group_by(group_size, round) |>
+  summarize(
+    acc = sum(correct) / n(),
+    lower = Hmisc::smean.cl.boot(correct)[2],
+    higher = Hmisc::smean.cl.boot(correct)[3]
+  ) |>
+  arrange(acc)
+
+acc_by_type_part <- good_stuff |>
+  group_by(workerid, group_size, round) |>
+  summarize(acc = sum(correct) / n())
+
+acc_by_target <- good_stuff |>
+  group_by(correct_tangram) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+
+acc_by_type_target <- good_stuff |>
+  group_by(correct_tangram, group_size, round) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+```
+
+Average accuracy is around 62%, with moderate person-to-person variability. 
+
+```{r}
+ggplot(acc_by_participant, aes(x = "By participant", y = acc)) +
+  geom_jitter(height = 0, width = .4) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 1.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
+  stat_summary(data.fun = "mean_cl_boot", color = "blue") +
+  labs(x = "", y = "Percent correct")
+```
+
+Key question is whether there are differences between the conditions: not huge ones. Here's mean accuracy and bootstrapped 95% CIs in each condition. There's a 10 percentage point difference between 2-player round 6 and 6-player round 6 (round 1's in the middle). 
+
+```{r}
+acc_by_type
+```
+
+And plot with per-participant small dots. 
+
+```{r}
+ggplot(acc_by_type_part, aes(x = round, y = acc, color = str_c(group_size, "_", round))) +
+  geom_jitter(height = 0, width = .2, alpha = .5, color = "black") +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 2.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
+  stat_summary(data.fun = "mean_cl_boot") +
+  facet_wrap(~group_size) +
+  theme(legend.position = "none")
+```
+
+Tangrams vary a lot in guessability. 
+
+```{r}
+ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, color = str_c(group_size, "_", round))) +
+  geom_point() +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed") +
+  labs(color = "Condition", x = "tangram")
+
+
+acc_by_target
+```
+
+
+# Models!
+
+predict accuracy as a function of:
+
+ * group size x round
+ * nuisance variable of trial (might get better over time)
+ * size x round |  tangram
+ * size x round + trial | participant
+
+```{r}
+acc_priors <- c(
+  set_prior("normal(0,1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd"),
+  set_prior("lkj(1)", class = "cor")
+)
+
+
+acc_mod <- brm(
+  correct ~ group_size * round + trial_order +
+    (group_size * round | correct_tangram) +
+    (group_size * round + trial_order | workerid),
+  data = good_stuff,
+  family = bernoulli(),
+  file = here(model_location, "acc_1"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+summary(acc_mod)
+```
+
+So basically this confirms what we see above: the percentages aren't that different across conditions, but there is an interaction -- 2-player games end up *less* transparent than 6-player games, even if they start in (roughly) the same place and don't change that much from start to end. 
+
+Logistic models are annoying to think about, so we can look at predictions: 
+
+Dotted lines are 95% posterior predictions from the model (no random effects), solid lines are mean and 95% CI from bootstrapping that category. 
+
+```{r}
+do_preds <- function(model) {
+  mod <- here(model_location, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    round = c("round_1", "round_6")
+  ) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
+    group_by(group_size, round) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+
+predicted <- do_preds("acc_1.rds") |> mutate(across(mean:high, inv_logit_scaled))
+
+ggplot(acc_by_type, aes(x = round, y = acc, color = str_c(group_size, "_", round))) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 2.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
+  geom_pointrange(aes(ymin = lower, ymax = higher), linetype = "solid", position = position_nudge(x = -.1)) +
+  geom_pointrange(data = predicted, aes(y = mean, ymin = low, ymax = high), linetype = "dotted", position = position_nudge(x = .1)) +
+  facet_wrap(~group_size) +
+  theme(legend.position = "none")
+```
+
+
+<!--
+# TODO drift diffusion model
+
+notes: should read more on drift diffusion to understand what factors should be where (especially since reading time may be variable?)
+
+will need to figure out what things mean so priors
+
+and how to initialize reasonably...
+
+and how to interpret ...
+
+```{r, eval=F}
+# todo winsorize the data somehow
+test <- good_stuff |> filter(rt_sec < 100)
+
+library(RWiener)
+
+formula <- bf(
+  rt_sec | dec(correct) ~ group_size * round + trial_order +
+    (group_size * round | correct_tangram) +
+    (group_size * round + trial_order | workerid),
+  bs ~ 1 + (1 | workerid),
+  ndt ~ 1 + (1 | workerid),
+  bias = .5
+)
+
+get_prior(formula, test, family = wiener(
+  link_bs = "identity",
+  link_ndt = "identity",
+  link_bias = "identity"
+))
+
+wiener_prior <- c(
+  prior("cauchy(0, 5)", class = "b")
+)
+
+# set_prior("normal(1.5, 1)", class = "Intercept", dpar = "bs"),
+#  set_prior("normal(1.5, 1)", class = "sd", dpar = "bs"),
+# copied from http://singmann.org/wiener-model-analysis-with-brms-part-i/
+# https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.1039172/full is also useful
+# set_prior("normal(5, 5)", class = "Intercept", dpar = "ndt"),
+# set_prior("normal(5, 5)", class = "sd", dpar = "ndt"))
+
+# looks like this should be less than total RT, so mean rt is 10-20 seconds, so ... this at least puts most weight there??
+
+fit_wiener <- brm(formula,
+  data = test,
+  family = wiener(
+    link_bs = "identity",
+    link_ndt = "identity",
+    link_bias = "identity"
+  ),
+  prior = wiener_prior,
+  control = list(adapt_delta = .95),
+  file = here(model_location, "wiener_test")
+)
+```
+
+# TODO compare accuracy as function of original
+
+<!--# Feedback reading time
+
+
+
+```{r, eval=F}
+survey <- raw |>
+  filter(trial_type == "survey-text") |>
+  select(workerid, response) |>
+  write_csv(here("data/expt1_pilotB_survey.csv"))
+
+# now go run python file "deal_with_survey.py" to unmangle to json...
+
+survey <- read.csv(here("data/expt1_pilotB_survey_fixed.csv")) |>
+  mutate(foo = map(response, fromJSON)) |>
+  unnest_wider(foo) |>
+  select(-response)
+```
+
+understand: Were the instructions and task clear? Was there anything you found confusing? 
+
+```{r, eval=F}
+survey |> select(understand)
+```
+
+length: How was the task length? Would you have preferred fewer or more items / a shorter or longer task? (Assume time estimate and payment scale with length).
+
+```{r, eval=F}
+survey |> select(length)
+```
+
+errors: Were there any problems or errors with the experiment?
+
+```{r, eval=F}
+survey |> select(errors)
+```
+
+interface: Is there anything that would make the interface better? (ex. bigger text, or a different placement of text and buttons)
+
+```{r, eval=F}
+survey |> select(interface)
+```
+
+other: Any other comments? 
+
+```{r, eval=F}
+survey |> select(other)
+```
+
+no issues from pilot study!
+-->
