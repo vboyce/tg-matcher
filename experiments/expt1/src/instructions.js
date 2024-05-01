@@ -15,7 +15,7 @@ export const INSTRUCTIONS =
   '</br><center><img width="600px" src="assets/demo.png" /></center></br>' +
   "<p>Your goal is to <b>read the transcript</b> and <b>figure out which image</b> is being described! </p>" +
   "<p>You will <b>click the image</b> you think is being described, and then you will <b>find out if you were right</b>.<p>" +
-  "<p>You will see <b>60 trials</b>. The image choices will stay the same, but the transcripts " +
+  "<p>You will see <b>64 trials</b>. The image choices will stay the same, but the transcripts " +
   "will come from different groups of people. " +
   "Some of the transcripts may be much shorter or longer than others. " +
   "Some of the descriptions may be hard to understand -- just take a guess if you are not sure.</p>" +

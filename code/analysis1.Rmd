@@ -2,6 +2,7 @@
 title: "tg-matcher 1: Preliminary analysis"
 output:
   html_document:
+    toc: true
     df_print: paged
 ---
 
@@ -35,9 +36,16 @@ theme_set(theme_bw())
 
 dat_loc <- "data/expt1_full_data.csv"
 model_location <- "code/models"
+
+images <- "experiments/expt1/assets/images"
 ```
 
-# Read in data
+# Experiment
+
+[try the experiment](vboyce.github.io/tg-matcher)
+
+# Boring stuff
+## Read in data
 
 ```{r}
 raw <- read_csv(here(dat_loc)) |>
@@ -67,7 +75,7 @@ good_stuff <- raw |>
   ungroup()
 ```
 
-# Bonus
+##  Bonus
 ```{r, eval=F}
 worker <- read_csv(here("data/tg_matcher_expt_1_full_data-workerids.csv")) |> mutate(workerid = as.factor(workerid))
 
@@ -83,7 +91,7 @@ cost <- bonuses |>
   summarize(s = sum(cost))
 ```
 
-# Timing
+## Timing
 
 This is clock time over the whole experiment (paying attention or not)
 
@@ -189,11 +197,18 @@ ggplot(acc_by_type_part, aes(x = round, y = acc, color = str_c(group_size, "_", 
 Tangrams vary a lot in guessability. 
 
 ```{r}
+library(ggtext)
+correct_tangram <- c("A","B","C", "D", "E", "F", "G", "H", "I", "J", "K", "L") 
+labels <- c("A","B","C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~str_c("<img src=",here(images,str_c("tangram_",.,".png"))," width='20'/>"))
+
+foo <- tibble(correct_tangram, labels) |> left_join(acc_by_target) |> arrange(acc)
+
 ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, color = str_c(group_size, "_", round))) +
   geom_point() +
   coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
   geom_hline(yintercept = 1 / 12, linetype = "dashed") +
-  labs(color = "Condition", x = "tangram")
+  scale_x_discrete(name=NULL, labels=foo$labels)+
+    theme(axis.text.x = element_markdown(color = "black", size = 11))
 
 
 acc_by_target
@@ -256,15 +271,373 @@ do_preds <- function(model) {
 
 predicted <- do_preds("acc_1.rds") |> mutate(across(mean:high, inv_logit_scaled))
 
-ggplot(acc_by_type, aes(x = round, y = acc, color = str_c(group_size, "_", round))) +
-  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 2.5), expand = F) +
-  geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
-  geom_pointrange(aes(ymin = lower, ymax = higher), linetype = "solid", position = position_nudge(x = -.1)) +
-  geom_pointrange(data = predicted, aes(y = mean, ymin = low, ymax = high), linetype = "dotted", position = position_nudge(x = .1)) +
-  facet_wrap(~group_size) +
-  theme(legend.position = "none")
+
 ```
 
+## check what's up with predictions via simpler models
+
+seems a bit odd that model preds are all larger than the bootstrap, so we check out what's causing it. Seems to be that adding mixed effects leads to pulling up the lower outliers more (b/c there's further out low ones??), although maybe this is partly due to that x logit stuff 
+
+```{r}
+acc_mod_2 <- brm(
+  correct ~ 1,
+  data = good_stuff,
+  family = bernoulli(),
+  file = here(model_location, "acc_1_test_1"),
+  control = list(adapt_delta = .95)
+)
+acc_priors_2 <- c(
+  set_prior("normal(0,1)", class = "b")
+)
+
+acc_mod <- brm(
+  correct ~ group_size * round + trial_order,
+  data = good_stuff,
+  family = bernoulli(),
+  file = here(model_location, "acc_1_test_2"),
+  prior = acc_priors_2,
+  control = list(adapt_delta = .95)
+)
+
+acc_priors <- c(
+  set_prior("normal(0,1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd"),
+  set_prior("lkj(1)", class = "cor")
+)
+acc_mod <- brm(
+  correct ~ group_size * round + trial_order +
+    (group_size * round | correct_tangram),
+  data = good_stuff,
+  family = bernoulli(),
+  file = here(model_location, "acc_1_test_3"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+acc_mod <- brm(
+  correct ~ group_size * round + trial_order +
+    (group_size * round + trial_order | workerid),
+  data = good_stuff,
+  family = bernoulli(),
+  file = here(model_location, "acc_1_test_4"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+predicted_person_level <- do_preds("acc_1_test_4.rds") |> mutate(across(mean:high, inv_logit_scaled))
+
+predicted_tangram_level <- do_preds("acc_1_test_3.rds") |> mutate(across(mean:high, inv_logit_scaled))
+
+predicted_no_me <- do_preds("acc_1_test_2.rds") |> mutate(across(mean:high, inv_logit_scaled))
+
+do_preds_tangram <- function(model) {
+  mod <- here(model_location, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    round = c("round_1", "round_6"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size * round | correct_tangram)) |>
+    group_by(group_size, round, trial_order, .draw) |>
+    summarize(predicted = mean(predicted)) |>
+    group_by(group_size, round) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+
+predict_average_out_tangram <- do_preds_tangram("acc_1.rds") |> mutate(across(mean:high, inv_logit_scaled))
+
+ggplot(acc_by_type, aes(x = round, y = acc)) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 2.6), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
+  geom_pointrange(aes(ymin = lower, ymax = higher, color = "data bootstrap"), linetype = "solid", position = position_nudge(x = -.1)) +
+  geom_pointrange(data = predicted_no_me, aes(y = mean, ymin = low, ymax = high, color = "fixed only"), linetype = "dotted", position = position_nudge(x = .1)) +
+  geom_pointrange(data = predicted_person_level, aes(y = mean, ymin = low, ymax = high, color = "person-level ranef"), linetype = "dotted", position = position_nudge(x = .2)) +
+  geom_pointrange(data = predicted_tangram_level, aes(y = mean, ymin = low, ymax = high, color = "tangram-level ranef"), linetype = "dotted", position = position_nudge(x = .3)) +
+  geom_pointrange(data = predict_average_out_tangram, aes(y = mean, ymin = low, ymax = high, color = "full model avg tangram"), linetype = "dotted", position = position_nudge(x = .5)) +
+  geom_pointrange(data = predicted, aes(y = mean, ymin = low, ymax = high, color = "full model", ), linetype = "dotted", position = position_nudge(x = .4)) +
+  facet_wrap(~group_size)
+```
+
+```{r}
+do_preds_per_tangram <- function(model) {
+  mod <- here(model_location, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    round = c("round_1", "round_6"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size * round | correct_tangram)) |>
+    group_by(group_size, round, correct_tangram) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+predict_individual_tangram <- do_preds_per_tangram("acc_1.rds") |> mutate(across(mean:high, inv_logit_scaled)) |> left_join(acc_by_target)
+
+
+ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, color = str_c(group_size, "_", round))) +
+  geom_point(position=position_nudge(x=-.2)) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed") +
+  scale_x_discrete(name=NULL, labels=foo$labels)+
+    theme(axis.text.x = element_markdown(color = "black", size = 11))+
+  geom_pointrange(data = predict_individual_tangram |> left_join(acc_by_target), aes(y = mean, ymin = low, ymax = high), size=.2, linetype = "dotted",position = position_nudge(x=.2))+
+  labs(color="")+
+  theme(legend.position = "bottom")
+  
+
+```
+
+# compare accuracy as function of original accuracy & length
+
+how does RT vary based on transcript length?
+
+```{r}
+orig <- read_csv(here("expt_prep_code/combined_chat.csv")) |>
+  filter(repNum == 5 | repNum == 0) |>
+  filter(!is.na(text)) |>
+  filter(condition %in% c("2_rotate", "6_rotate")) |>
+  mutate(
+    group_size = ifelse(condition == "2_rotate", "2_player", "6_player"),
+    round = ifelse(repNum == 0, "round_1", "round_6")
+  ) |>
+  group_by(group_size, round, gameId, tangram, realCorrect) |>
+  mutate(utt_length_words = str_count(text, "\\W+") + 1) %>%
+  summarize(
+    text = paste0(text, collapse = ", "),
+    total_num_words = sum(utt_length_words, na.rm = T) %>% as.numeric()
+  ) |>
+  select(group_size, round, gameId, correct_tangram = tangram, realCorrect, text, total_num_words)
+
+augment <- good_stuff |>
+  select(-text) |>
+  left_join(orig, by = c("group_size", "round", "gameId", "correct_tangram"))
+```
+
+```{r}
+ggplot(augment, aes(x = total_num_words, y = rt_sec, color = as.factor(correct))) +
+  geom_point(alpha = .1) +
+  coord_trans(x = "log", ylim = c(0, 100)) +
+  geom_smooth(method = "lm") +
+  facet_grid(round ~ group_size)
+```
+
+how does accuracy vary based on transcript length?
+
+```{r}
+ggplot(augment, aes(x = total_num_words, y = correct)) +
+  geom_point(alpha = .1) +
+  coord_trans(x = "log") +
+  geom_smooth(method = "lm") +
+  facet_grid(round ~ group_size)
+```
+
+Note there's some join or exclusion issue happening where we don't have round results for some of these -- I thought it might be an NA issue, but it looks like not -- looks like results v chat mismatch thing which I will deal with later. Grrr. 
+
+What's the relationship between original listener accuracy and accuracy?
+
+Definitely positive correlation here, which makes sense. 
+
+```{r}
+correctness <- augment |>
+  filter(!is.na(realCorrect)) |>
+  mutate(
+    possible = ifelse(group_size == "2_player", 1, 5),
+    pct_correct = realCorrect / possible,
+    all_correct = realCorrect == possible
+  )
+
+ggplot(correctness, aes(x = all_correct, y = correct)) +
+  stat_summary(fun.data = "mean_cl_boot") +
+  facet_grid(round ~ group_size)
+
+ggplot(correctness, aes(x = pct_correct, y = correct)) +
+  stat_summary(fun.data = "mean_cl_boot") +
+  facet_grid(round ~ group_size)
+```
+
+just to check correlation issues, original accuracy v length. some correlation, but not huge.
+
+```{r}
+ggplot(correctness, aes(x = all_correct, y = total_num_words)) +
+  stat_summary(fun.data = "mean_cl_boot") +
+  facet_grid(round ~ group_size)
+
+ggplot(correctness, aes(x = pct_correct, y = total_num_words)) +
+  stat_summary(fun.data = "mean_cl_boot") +
+  facet_grid(round ~ group_size)
+```
+
+# confusion matrix might be real interesting!
+
+```{r}
+library(ggtext)
+correct_tangram <- c("A","B","C", "D", "E", "F", "G", "H", "I", "J", "K", "L") 
+labels <- c("A","B","C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~str_c("<img src=",here(images,str_c("tangram_",.,".png"))," width='20'/>"))
+
+confusion <- good_stuff |>
+  group_by(correct_tangram, selected) |>
+  tally() |>
+  group_by(correct_tangram) |>
+  mutate(pct = n / sum(n)) 
+
+self <- confusion |> filter(correct_tangram==selected) |> select(correct_tangram, self=pct)
+
+corr_order <- tibble(correct_tangram, labels) |> left_join(self) |> arrange(self)
+
+self_2 <- confusion |>ungroup() |>  filter(correct_tangram==selected) |> select(selected, self_2=pct)
+
+
+confusion |> left_join(self) |> left_join(self_2) |> mutate(correct_tangram=str_c("<img src=",here(images,"tangram_",correct_tangram,".png"),"width='100' />")) |> 
+  ggplot(aes(x=reorder(correct_tangram, self, FUN=mean), y=reorder(selected, self_2, FUN=mean), fill=pct))+geom_tile()+scale_fill_gradient(low="white", high="blue")+
+  scale_x_discrete(name="Correct", labels = corr_order$labels) +
+    scale_y_discrete(name="Selected", labels = corr_order$labels) +
+  
+  theme(axis.text= element_markdown(color = "black", size = 11))
+
+```
+
+# Thinking about what the heck the "reduction process" theory space is
+
+So, given these 4 data points we have some things to explain
+
+* what does it mean that accuracy (overall) here is what it is
+* what does it mean that there isn't (much) condition difference
+* what does it mean that 2-player is harder later but 6-player is easier later
+
+what ""theories"" or proto-theories do we have to work with:
+
+* Robert's CHAI -- predictions unclear since it depends a lot on priors (if priors start out random, then naive should be uniformly hopeless, otherwise earlier should be easier ?), also doesn't account for practice effects / better sampling of utterance components over time
+* claim that utterances get more opaque over time 
+* larger games stick closer to priors / have less game-to-game variability (a la Guilbeault paper)
+* vague notion that group size (in this range) should yield continuous behavior (same trajectory, different speed parameters)
+* auxiliary theory of task demands!
+* ??? 
+
+""theories"" also need to be consistent with our other sources of evidence:
+
+* reduction trajectories
+* semantic trajectories
+* item-level stuff
+
+## Overall accuracy
+
+We didn't really have priors on this. So, these (first round) accuracies are substantially lower than in-game listener (first round) accuracies -- might expect some satisficing / some its easier to have a conversation than to read it / and also some this isn't including the right details. 
+
+The big question might be how we see really big image to image differences, so to some extent it's not that accuracy is like 62% it's that it's a certain mix of 35-85%. 
+
+Theory implications: ???
+
+## Why is initial accuracy the same-ish for 2 and 6? 
+
+People don't start off doing anything different for group size, and maybe people on this task don't read that far? / what questions people have are sufficiently random that the clarifications aren't that differential?
+
+Here we have the issue that in real games, initial accuracy for 2p is marginally? greater than 6p, so there may or may not be something to explain here...
+
+How far people actually read / time might also be part of it 
+
+
+## Why aren't there more differences between conditions? 
+
+* the descriptions aren't actually that different (how do we quantify different-ness?) -- but this is contra some of the similarity trajectories we see where 2p converges much faster
+* it is kinda strange that this is more squished than in game listener differences -- so is having it be interactive make a big difference? (regardless of in-order-ness) but is it actually more squished -- 2 v 6 in the first experiment isn't a big different, but that might mostly be partial pooling of the model? 
+* is this a product of some mixture of some being quite identifiable and others being a guess between 2 or 3 or ... 
+* THIS IS NOT SOMETHING I HAVE A GOOD ANSWER TO!
+
+## Why different trajectories?
+
+so, descriptions vary and we can think of "goodness to partner" and "goodness to naive" as having a shared component "overall goodness" and then a "path dependence" component (or something)
+
+and we might imagine that both of these increase over time generally
+
+things that don't narrow down the set of tangrams (diamond head) isn't useful at all
+
+maybe should factor out a "nichiness" part <-- how broad is the prior knowledge -> like is this based on a general "what bunnies look like" or a pop-culture thing or a our-personal-conversation-history
+
+seems like there might also be a : how commonly does this description come up v how well it fits the image (/differentially fits the image). Like "cobra" might not be commonly used but may be high fit? 
+
+So one question is: is everything the same path, but with different time components ... or are there different paths in some way? Issue is that we think path speed is a group x tangram thing
+
+so there's a few things that contribute to *difficulty* like tangram & maybe group dynamic (difficulty might be externally measureable with kilogram or image distance from others or something)
+
+is there a way to info theory this? 
+
+what's a non-ad-hoc way...
+
+could deep dive on a couple games to see if within a game / image we see u shape 
+
+but what do we think the parameters are...
+
+
+# Fun with fake data!
+
+there's like lots of functional forms that one could fit
+
+but what do we think the process - plausible ones are 
+
+on a per-trajectory basis: 
+* could asymtote up as it is better / more clearly described
+* if in-group clarity > something, then can reduce which may or may not reduce clarity depending on in-groupiness?
+
+no idea what those do with description length, going to have to build some toy process model aren't we? 
+
+```{r}
+
+two <- tibble(num=2,block=1:6, acc=seq(62,56.6, length.out=6))
+three <- tibble(num=3,block=1:6, acc=seq(62.4,59.2, length.out=6))
+four <- tibble(num=4,block=1:6, acc=seq(62.8,61.6, length.out=6))
+five <- tibble(num=5,block=1:6, acc=seq(63,64.1, length.out=6))
+
+six <- tibble(num=6,block=1:6, acc=seq(63.4, 66.6, length.out=6))
+
+all <- two |> rbind(three,four,five,six)
+
+
+ggplot(all, aes(x=block, y=acc, color=as.factor(num)))+geom_point()+geom_line()
+```
+```{r}
+
+x <-c(1,3,6)
+y <- c(62.8, 66, 61.6)
+
+#coef(lm(y ~ poly(x, 2, raw = TRUE)))
+
+blah <- function(y){
+  x=y
+  return(59.36+4.*x-.61*x^2)}
+
+#blah(1:6)
+
+two <- tibble(num=2,block=1:6, acc=c(62,64.9, 65.9, 64.9, 61.9, 56.6))
+three <- tibble(num=3,block=1:6, acc=c(62.4, 64.9, 65.8, 65.2, 62.9, 59.2))
+four <- tibble(num=4,block=1:6, acc=c(62.8,64.92, 65.87, 65.6, 64.11, 61.6))
+five <- tibble(num=5,block=1:6, acc=c(63,65.12, 66.3, 66.5, 65.75, 64.2))
+
+six <- tibble(num=6,block=1:6, acc=c(63.4,64.7, 65.7, 66.3, 66.5, 66.3))
+
+all <- two |> rbind(three,four,five,six)
+
+
+ggplot(all, aes(x=block, y=acc, color=as.factor(num)))+geom_point()+geom_line()
+```
+
+
+
+# Next steps:
+
+* could collect more data on the same thing (not V's favorite idea)
+* could pull things where in-game patterns were more different (2 thick v 6 thin for example)
+* could pull intermediates (middling game size & middling rounds)
+* could deep dive in a couple games to see if there's any u shape / non-linearity
+* could go straight to some incremental viewing to get at how much people are reading? get some sort of RT separate from selection time ??
 
 <!--
 # TODO drift diffusion model
@@ -277,18 +650,74 @@ and how to initialize reasonably...
 
 and how to interpret ...
 
-```{r, eval=F}
-# todo winsorize the data somehow
-test <- good_stuff |> filter(rt_sec < 100)
+## but first what's the speed -- accuracy look like 
+
+```{r}
+speed_acc <- good_stuff |>
+  filter(rt_sec < 60) |>
+  group_by(workerid, correct) |>
+  summarize(mean_rt = mean(rt_sec), n = n())
+
+ggplot(speed_acc, aes(x = workerid, y = mean_rt, alpha = n, color = as.factor(correct))) +
+  geom_point()
+
+speed_acc |>
+  select(-n) |>
+  pivot_wider(names_from = correct, values_from = mean_rt) |>
+  filter(`1` < `0`) # for 53/60 correct answers are faster on average
+```
+
+## playing around
+
+in which we conclude that MLE sucks
+
+```{r}
+test <- good_stuff |>
+  filter(rt_sec < 60) |>
+  select(correct, q = rt_sec) |>
+  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
+  select(resp, q)
 
 library(RWiener)
 
+foo <- wdm(test, beta = .5, fixed = 1)
+```
+
+```{r}
+# try the 4 quadrants
+
+small_early <- good_stuff |>
+  filter(rt_sec < 60) |>
+  filter(round == "round_1") |>
+  filter(group_size == "2_player") |>
+  select(correct, q = rt_sec) |>
+  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
+  select(resp, q)
+
+wdm(small_early, beta = .5) # very high nonstability
+
+small_late <- good_stuff |>
+  filter(rt_sec < 60) |>
+  filter(round == "round_6") |>
+  filter(group_size == "2_player") |>
+  select(correct, q = rt_sec) |>
+  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
+  select(resp, q)
+
+wdm(small_late, beta = .5)
+```
+## Back to bayesian, but toy
+
+```{r}
+library(RWiener)
+
+test <- good_stuff |> filter(rt_sec < 60)
+
+
 formula <- bf(
-  rt_sec | dec(correct) ~ group_size * round + trial_order +
-    (group_size * round | correct_tangram) +
-    (group_size * round + trial_order | workerid),
-  bs ~ 1 + (1 | workerid),
-  ndt ~ 1 + (1 | workerid),
+  rt_sec | dec(correct) ~ 0 + group_size:round,
+  bs ~ 1,
+  ndt ~ 1,
   bias = .5
 )
 
@@ -298,6 +727,23 @@ get_prior(formula, test, family = wiener(
   link_bias = "identity"
 ))
 
+wiener_prior <- c(
+  prior("cauchy(0, 5)", class = "b")
+)
+
+fit_wiener <- brm(formula,
+  data = test,
+  family = wiener(
+    link_bs = "identity",
+    link_ndt = "identity",
+    link_bias = "identity"
+  ),
+  prior = wiener_prior,
+  control = list(adapt_delta = .95),
+  file = here(model_location, "wiener_test")
+)
+```
+```{r}
 wiener_prior <- c(
   prior("cauchy(0, 5)", class = "b")
 )
@@ -324,7 +770,6 @@ fit_wiener <- brm(formula,
 )
 ```
 
-# TODO compare accuracy as function of original
 
 <!--# Feedback reading time
 

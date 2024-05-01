@@ -4,7 +4,6 @@ output: html_notebook
 ---
 
 ```{r}
-
 library(tidyverse)
 library(here)
 library(jsonlite)
@@ -13,70 +12,80 @@ library(jsonlite)
 # Get the things!
 
 ```{r}
-#let's try reading them in from github? since they're in another repo
+# let's try reading them in from github? since they're in another repo
 
-#based on https://github.com/vboyce/multiparty-tangrams/blob/main/code/prep_ms.R
+# based on https://github.com/vboyce/multiparty-tangrams/blob/main/code/prep_ms.R
 
 url <- "https://raw.githubusercontent.com/vboyce/multiparty-tangrams/main/"
-one_chat <- read_csv(str_c(url,"data/study1/filtered_chat.csv")) |> mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
-two_a_chat <-  read_csv(str_c(url,"data/study2a/filtered_chat.csv")) |> mutate(rotate="no_rotate")
-two_b_chat <- read_csv(str_c(url,"data/study2b/filtered_chat.csv")) |> mutate(rotate="full_feedback") |> select(-`row num`)
-two_c_chat <- read_csv(str_c(url,"data/study2c/filtered_chat.csv")) |> mutate(rotate="emoji") |> select(-type)
-three_chat <- read_csv(str_c(url,"data/study3/filtered_chat.csv"))  |> 
-  inner_join(read_rds(str_c(url, "data/study3/round_results.rds")) |> select(gameId, trialNum, condition=name) |> unique() ) |> 
+one_chat <- read_csv(str_c(url, "data/study1/filtered_chat.csv")) |> mutate(rotate = str_c(as.character(numPlayers), "_rotate"))
+two_a_chat <- read_csv(str_c(url, "data/study2a/filtered_chat.csv")) |> mutate(rotate = "no_rotate")
+two_b_chat <- read_csv(str_c(url, "data/study2b/filtered_chat.csv")) |>
+  mutate(rotate = "full_feedback") |>
+  select(-`row num`)
+two_c_chat <- read_csv(str_c(url, "data/study2c/filtered_chat.csv")) |>
+  mutate(rotate = "emoji") |>
+  select(-type)
+three_chat <- read_csv(str_c(url, "data/study3/filtered_chat.csv")) |>
+  inner_join(read_rds(str_c(url, "data/study3/round_results.rds")) |> select(gameId, trialNum, condition = name) |> unique()) |>
   select(-rowid, -type)
-  
-combined_chat <- one_chat |> 
-  rbind(two_a_chat) |> 
-  rbind(two_b_chat) |> 
-  rbind(two_c_chat) |> 
-  mutate(activePlayerCount=NA) |> 
-  rename(condition=rotate) |> 
-  rbind(three_chat) |> 
-  filter(!(is.chitchat)) |> 
-   mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
-         text = gsub("[/?/.]", ' ', text),
-         text = str_squish(text),
-         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
-         tangram = gsub('.png', '', tangram, fixed=TRUE)) %>%
-  select(gameId, trialNum,repNum,tangram, playerId, role, numPlayers, text, condition)
-# so here we instead count non-white space chunks for words 
 
-one_round_results <- read_rds(str_c(url,"data/study1/round_results.rds")) %>% mutate(rotate=str_c(as.character(numPlayers), "_rotate"))
-two_a_round_results <- read_rds(str_c(url,"data/study2a/round_results.rds")) %>% mutate(rotate="no_rotate")
-two_b_round_results <- read_rds(str_c(url,"data/study2b/round_results.rds")) %>% mutate(rotate="full_feedback")
-two_c_round_results <- read_rds(str_c(url,"data/study2c/round_results.rds")) |> mutate(rotate="emoji")
-three_round_results <- read_rds(str_c(url,"data/study3/round_results.rds")) |> rename(`_id`="X_id", condition=name)
+combined_chat <- one_chat |>
+  rbind(two_a_chat) |>
+  rbind(two_b_chat) |>
+  rbind(two_c_chat) |>
+  mutate(activePlayerCount = NA) |>
+  rename(condition = rotate) |>
+  rbind(three_chat) |>
+  filter(!(is.chitchat)) |>
+  mutate(
+    text = gsub("\\n", "", fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
+    text = gsub("[/?/.]", " ", text),
+    text = str_squish(text),
+    tangram = gsub("/experiment/tangram_", "", target, fixed = TRUE),
+    tangram = gsub(".png", "", tangram, fixed = TRUE)
+  ) %>%
+  select(gameId, trialNum, repNum, tangram, playerId, role, numPlayers, text, condition)
+# so here we instead count non-white space chunks for words
 
-combined_results <- one_round_results |> 
-  rbind(two_a_round_results) |> 
-  rbind(two_b_round_results) |> 
-  rbind(two_c_round_results) |> 
-  mutate(activePlayerCount=NA) |> 
-  rename(condition=rotate) |> 
-  rbind(three_round_results) |> 
-  select(realCorrect, gameId, targetNum, repNum, trialNum, condition, numPlayers, activePlayerCount) |> 
+one_round_results <- read_rds(str_c(url, "data/study1/round_results.rds")) %>% mutate(rotate = str_c(as.character(numPlayers), "_rotate"))
+two_a_round_results <- read_rds(str_c(url, "data/study2a/round_results.rds")) %>% mutate(rotate = "no_rotate")
+two_b_round_results <- read_rds(str_c(url, "data/study2b/round_results.rds")) %>% mutate(rotate = "full_feedback")
+two_c_round_results <- read_rds(str_c(url, "data/study2c/round_results.rds")) |> mutate(rotate = "emoji")
+three_round_results <- read_rds(str_c(url, "data/study3/round_results.rds")) |> rename(`_id` = "X_id", condition = name)
+
+combined_results <- one_round_results |>
+  rbind(two_a_round_results) |>
+  rbind(two_b_round_results) |>
+  rbind(two_c_round_results) |>
+  mutate(activePlayerCount = NA) |>
+  rename(condition = rotate) |>
+  rbind(three_round_results) |>
+  select(realCorrect, gameId, targetNum, repNum, trialNum, condition, numPlayers, activePlayerCount) |>
   unique()
-  
-chat <- combined_chat |> left_join(combined_results)
 
+chat <- combined_chat |>
+  left_join(combined_results) |>
+  
+  write_csv(here("expt_prep_code/combined_chat.csv"))
 ```
 
 # Prep pilot
 
 Change of plans we're now looking at first and last. 
-```{r}
+```{r, eval=F}
+first_last <- chat |>
+  filter(repNum == 5 | repNum == 0) |>
+  filter(!is.na(text)) |>
+  filter(condition %in% c("2_rotate", "6_rotate"))
 
-first_last<-  chat |> filter(repNum==5 | repNum==0) |> filter(!is.na(text)) |> filter(condition %in% c("2_rotate", "6_rotate"))
 
 
-
-prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
-  mutate(allCorrect=realCorrect==playerCount-1) |> 
-  mutate(size_round=str_c(condition, "_", as.character(repNum+1))) |> 
-  select(-numPlayers, -activePlayerCount) #|> 
-  #nest(text=c(role, playerId, text))
-  
+prepped <- first_last |>
+  mutate(playerCount = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(allCorrect = realCorrect == playerCount - 1) |>
+  mutate(size_round = str_c(condition, "_", as.character(repNum + 1))) |>
+  select(-numPlayers, -activePlayerCount) #|>
+# nest(text=c(role, playerId, text))
 ```
 
 # Potential censorship
@@ -84,36 +93,86 @@ prepped <- first_last |> mutate(playerCount=ifelse(is.na(activePlayerCount), num
 ```{r}
 # from https://www.cs.cmu.edu/~biglou/resources/bad-words.txt
 # but we allow "bigger", "kid", "crime", "crimes", "butt", "laid", "god", "crack" etc
-bad <- read_lines(here("expt_prep_code/bad-words-modified.txt"))  |> str_c(collapse="|")
+bad <- read_lines(here("expt_prep_code/bad-words-modified.txt")) |> str_c(collapse = "|")
 
-bad_regex <- str_c("\\b(",bad,")\\b")
+bad_regex <- str_c("\\b(", bad, ")\\b")
 
-is_bad <- function(text){
-  
-  return(str_detect(str_to_lower(text),bad_regex)[1])
+is_bad <- function(text) {
+  return(str_detect(str_to_lower(text), bad_regex)[1])
 }
+```
 
-bad_strings <- prepped |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad==T)
 
-#bad_strings |>  View()
+```{r, eval=F}
+bad_strings <- prepped |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad == T)
+
+# bad_strings |>  View()
 
 nrow(prepped) # 2749
-nrow(bad_strings) #18
+nrow(bad_strings) # 18
 
-prepped |> nest(text=c(role, playerId, text)) |> nrow() #787
+prepped |>
+  nest(text = c(role, playerId, text)) |>
+  nrow() # 787
 
-bad_strings |>  nest(text=c(role, playerId, text)) |> nrow() #16
+bad_strings |>
+  nest(text = c(role, playerId, text)) |>
+  nrow() # 16
 
-# get some of the boobs and fat ones out 
+# get some of the boobs and fat ones out
 # regex isn't perfect since we might be missing plurals but whatever if we anchor only start of word it flags "bit" and "hood" ... sigh
 ```
 
-```{r}
-good_strings <- prepped |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad==F) |> 
-  select(-has_bad) |> 
-  nest(text=c(role, playerId, text)) 
+```{r, eval=F}
+good_strings <- prepped |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad == F) |>
+  select(-has_bad) |>
+  nest(text = c(role, playerId, text))
 
 good_strings |> write_json(here("experiments/expt1/src/test.js"))
-
 ```
 
+# Prep expt 2
+Here we take the game 3 round 1 and 6 stuff
+and again apply light censoring
+
+```{r}
+
+pre_censor <- chat |>
+  filter(repNum == 5 | repNum == 0) |>
+  filter(!is.na(text)) |>
+  filter(condition %in% c("2_thin", "6_thin", "2_thick", "6_thick")) |> 
+  mutate(playerCount = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(allCorrect = realCorrect == playerCount - 1) |>
+  mutate(size_round = str_c(condition, "_", as.character(repNum + 1))) |>
+  select(-numPlayers, -activePlayerCount)
+
+bad_strings <- pre_censor |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad == T)
+
+
+nrow(pre_censor) # 2749
+nrow(bad_strings) # 18
+
+pre_censor |>
+  nest(text = c(role, playerId, text)) |>
+  nrow() # 787
+
+bad_strings |>
+  nest(text = c(role, playerId, text)) |>
+  nrow() # 16
+```
+
+```{r, eval=F}
+good_strings <- pre_censor |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad == F) |>
+  select(-has_bad) |>
+  nest(text = c(role, playerId, text))
+
+good_strings |> write_json(here("experiments/expt1/src/test.js"))
+```

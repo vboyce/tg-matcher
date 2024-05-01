@@ -48,7 +48,17 @@ export function no_repetitions(items) {
 }
 export function subset(items, total) {
   let select_items = [];
-  let types = ["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"];
+  //let types = ["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"];
+  let types = [
+    "2_thick_1",
+    "2_thick_6",
+    "6_thick_1",
+    "6_thick_6",
+    "2_thin_1",
+    "2_thin_6",
+    "6_thin_1",
+    "6_thin_6",
+  ];
   let per = total / types.length;
   shuffle(items);
   for (let i = 0; i < types.length; i++) {

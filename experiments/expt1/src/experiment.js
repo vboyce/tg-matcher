@@ -42,7 +42,7 @@ import {
  * @type {import("jspsych-builder").RunFunction}
  */
 
-const NUM_ITEMS = 60;
+const NUM_ITEMS = 64;
 const BONUS = 5;
 
 const select_stimuli = subset(stimuli, NUM_ITEMS);
