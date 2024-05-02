@@ -475,7 +475,30 @@ ggplot(correctness, aes(x = pct_correct, y = total_num_words)) +
   stat_summary(fun.data = "mean_cl_boot") +
   facet_grid(round ~ group_size)
 ```
+# by tangram
 
+```{r}
+per_utt <- correctness |> group_by(correct_tangram, gameId, pct_correct, group_size, round) |> 
+  summarize(match_pct=mean(correct))
+
+per_game <- per_utt |> group_by(gameId, group_size, round) |> 
+  summarize(orig_pct=mean(pct_correct),
+            match_pct=mean(match_pct))
+
+per_image <- per_utt |> group_by(correct_tangram, group_size, round) |> 
+  summarize(orig_pct=mean(pct_correct),
+            match_pct=mean(match_pct))
+
+```
+
+```{r}
+library(ggimage)
+per_game |> group_by(group_size, round) |> ggplot(aes(x=round, y=match_pct, group=gameId))+geom_point()+geom_smooth(method="lm")+
+  facet_grid(~ group_size)
+
+per_image |> mutate(image=str_c("tangram_",correct_tangram,".png")) |> group_by(group_size, round) |> ggplot(aes(x=round, y=match_pct, group=correct_tangram))+geom_point()+geom_smooth(method="lm")+
+  facet_grid(~ group_size)+ geom_image(aes(image=here(images,image)))
+```
 # confusion matrix might be real interesting!
 
 ```{r}
@@ -504,6 +527,7 @@ confusion |> left_join(self) |> left_join(self_2) |> mutate(correct_tangram=str_
   theme(axis.text= element_markdown(color = "black", size = 11))
 
 ```
+
 
 # Thinking about what the heck the "reduction process" theory space is
 
@@ -639,139 +663,9 @@ ggplot(all, aes(x=block, y=acc, color=as.factor(num)))+geom_point()+geom_line()
 * could deep dive in a couple games to see if there's any u shape / non-linearity
 * could go straight to some incremental viewing to get at how much people are reading? get some sort of RT separate from selection time ??
 
-<!--
-# TODO drift diffusion model
-
-notes: should read more on drift diffusion to understand what factors should be where (especially since reading time may be variable?)
-
-will need to figure out what things mean so priors
-
-and how to initialize reasonably...
-
-and how to interpret ...
-
-## but first what's the speed -- accuracy look like 
-
-```{r}
-speed_acc <- good_stuff |>
-  filter(rt_sec < 60) |>
-  group_by(workerid, correct) |>
-  summarize(mean_rt = mean(rt_sec), n = n())
-
-ggplot(speed_acc, aes(x = workerid, y = mean_rt, alpha = n, color = as.factor(correct))) +
-  geom_point()
-
-speed_acc |>
-  select(-n) |>
-  pivot_wider(names_from = correct, values_from = mean_rt) |>
-  filter(`1` < `0`) # for 53/60 correct answers are faster on average
-```
-
-## playing around
-
-in which we conclude that MLE sucks
-
-```{r}
-test <- good_stuff |>
-  filter(rt_sec < 60) |>
-  select(correct, q = rt_sec) |>
-  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
-  select(resp, q)
-
-library(RWiener)
-
-foo <- wdm(test, beta = .5, fixed = 1)
-```
-
-```{r}
-# try the 4 quadrants
-
-small_early <- good_stuff |>
-  filter(rt_sec < 60) |>
-  filter(round == "round_1") |>
-  filter(group_size == "2_player") |>
-  select(correct, q = rt_sec) |>
-  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
-  select(resp, q)
-
-wdm(small_early, beta = .5) # very high nonstability
-
-small_late <- good_stuff |>
-  filter(rt_sec < 60) |>
-  filter(round == "round_6") |>
-  filter(group_size == "2_player") |>
-  select(correct, q = rt_sec) |>
-  mutate(resp = ifelse(correct == 1, "upper", "lower")) |>
-  select(resp, q)
-
-wdm(small_late, beta = .5)
-```
-## Back to bayesian, but toy
-
-```{r}
-library(RWiener)
-
-test <- good_stuff |> filter(rt_sec < 60)
 
 
-formula <- bf(
-  rt_sec | dec(correct) ~ 0 + group_size:round,
-  bs ~ 1,
-  ndt ~ 1,
-  bias = .5
-)
-
-get_prior(formula, test, family = wiener(
-  link_bs = "identity",
-  link_ndt = "identity",
-  link_bias = "identity"
-))
-
-wiener_prior <- c(
-  prior("cauchy(0, 5)", class = "b")
-)
-
-fit_wiener <- brm(formula,
-  data = test,
-  family = wiener(
-    link_bs = "identity",
-    link_ndt = "identity",
-    link_bias = "identity"
-  ),
-  prior = wiener_prior,
-  control = list(adapt_delta = .95),
-  file = here(model_location, "wiener_test")
-)
-```
-```{r}
-wiener_prior <- c(
-  prior("cauchy(0, 5)", class = "b")
-)
-
-# set_prior("normal(1.5, 1)", class = "Intercept", dpar = "bs"),
-#  set_prior("normal(1.5, 1)", class = "sd", dpar = "bs"),
-# copied from http://singmann.org/wiener-model-analysis-with-brms-part-i/
-# https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.1039172/full is also useful
-# set_prior("normal(5, 5)", class = "Intercept", dpar = "ndt"),
-# set_prior("normal(5, 5)", class = "sd", dpar = "ndt"))
-
-# looks like this should be less than total RT, so mean rt is 10-20 seconds, so ... this at least puts most weight there??
-
-fit_wiener <- brm(formula,
-  data = test,
-  family = wiener(
-    link_bs = "identity",
-    link_ndt = "identity",
-    link_bias = "identity"
-  ),
-  prior = wiener_prior,
-  control = list(adapt_delta = .95),
-  file = here(model_location, "wiener_test")
-)
-```
-
-
-<!--# Feedback reading time
+# Feedback reading time
 
 
 
@@ -779,11 +673,11 @@ fit_wiener <- brm(formula,
 survey <- raw |>
   filter(trial_type == "survey-text") |>
   select(workerid, response) |>
-  write_csv(here("data/expt1_pilotB_survey.csv"))
+  write_csv(here("data/expt1_survey.csv"))
 
 # now go run python file "deal_with_survey.py" to unmangle to json...
 
-survey <- read.csv(here("data/expt1_pilotB_survey_fixed.csv")) |>
+survey <- read.csv(here("data/expt1_survey_fixed.csv")) |>
   mutate(foo = map(response, fromJSON)) |>
   unnest_wider(foo) |>
   select(-response)
@@ -819,5 +713,5 @@ other: Any other comments?
 survey |> select(other)
 ```
 
-no issues from pilot study!
--->
+no issues from pilot study or expt 1
+
