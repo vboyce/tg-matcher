@@ -29,6 +29,8 @@ library(ggrepel)
 library(ggthemes)
 library(knitr)
 library(cowplot)
+library(ggtext)
+library(ggimage)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
@@ -453,7 +455,6 @@ per_image <- per_utt |>
 ```
 
 ```{r}
-library(ggimage)
 per_game |>
   group_by(thickness, group_size, round) |>
   ggplot(aes(x = round, y = match_pct, group = gameId)) +
@@ -474,7 +475,6 @@ for_plot |> ggplot(aes(x = round, y = match_pct, group = correct_tangram)) +
 # confusion matrix might be real interesting!
 
 ```{r}
-library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
 
@@ -537,7 +537,9 @@ rotate <- read_csv(here(dat_loc_1)) |>
   ungroup()
 
 
-together <- good_stuff |> rbind(rotate) |> mutate(thickness=factor(thickness, levels=c("thin", "rotate", "thick")))
+together <- good_stuff |>
+  rbind(rotate) |>
+  mutate(thickness = factor(thickness, levels = c("thin", "rotate", "thick")))
 ```
 
 ```{r}
@@ -557,10 +559,66 @@ together |>
   summarize(acc = mean(correct)) |>
   pivot_wider(names_from = round, values_from = acc) |>
   mutate(diff = round_6 - round_1) |>
-      mutate(image = str_c("tangram_", correct_tangram, ".png")) |>
+  mutate(image = str_c("tangram_", correct_tangram, ".png")) |>
   ggplot(aes(x = group_size, y = diff)) +
-  geom_image(aes(image = here(images, image)), position=position_dodge(width=.3))+
-  geom_hline(yintercept=0, linetype="dotted")+
-  facet_wrap(~thickness)+
+  geom_image(aes(image = here(images, image)), position = position_dodge(width = .3)) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  facet_wrap(~thickness) +
   labs("Increase in naive legibility from round 1 to 6")
+```
+```{r}
+together |> write_csv(here("human_data.csv"))
+```
+# Versus mpt data
+
+```{r}
+tg_matcher <- read_csv(here("human_data.csv"))
+
+
+# based on https://github.com/vboyce/multiparty-tangrams/blob/main/code/prep_ms.R
+
+url <- "https://raw.githubusercontent.com/vboyce/multiparty-tangrams/main/"
+
+one_round_results <- read_rds(str_c(url, "data/study1/round_results.rds")) %>% mutate(rotate = str_c(as.character(numPlayers), "_rotate"))
+two_a_round_results <- read_rds(str_c(url, "data/study2a/round_results.rds")) %>% mutate(rotate = "no_rotate")
+two_b_round_results <- read_rds(str_c(url, "data/study2b/round_results.rds")) %>% mutate(rotate = "full_feedback")
+two_c_round_results <- read_rds(str_c(url, "data/study2c/round_results.rds")) |> mutate(rotate = "emoji")
+three_round_results <- read_rds(str_c(url, "data/study3/round_results.rds")) |> rename(`_id` = "X_id", condition = name)
+
+combined_results <- one_round_results |>
+  rbind(two_a_round_results) |>
+  rbind(two_b_round_results) |>
+  rbind(two_c_round_results) |>
+  mutate(activePlayerCount = NA) |>
+  rename(condition = rotate) |>
+  rbind(three_round_results) |>
+  select(realCorrect, gameId, targetNum, repNum, trialNum, condition, numPlayers, activePlayerCount, tangram) |>
+  unique() |>
+  filter(repNum %in% c(0, 5)) |>
+  mutate(round = str_c("round_", repNum + 1)) |> 
+  mutate(activePlayerCount=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |> 
+  mutate(orig_correct=realCorrect/(activePlayerCount-1)) |> 
+  select(orig_correct, tangram, condition, round, gameId)
+
+compare <- tg_matcher |>
+  rename(tangram = correct_tangram, new_correct=correct) |>
+  left_join(combined_results) |>
+  select(group_size, thickness, round, orig_correct, new_correct, tangram) |> 
+  filter(!is.na(orig_correct))
+```
+
+going to have sparsity issues, so we may need a model eventually
+
+but want to know where the biggest differences in accuracy are -- type / round / tangram
+
+```{r}
+summ <- compare |> group_by(group_size,thickness, round, tangram) |> summarize(new_correct=mean(new_correct), orig_correct=mean(orig_correct)) |> mutate(diff=orig_correct-new_correct) |> 
+    mutate(image = str_c("tangram_", tangram, ".png"))
+
+
+ggplot(summ, aes(x=str_c(group_size,"\n",thickness), y=diff, color=round, group=round))+geom_point(position=position_dodge(width=.2))+geom_hline(aes(yintercept=0))+stat_summary(fun.data="mean_cl_boot", color="black", position=position_dodge(width=.2))
+
+```
+```{r}
+summ |> ggplot(aes(x=orig_correct, y=new_correct, color=round))+geom_point()+facet_grid(group_size~thickness)+coord_equal()+geom_abline()
 ```

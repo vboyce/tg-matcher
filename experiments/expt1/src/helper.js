@@ -49,31 +49,8 @@ export function no_repetitions(items) {
 export function subset(items, total) {
   let select_items = [];
   //let types = ["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"];
-  let types = [
-    "2_thick_1",
-    "2_thick_6",
-    "6_thick_1",
-    "6_thick_6",
-    "2_thin_1",
-    "2_thin_6",
-    "6_thin_1",
-    "6_thin_6",
-  ];
-  let per = total / types.length;
   shuffle(items);
-  for (let i = 0; i < types.length; i++) {
-    let k = 0;
-    for (let j = 0; j < items.length; j++) {
-      let item = items[j];
-      if (types[i] == item.size_round) {
-        select_items.push(item);
-        k++;
-        if (k >= per) {
-          break;
-        }
-      }
-    }
-  }
+  select_items = items.slice(0, total);
   return no_repetitions(select_items);
 }
 export function counterbalance(item_types, items) {

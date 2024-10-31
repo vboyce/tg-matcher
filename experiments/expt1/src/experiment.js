@@ -20,7 +20,7 @@ import SurveyTextPlugin from "@jspsych/plugin-survey-text";
 import { proliferate } from "./proliferate.js";
 import { subset } from "./helper.js";
 
-import { stimuli } from "./stimuli.js";
+import { stimuli } from "./calibrate.js";
 import {
   choices,
   all_images,

@@ -176,3 +176,19 @@ good_strings <- pre_censor |>
 
 good_strings |> write_json(here("experiments/expt1/src/test.js"))
 ```
+
+# Prep calibration
+
+```{r}
+calibration <- read_csv("for_calibration.csv") |> select(-utterance) |> left_join(chat) |> 
+  select(-numPlayers, -activePlayerCount)
+
+bad_strings <- calibration |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad)
+
+good_strings <- calibration  |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad == F) |>
+  select(-has_bad) |> select(-grouping, -value) |> 
+  nest(text = c(role, playerId, text)) #|> #write_json(here("experiments/expt1/src/calibrate.js"))
+```
+
