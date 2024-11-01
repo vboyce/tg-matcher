@@ -188,7 +188,8 @@ bad_strings <- calibration |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(ha
 good_strings <- calibration  |>
   mutate(has_bad = map_lgl(text, is_bad)) |>
   filter(has_bad == F) |>
-  select(-has_bad) |> select(-grouping, -value) |> 
-  nest(text = c(role, playerId, text)) #|> #write_json(here("experiments/expt1/src/calibrate.js"))
+  select(-has_bad) |> 
+  #nest(text = c(role, playerId, text))
+   write_csv("labelled.csv")#|> #write_json(here("experiments/expt1/src/calibrate.js"))
 ```
 

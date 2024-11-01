@@ -1,0 +1,477 @@
+tangram,gameId,trialNum,repNum,value,grouping,playerId,role,text,condition,realCorrect,targetNum
+A,JnYAkqq7mqk9Gxdse,46,3,0.0016805469223269,"[1.9e-10,0.0427]",KgdEYahjHpGSFCw4r,speaker,elephant,6_thin,2,10
+B,iHNnNCnSAx2TYjDhf,60,5,0.00750354606265416,"[1.9e-10,0.0427]",2ub9Fg5YrCita2F2y,speaker,5,6_thick,4,0
+C,AdawMQbBwh5vdpoKg,11,0,0.01645055946805412,"[1.9e-10,0.0427]",zRqzCeYGLBGeavpiS,speaker,ok left like square,6_thin,3,11
+C,AdawMQbBwh5vdpoKg,11,0,0.01645055946805412,"[1.9e-10,0.0427]",zRqzCeYGLBGeavpiS,speaker,right hand like triangle pointing up,6_thin,3,11
+C,AdawMQbBwh5vdpoKg,11,0,0.01645055946805412,"[1.9e-10,0.0427]",zRqzCeYGLBGeavpiS,speaker,square head,6_thin,3,11
+C,AdawMQbBwh5vdpoKg,11,0,0.01645055946805412,"[1.9e-10,0.0427]",zRqzCeYGLBGeavpiS,speaker,tilting to left 45 degrees,6_thin,3,11
+D,FmuScBvZuEj2zegE2,43,3,0.01439505335690635,"[1.9e-10,0.0427]",pyBP4wTvPc2uhWfZ9,speaker,box under arm,2_thick,1,7
+E,vuZBGuCBS5f9ibvk7,57,4,0.01061841042556091,"[1.9e-10,0.0427]",yyyzhfLtfEXgbF8XH,speaker,mohawk,6_thin,1,9
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",wY2uEhHeSSCPuaAb5,speaker,This one looks like a person sat down with their legs pointing to the left,full_feedback,5,1
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",P5mFFBLCywApLr7JJ,listener,bent knees,full_feedback,5,1
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",wY2uEhHeSSCPuaAb5,speaker,It kind of looks like bent knees,full_feedback,5,1
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",zwiWDYioyEXwPuR3b,listener,feet balanced on their heels,full_feedback,5,1
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",gvqNf3uLkqD94uha2,listener,sitting flat,full_feedback,5,1
+F,TY9mhHQpa4R5Q5K6H,1,0,0.02458368466711175,"[1.9e-10,0.0427]",wY2uEhHeSSCPuaAb5,speaker,Yes feet on heels!,full_feedback,5,1
+G,wPKShK8DJjFJDPPC2,26,2,0.00183408085023618,"[1.9e-10,0.0427]",7873fQ46q5WbGoifc,speaker,"Square bunny ear, dog shaped other ear",2_thick,0,2
+G,wPKShK8DJjFJDPPC2,26,2,0.00183408085023618,"[1.9e-10,0.0427]",7873fQ46q5WbGoifc,speaker,NOT THE TRIANGLE bunny ears,2_thick,0,2
+H,QeHxf8rJXN8MCSKYR,41,3,0.01498654153924305,"[1.9e-10,0.0427]",NxLjuiDi5cuFnLeTt,speaker,kneeler with feet not on show,6_thick,3,5
+H,QeHxf8rJXN8MCSKYR,41,3,0.01498654153924305,"[1.9e-10,0.0427]",ayGjv5rqNZ8Ruuo4P,listener,blob,6_thick,3,5
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,The medicine ball lunge!,6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,Foot is facing out to the right,6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,"Arms are pointing left, as if holding a ball",6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,And the body is balancing on one leg,6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",ybQ6avjhBa46uuw8Z,listener,karate kick to the right,6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,The head is a perfect diamond,6_rotate,5,10
+I,k4otZKu35xehtF93F,34,2,4.0998741916978e-4,"[1.9e-10,0.0427]",Sb5t7YLhHirE7JfNH,speaker,Yeah like a spinning back kick maybe lol,6_rotate,5,10
+J,7eWGPqmG35RrZoezF,67,5,0.01279463359328024,"[1.9e-10,0.0427]",HcAY9mNwACmDrRN2A,speaker,kneeling pointing right,2_thick,0,7
+K,APb85jFMnKTvtxB9Q,55,4,0.00990776596716297,"[1.9e-10,0.0427]",8EKHajAZMvmFinexJ,speaker,Kneeling Pointing to right Two diamonds as head Left upward tick on garment,6_thick,1,7
+L,4bDDi23d6D8SJkrgQ,10,0,0.02563215083105218,"[1.9e-10,0.0427]",P5nFedWBmEvAmd8CD,speaker,a person with bend knees facing the the right,2_thick,1,10
+L,4bDDi23d6D8SJkrgQ,10,0,0.02563215083105218,"[1.9e-10,0.0427]",P5nFedWBmEvAmd8CD,speaker,and they have a triangle facing the right side,2_thick,1,10
+L,4bDDi23d6D8SJkrgQ,10,0,0.02563215083105218,"[1.9e-10,0.0427]",P5nFedWBmEvAmd8CD,speaker,their knees and bent in a zig zag,2_thick,1,10
+A,oJFB5dkDNtRxZNzec,31,2,0.05752042809253831,"(0.0427,0.104]",q7PZmgpyPo6hEuEnt,speaker,person facing left with leg out in front,2_thin,1,7
+B,QkKavPsKXNH5uJzrs,56,4,0.06909051572260438,"(0.0427,0.104]",ySkkTvw6MWq2jN8sB,speaker,left foot,6_thick,2,8
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",qs9igjQTnJt7wfpyq,speaker,Figure almost looks shot dead,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",qs9igjQTnJt7wfpyq,speaker,Diamond head,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",mywQnZtzE6E5yzwkE,listener,both arms raised,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",Gebor7AaNSy3bp4Ch,listener,two arms up,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",qs9igjQTnJt7wfpyq,speaker,Two arms raised up,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",SFa7XF9tfzsrWHsR9,listener,leaning left,full_feedback,5,9
+C,FDXJ7stbQxKCkcKzv,9,0,0.04649273756345543,"(0.0427,0.104]",qs9igjQTnJt7wfpyq,speaker,No legs,full_feedback,5,9
+D,K3MLgpK29uppByXck,8,0,0.05998145735211514,"(0.0427,0.104]",juW4jvRxSzBrxXbQ8,speaker,"this is a more basic shape with a diamond at the top, a point coming out to the left and another point coming out at the base to the left",3_rotate,1,8
+E,Aq5QevmQACnfqeuj4,7,0,0.09488430254029125,"(0.0427,0.104]",ERSkt3845KGzpnN6o,speaker,the person is sat down and has something sticking out of the top of their head,2_thin,1,7
+E,Aq5QevmQACnfqeuj4,7,0,0.09488430254029125,"(0.0427,0.104]",ERSkt3845KGzpnN6o,speaker,it is the only one that hasn't got a square for a head,2_thin,1,7
+E,Aq5QevmQACnfqeuj4,7,0,0.09488430254029125,"(0.0427,0.104]",ERSkt3845KGzpnN6o,speaker,it looks like they have a hat on,2_thin,1,7
+F,4eigY5GthWZfxug8D,27,2,0.06520507812397211,"(0.0427,0.104]",T8RuPGkjXkXWtsHrf,speaker,sad man with poncho,6_rotate,5,3
+F,4eigY5GthWZfxug8D,27,2,0.06520507812397211,"(0.0427,0.104]",T8RuPGkjXkXWtsHrf,speaker,feet pointing left,6_rotate,5,3
+F,4eigY5GthWZfxug8D,27,2,0.06520507812397211,"(0.0427,0.104]",W2FcmbCnXZFmMLy9v,listener,knees up,6_rotate,5,3
+F,4eigY5GthWZfxug8D,27,2,0.06520507812397211,"(0.0427,0.104]",W2FcmbCnXZFmMLy9v,listener,sad boi,6_rotate,5,3
+G,9AyhLQe5bddaES2Af,10,0,0.04854885431383648,"(0.0427,0.104]",er3qDMxvSydmzvqDy,speaker,"it looks like the person is dancing, elbow and arm up to the side",6_thin,0,10
+G,9AyhLQe5bddaES2Af,10,0,0.04854885431383648,"(0.0427,0.104]",er3qDMxvSydmzvqDy,speaker,legs are apart,6_thin,0,10
+H,sijMDqp4oocvXG8Sv,45,3,0.05856606331496519,"(0.0427,0.104]",KpkQvEaJQStx557HY,speaker,block foot to right,3_rotate,2,9
+H,sijMDqp4oocvXG8Sv,45,3,0.05856606331496519,"(0.0427,0.104]",KpkQvEaJQStx557HY,speaker,body straight,3_rotate,2,9
+H,sijMDqp4oocvXG8Sv,45,3,0.05856606331496519,"(0.0427,0.104]",KpkQvEaJQStx557HY,speaker,head straight,3_rotate,2,9
+H,sijMDqp4oocvXG8Sv,45,3,0.05856606331496519,"(0.0427,0.104]",KpkQvEaJQStx557HY,speaker,no arms,3_rotate,2,9
+I,QzDZ9idpFkW6nHuCq,66,5,0.08213428763233814,"(0.0427,0.104]",64rzpC4x4MeQZbRPz,speaker,arms out left one foot out to right,6_thick,2,6
+I,QzDZ9idpFkW6nHuCq,66,5,0.08213428763233814,"(0.0427,0.104]",64rzpC4x4MeQZbRPz,speaker,like it's falling to left,6_thick,2,6
+J,Y334RjwcFj2mS2S3Z,61,5,0.08425441535893959,"(0.0427,0.104]",zbEMdMCz3kEEZteSR,speaker,big man 2 triangles,2_thin,1,1
+K,vuZBGuCBS5f9ibvk7,34,2,0.04953102868620165,"(0.0427,0.104]",yyyzhfLtfEXgbF8XH,speaker,looks like johnny 5 person holding out something to the right Back left side pointing up,6_thin,0,10
+L,FdsX4xEWYboEy83kj,22,1,0.09289667896393113,"(0.0427,0.104]",of4g5ggvwqvvbQ5Pi,speaker,"Looks like a person that is kneeling, facing the right, diamond for a head, like they're praying",emoji,4,10
+A,pAtG6vt3AyaJypa2j,17,1,0.11283490239043392,"(0.104,0.181]",kNihCF3o2LNDkwQs5,speaker,"looks like a person walking, one leg on the ground, the other leg is in the air and to the left",2_rotate,1,5
+B,oXTMu3q59e3nffGz3,40,3,0.1266190234278357,"(0.104,0.181]",LTS4YALfJnHNGsMfu,speaker,angel,no_rotate,5,4
+B,oXTMu3q59e3nffGz3,40,3,0.1266190234278357,"(0.104,0.181]",LTS4YALfJnHNGsMfu,speaker,hera - seal has got a little tail flick on left side,no_rotate,5,4
+C,Ja6HX8DgvFAspRAYm,23,1,0.1361388090868976,"(0.104,0.181]",Kzhdqc62M5vtN2q4e,speaker,no legs leaning to the left arms out,2_rotate,1,11
+D,AdiA5JEZBKJ4F5r4i,24,2,0.1700379338406944,"(0.104,0.181]",DnsCNZv6g42s9Ruci,speaker,"The person is facing towards the left, both arms and legs pointing to left",6_thin,2,0
+D,AdiA5JEZBKJ4F5r4i,24,2,0.1700379338406944,"(0.104,0.181]",DnsCNZv6g42s9Ruci,speaker,Looks like he is holding something,6_thin,2,0
+E,79swBZFsJnrQuHvhd,35,2,0.1642366906390138,"(0.104,0.181]",wQmTAXk3WXqT2b275,speaker,rabbit ear guy sitting facing right (right angle at bottom left corner),2_rotate,1,11
+F,6ikro5aNu98qHGGFL,33,2,0.1097648227869239,"(0.104,0.181]",Mm4ut74JJKd55WcMT,speaker,figure sitting down leg in front of him knee up facing left diamond head,6_thick,4,9
+G,3NRHD2hCEgJ74Q4b2,46,3,0.14441356287188664,"(0.104,0.181]",FPvYQcmkbsKdx9sqz,speaker,"X' shaped with a square head on the left side, 2 triangles on the right side one at the top and the other and the bottom",2_thin,1,10
+H,pAtG6vt3AyaJypa2j,71,5,0.14884575555086685,"(0.104,0.181]",kNihCF3o2LNDkwQs5,speaker,half hexagon,2_rotate,1,11
+I,GGz5Zb58tHpG8X5z7,26,2,0.11084749089370052,"(0.104,0.181]",HfeucCnhyMQZNxJYH,speaker,the one u just picked! facing left on one leg,2_thin,1,2
+J,QTLcapnjShjWX3s4t,69,5,0.1713877718616989,"(0.104,0.181]",xC7eosoFk4ekBGb85,speaker,"long flat back, long flat neck with square head on it",2_thin,1,9
+K,PDtkH4fTndXzR4oNt,15,1,0.1113144671570956,"(0.104,0.181]",g23WQF52FCAgNBLLq,speaker,triangle at the top and then in the middle there is another triangle pointing to the right and looks like it is also kneeling down,6_thin,3,3
+K,PDtkH4fTndXzR4oNt,15,1,0.1113144671570956,"(0.104,0.181]",g23WQF52FCAgNBLLq,speaker,there is a triangle in the middle pointing to the right and then one at the pointing pointing upwards,6_thin,3,3
+L,TfkrsqMn78kJbqqgg,26,2,0.18059680986519863,"(0.104,0.181]",A42GqTLXDrrZm89yN,speaker,lightning bolt shape legs arms facing to right,6_thin,3,2
+A,3AkQAYjgybC5xKfov,71,5,0.2561521465696499,"(0.181,0.268]",D4Qs3dPH4woAmLper,speaker,"Guy on one leg, facing the left, head tilted back",no_rotate,5,11
+A,3AkQAYjgybC5xKfov,71,5,0.2561521465696499,"(0.181,0.268]",D4Qs3dPH4woAmLper,speaker,Arms look like an up arrow,no_rotate,5,11
+B,awMBFij9Yo8w2nA5K,31,2,0.2307349157634227,"(0.181,0.268]",tFxPDpxwB3TJg5B8c,speaker,The one I said the left triangle looks like a tail,6_thick,1,7
+B,awMBFij9Yo8w2nA5K,31,2,0.2307349157634227,"(0.181,0.268]",tFxPDpxwB3TJg5B8c,speaker,Diamond head The bottom point connects to the point of two different triangles The right one doesn't connect to anything The left one attaches to a pentagon base,6_thick,1,7
+C,JnYAkqq7mqk9Gxdse,53,4,0.19589661612423015,"(0.181,0.268]",tGBfoiq8WDic5rZrH,speaker,the goalie diving left,6_thin,2,5
+D,g6tPwYeFzT3Cer5qC,45,3,0.21127289217023645,"(0.181,0.268]",SyzxCSX67Gx4LQRg7,speaker,The person is standing up with a diamond head facing to the left and it looks like it's holding something,6_thick,5,9
+E,XaYo7mGCsyJKW3w4Z,1,0,0.22761472282887968,"(0.181,0.268]",NYD7GMoHm3TagmyTN,speaker,mouse ears on a diamond head,2_thick,1,1
+E,XaYo7mGCsyJKW3w4Z,1,0,0.22761472282887968,"(0.181,0.268]",NYD7GMoHm3TagmyTN,speaker,the ears are both triangles,2_thick,1,1
+E,XaYo7mGCsyJKW3w4Z,1,0,0.22761472282887968,"(0.181,0.268]",4SANPkdDamcrCs5p5,listener,can you give me some more info,2_thick,1,1
+E,XaYo7mGCsyJKW3w4Z,1,0,0.22761472282887968,"(0.181,0.268]",NYD7GMoHm3TagmyTN,speaker,the diamond head is on two triangles,2_thick,1,1
+F,t3d4LuHZFazCzHhYq,12,1,0.25841921840197196,"(0.181,0.268]",FJi5uaLA6m4NZFkNG,speaker,It's a man sitting down,5_rotate,3,0
+F,t3d4LuHZFazCzHhYq,12,1,0.25841921840197196,"(0.181,0.268]",FJi5uaLA6m4NZFkNG,speaker,Facing left,5_rotate,3,0
+F,t3d4LuHZFazCzHhYq,12,1,0.25841921840197196,"(0.181,0.268]",FJi5uaLA6m4NZFkNG,speaker,No arms,5_rotate,3,0
+F,t3d4LuHZFazCzHhYq,12,1,0.25841921840197196,"(0.181,0.268]",FJi5uaLA6m4NZFkNG,speaker,Triangle foot with toe pointing up,5_rotate,3,0
+F,t3d4LuHZFazCzHhYq,12,1,0.25841921840197196,"(0.181,0.268]",FJi5uaLA6m4NZFkNG,speaker,Head kinda bowing downwards,5_rotate,3,0
+G,GGz5Zb58tHpG8X5z7,37,3,0.20333823597071185,"(0.181,0.268]",zMrgbynyhLhqT5X3C,speaker,square head tilted left with obscure shape sitting legs in front to left with tail facing down on right,2_thin,1,1
+H,QG9fkFCXKj6g9mjR5,68,5,0.18833923242004308,"(0.181,0.268]",u3bWoHe66Wu9yh7ka,speaker,Body tucked in with leg to right,6_thick,1,8
+H,QG9fkFCXKj6g9mjR5,68,5,0.18833923242004308,"(0.181,0.268]",6dv6K8Q6C7Jm9oEpc,listener,Knees raised,6_thick,1,8
+I,SRBofppfmKZ4dhpv2,56,4,0.20248621156045649,"(0.181,0.268]",PDN8wbfj49btpLgpq,speaker,figure about to kick hard,full_feedback,5,8
+I,SRBofppfmKZ4dhpv2,56,4,0.20248621156045649,"(0.181,0.268]",DJ3JhctBDsJPjadGp,listener,two arms to the left,full_feedback,5,8
+I,SRBofppfmKZ4dhpv2,56,4,0.20248621156045649,"(0.181,0.268]",PDN8wbfj49btpLgpq,speaker,one long leg and little right leg,full_feedback,5,8
+J,GfdodQMJHhNodveqQ,21,1,0.2601105308294271,"(0.181,0.268]",5HHG2vhFvkf56ugh3,speaker,Select the picture with the most left hand side,6_thin,4,9
+K,7iF9MxsD2YYEcq3uq,60,5,0.24726055585302056,"(0.181,0.268]",SpSp42ZaBDB3pmoEx,speaker,chunk foot prayer,no_rotate,5,0
+L,DYwdcHHmdgpLTuJ3S,0,0,0.18403477802913493,"(0.181,0.268]",ugJJgEnjeZXTw9TRP,speaker,it looks like someone slightly on their knees praying with their arms pointed forward the bend in the knee is slightly angled to the right,full_feedback,2,0
+A,Nh8nE8Qa4C3BkbhD6,61,5,0.29127828493284963,"(0.268,0.375]",5JEmHBEF2C5GGGZkJ,speaker,monster,6_thin,5,1
+B,voSMQaG9H4nC4jy32,40,3,0.28464476505019415,"(0.268,0.375]",xCczn7ZDHtYRWQE6W,speaker,Kneeling towards us with both arms out,2_thick,1,4
+C,TNRYprBpNcgCrb2HF,6,0,0.3489283489612939,"(0.268,0.375]",ZBAXeNd9hoDrFHWhf,speaker,The next target image looks like someone standing up but only showing the top half of the body with their arms outstretched and facing to the left when facing the image,6_thick,2,6
+D,QzDZ9idpFkW6nHuCq,56,4,0.28887401691075637,"(0.268,0.375]",64rzpC4x4MeQZbRPz,speaker,standing straight hands holding dish to left,6_thick,2,8
+E,2gkxKTcPdQews5qTX,49,4,0.3193620671671833,"(0.268,0.375]",4LNfkAGRJtsqNhst3,speaker,two triangles coming out of top of head,6_thin,4,1
+F,y8EQv9bh29FEwLNLN,66,5,0.2825332639153041,"(0.268,0.375]",3mBgfxKADNCYjGtuz,speaker,Sleeping man,full_feedback,5,6
+G,of4gY8Bu37PbmkPee,8,0,0.33576304708367616,"(0.268,0.375]",HGiZGbRSXTDaGdsfH,speaker,bottom is straight,2_rotate,0,8
+G,of4gY8Bu37PbmkPee,8,0,0.33576304708367616,"(0.268,0.375]",HGiZGbRSXTDaGdsfH,speaker,small triangle hanging bottom left,2_rotate,0,8
+G,of4gY8Bu37PbmkPee,8,0,0.33576304708367616,"(0.268,0.375]",HGiZGbRSXTDaGdsfH,speaker,top has a square,2_rotate,0,8
+H,qww2u9HuGk9nxnxyx,54,4,0.3488980673641033,"(0.268,0.375]",FLJkaQs3Frxy3ZY4S,speaker,blobby man,3_rotate,2,6
+H,qww2u9HuGk9nxnxyx,54,4,0.3488980673641033,"(0.268,0.375]",FLJkaQs3Frxy3ZY4S,speaker,no limbs,3_rotate,2,6
+I,3WzEi9zkHF77vdTw5,11,0,0.3528010485296279,"(0.268,0.375]",qZYMtuyj2SBfZk8XH,speaker,it's a guy looking left with his foot behind him,4_rotate,3,11
+I,3WzEi9zkHF77vdTw5,11,0,0.3528010485296279,"(0.268,0.375]",qZYMtuyj2SBfZk8XH,speaker,like kicking up behind him,4_rotate,3,11
+I,3WzEi9zkHF77vdTw5,11,0,0.3528010485296279,"(0.268,0.375]",wXsGgzkQgoofFhxwk,listener,standing on one leg,4_rotate,3,11
+I,3WzEi9zkHF77vdTw5,11,0,0.3528010485296279,"(0.268,0.375]",ieBYKaxXNCy2QcwJj,listener,with two triangles for arms,4_rotate,3,11
+J,QeHxf8rJXN8MCSKYR,33,2,0.2732144054851547,"(0.268,0.375]",NxLjuiDi5cuFnLeTt,speaker,vertical line on the left from shoulder to floor - scarecrow,6_thick,2,9
+J,QeHxf8rJXN8MCSKYR,33,2,0.2732144054851547,"(0.268,0.375]",ayGjv5rqNZ8Ruuo4P,listener,scarecrow,6_thick,2,9
+K,vb35TJcSHPpKxAzJo,6,0,0.3203059154919197,"(0.268,0.375]",LPLHcHnNBPidsJsYK,speaker,This one is really tricky to describe but it's tall and looks like two diamonds are stacked on top of each other for the top Then it looks like arms are maybe out to the right side like they are serving something or waiting to hold something,6_thin,5,6
+K,vb35TJcSHPpKxAzJo,6,0,0.3203059154919197,"(0.268,0.375]",LPLHcHnNBPidsJsYK,speaker,The bottom is pretty solid with no discernable legs,6_thin,5,6
+L,R5N7KGPfkvFs36q7g,53,4,0.32846602115037477,"(0.268,0.375]",A9zvmfSXi5NeBmM9z,speaker,"facing right , squatting down bent knees and straight head holding something in front",6_thick,4,5
+A,5wn4MiopXyfXuTxG9,59,4,0.39839344136836935,"(0.375,0.498]",HJoHFMvp6qPSD2pXk,speaker,this figure looks like it is walking,6_thick,3,11
+B,TswNa6hfiGwkWHMgB,9,0,0.4482997751905691,"(0.375,0.498]",BCjiqev2Kt7Lze3nQ,speaker,girl with triangle hat on back of net with palms and feet extended,2_thick,1,9
+B,TswNa6hfiGwkWHMgB,9,0,0.4482997751905691,"(0.375,0.498]",BCjiqev2Kt7Lze3nQ,speaker,*neck,2_thick,1,9
+B,TswNa6hfiGwkWHMgB,9,0,0.4482997751905691,"(0.375,0.498]",BCjiqev2Kt7Lze3nQ,speaker,She has her hands out in front of her,2_thick,1,9
+C,wPKShK8DJjFJDPPC2,62,5,0.4935087524474465,"(0.375,0.498]",7873fQ46q5WbGoifc,speaker,Man asking what is happening with arms outstretched,2_thick,1,2
+D,sijMDqp4oocvXG8Sv,13,1,0.3867071736340101,"(0.375,0.498]",KaSEuARC4mQrELeZP,speaker,looks like a priest in a full length robe with toe peeping out to left,3_rotate,2,1
+D,sijMDqp4oocvXG8Sv,13,1,0.3867071736340101,"(0.375,0.498]",KaSEuARC4mQrELeZP,speaker,head straight,3_rotate,2,1
+E,Tg2JqdT9ugXdkqWsC,8,0,0.3897171964676225,"(0.375,0.498]",7ZT3RAxSFjc39CDXe,speaker,"This one looks like a a guy wearing a bunny head, square head, two triangles are ears looking down to the right",full_feedback,5,8
+E,Tg2JqdT9ugXdkqWsC,8,0,0.3897171964676225,"(0.375,0.498]",7ZT3RAxSFjc39CDXe,speaker,Body is sitting down,full_feedback,5,8
+E,Tg2JqdT9ugXdkqWsC,8,0,0.3897171964676225,"(0.375,0.498]",7ZT3RAxSFjc39CDXe,speaker,Or look for a square with two triangles on top,full_feedback,5,8
+F,acL8Dhxe4PDAn42od,27,2,0.48294636931014273,"(0.375,0.498]",dsSQPa7CdRfAk5fn8,speaker,"seated, facing left, knees bent, one foot showing",no_rotate,5,3
+F,acL8Dhxe4PDAn42od,27,2,0.48294636931014273,"(0.375,0.498]",62hdtatPoTPryWMMY,listener,tree dude,no_rotate,5,3
+F,acL8Dhxe4PDAn42od,27,2,0.48294636931014273,"(0.375,0.498]",jtbZ4XfDnEkv55ut4,listener,leaning against tree guy,no_rotate,5,3
+F,acL8Dhxe4PDAn42od,27,2,0.48294636931014273,"(0.375,0.498]",dsSQPa7CdRfAk5fn8,speaker,"yes, tree dude",no_rotate,5,3
+F,acL8Dhxe4PDAn42od,27,2,0.48294636931014273,"(0.375,0.498]",FXYXhnXqQw4DFh5eo,listener,Sad guy,no_rotate,5,3
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",MgJ37EC6d5m8bs8h7,speaker,"yoga pose - one leg behind, facing rightwards, arm up in air, smaller leg foot in front on right side",2_thick,1,9
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",MgJ37EC6d5m8bs8h7,speaker,head thrown back,2_thick,1,9
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",4h6mj5Yg8BuRPDncp,listener,like a shoe,2_thick,1,9
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",MgJ37EC6d5m8bs8h7,speaker,yeah kind like a boot I guess,2_thick,1,9
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",4h6mj5Yg8BuRPDncp,listener,head thrown back to the left,2_thick,1,9
+G,rshQ6tYBS22PNQeTe,21,1,0.4568904013649504,"(0.375,0.498]",4h6mj5Yg8BuRPDncp,listener,yep call that the boot,2_thick,1,9
+H,pAtG6vt3AyaJypa2j,55,4,0.4374245981010269,"(0.375,0.498]",3D7MbrSZL62xJBhib,speaker,half hexagon left side of body,2_rotate,1,7
+I,2nZ79PA8WMtYNqLrS,48,4,0.3866295702539896,"(0.375,0.498]",dbjgaDHHQ6eA4qHnA,speaker,karate kick leg right,6_thin,5,0
+J,6ikro5aNu98qHGGFL,38,3,0.3906986636925027,"(0.375,0.498]",NeeLki6vCQP4BXAQp,listener,"we know ""flying"" ""skating"" and ""partially sitting""",6_thick,4,2
+J,6ikro5aNu98qHGGFL,38,3,0.3906986636925027,"(0.375,0.498]",Mm4ut74JJKd55WcMT,speaker,square kinda looking figure arm out further than leg facingn right diamod head,6_thick,4,2
+J,6ikro5aNu98qHGGFL,38,3,0.3906986636925027,"(0.375,0.498]",NeeLki6vCQP4BXAQp,listener,"we should know ""kneeling"" and ""partially kneeling"" and ""bunny""",6_thick,4,2
+J,6ikro5aNu98qHGGFL,38,3,0.3906986636925027,"(0.375,0.498]",NeeLki6vCQP4BXAQp,listener,"and this is the ""square""",6_thick,4,2
+K,JmgdhSKRPPxDKvprr,24,2,0.488720119834211,"(0.375,0.498]",TFvBbKSS8eN9KxxHD,speaker,"facing right, kneeling in prayer position, straight back, small triangle upper back",4_rotate,3,0
+K,JmgdhSKRPPxDKvprr,24,2,0.488720119834211,"(0.375,0.498]",fnpWjeJ5eoBme4DLX,listener,feet up back,4_rotate,3,0
+K,JmgdhSKRPPxDKvprr,24,2,0.488720119834211,"(0.375,0.498]",TFvBbKSS8eN9KxxHD,speaker,feet up back,4_rotate,3,0
+K,JmgdhSKRPPxDKvprr,24,2,0.488720119834211,"(0.375,0.498]",fnpWjeJ5eoBme4DLX,listener,knees pointed,4_rotate,3,0
+K,JmgdhSKRPPxDKvprr,24,2,0.488720119834211,"(0.375,0.498]",TFvBbKSS8eN9KxxHD,speaker,yes knees pointed,4_rotate,3,0
+L,rTdgorcZpRzAdoR3G,46,3,0.4571359678892443,"(0.375,0.498]",cy6HigPTSWTac7Xqy,speaker,facing right knees bent slightly holding a bowl,emoji,5,10
+A,iWDET8rLPYMj9RE39,52,4,0.5025311396333277,"(0.498,0.651]",ztMeHhJLmdDTHBMJS,speaker,Kicking legs facing left,6_thin,2,4
+B,Z2WAkYpWiXwuGcdME,27,2,0.6395623265789667,"(0.498,0.651]",R3cRgh4HmEtRsmQyp,speaker,arms in air kneeling,2_thick,1,3
+C,FfK5QXXSw833vwHKX,8,0,0.6381895688209047,"(0.498,0.651]",6iMbQKiFyJ2YwPaeo,speaker,"the guy is leaning left with his arms up kind of like ""but why""",2_rotate,1,8
+D,voSMQaG9H4nC4jy32,5,0,0.5168814703733001,"(0.498,0.651]",xCczn7ZDHtYRWQE6W,speaker,this one looks like a guy in a preacher robe with a tithe plate pointing to the left,2_thick,1,5
+E,2yTRgeWp8WH65rQQq,59,4,0.5843275547211649,"(0.498,0.651]",6orNN6e8XB9vh277r,speaker,"triangle base that goes into a square, with the two triangles on top",no_rotate,5,11
+F,MR4xnrE8c4oCHmZX2,41,3,0.6400863606255801,"(0.498,0.651]",SzgQCuHiAotKNJLPk,speaker,"left facing, sitting",6_thin,4,5
+G,8ukdn7m9ypXhxpPR4,27,2,0.6356384470929348,"(0.498,0.651]",HjETYsPdB49PboNEN,speaker,the dancing image long horizontal bottom faced to the right hands and one leg is on the right sticking out,6_thick,4,3
+G,8ukdn7m9ypXhxpPR4,27,2,0.6356384470929348,"(0.498,0.651]",ygaSc6oZ2uhyiDKbr,listener,flamenco haha,6_thick,4,3
+G,8ukdn7m9ypXhxpPR4,27,2,0.6356384470929348,"(0.498,0.651]",EMSuSGAopPJ95mMrJ,listener,long horizontal rhombus on bottom left,6_thick,4,3
+G,8ukdn7m9ypXhxpPR4,27,2,0.6356384470929348,"(0.498,0.651]",ygaSc6oZ2uhyiDKbr,listener,looks like a proposal,6_thick,4,3
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,Standing figure,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,"No legs, just purely block like",full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,Diamond head leaning towards the right,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,No arms either,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",mywQnZtzE6E5yzwkE,listener,with 2 triangle like ears at the top,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,No ears,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",SFa7XF9tfzsrWHsR9,listener,"Does it have a small triangle stub on the bottom, pointing to the right",full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",4FA96Kd5aWNgngrju,listener,does the end of the torso look like it's pointing to the right,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,Has a triangle point out of the right side,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",qs9igjQTnJt7wfpyq,speaker,Were it's foot would be,full_feedback,5,6
+H,FDXJ7stbQxKCkcKzv,6,0,0.5765579463604692,"(0.498,0.651]",mywQnZtzE6E5yzwkE,listener,back curved,full_feedback,5,6
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",2ub9Fg5YrCita2F2y,speaker,This is like someone in a chicken outfit,6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",2ub9Fg5YrCita2F2y,speaker,or doing woga,6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",fj5hYTYAfRdgfohsG,listener,does it look like he's doing a karate kick to the right,6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",2ub9Fg5YrCita2F2y,speaker,"diamond head, then the chicken beak facing left",6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",ghuYrBDccmDDZc3QK,listener,Does it have two triangles going left,6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",2ub9Fg5YrCita2F2y,speaker,looks like a tail or someone standing on one leg with the other leg up behind them,6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",SLXXsJaRnhy9QdfeY,listener,looks like a dinosaur :),6_thick,5,10
+I,iHNnNCnSAx2TYjDhf,10,0,0.6108519432894378,"(0.498,0.651]",2ub9Fg5YrCita2F2y,speaker,yes 2 triangles going left,6_thick,5,10
+J,8vDbP6xD36MAFSAFC,23,1,0.5995656751637417,"(0.498,0.651]",JPJgMw5EzQBQ6gw9a,speaker,square head on an almost complete rectangle except for the 'missing bits on the right hand side) - described as if eaten out of image,emoji,4,11
+J,8vDbP6xD36MAFSAFC,23,1,0.5995656751637417,"(0.498,0.651]",JPJgMw5EzQBQ6gw9a,speaker,flat shoulder,emoji,4,11
+J,8vDbP6xD36MAFSAFC,23,1,0.5995656751637417,"(0.498,0.651]",JPJgMw5EzQBQ6gw9a,speaker,shoulders,emoji,4,11
+K,TswNa6hfiGwkWHMgB,6,0,0.6333939967642697,"(0.498,0.651]",BCjiqev2Kt7Lze3nQ,speaker,boy sitting on knees with feet behind him and hands out,2_thick,0,6
+L,ogPZPPCKpGn4votMa,46,3,0.5344214488441542,"(0.498,0.651]",fLSfDEdkLomjBKJ4E,speaker,looking right with knees kinda bent with hand out in front,4_rotate,3,10
+L,ogPZPPCKpGn4votMa,46,3,0.5344214488441542,"(0.498,0.651]",fLSfDEdkLomjBKJ4E,speaker,diamond head,4_rotate,3,10
+L,ogPZPPCKpGn4votMa,46,3,0.5344214488441542,"(0.498,0.651]",Y3ATEvaw2Ex9TyTaM,listener,is it kinda kneeling,4_rotate,3,10
+L,ogPZPPCKpGn4votMa,46,3,0.5344214488441542,"(0.498,0.651]",fLSfDEdkLomjBKJ4E,speaker,yes looks like its about to kneel,4_rotate,3,10
+A,5ygBYimhnLq4Bcb2N,13,1,0.7966253812838906,"(0.651,0.825]",bMkZ9C5DEH9p5Bn6o,speaker,The chicken dance one that Hera described,5_rotate,4,1
+A,5ygBYimhnLq4Bcb2N,13,1,0.7966253812838906,"(0.651,0.825]",bMkZ9C5DEH9p5Bn6o,speaker,"One food in the air, one on the ground Facing right",5_rotate,4,1
+A,5ygBYimhnLq4Bcb2N,13,1,0.7966253812838906,"(0.651,0.825]",PuxjeeRSsr2zsPEGM,listener,head top right,5_rotate,4,1
+A,5ygBYimhnLq4Bcb2N,13,1,0.7966253812838906,"(0.651,0.825]",bMkZ9C5DEH9p5Bn6o,speaker,"The feet face left and one foot is up to the knee level The head faces to the right They have the arm on the left up in the air, with the elbow the same height as the top of head",5_rotate,4,1
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",WXmyGwByDtSr3gTyk,speaker,kneeling head forward feet showing,6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",WXmyGwByDtSr3gTyk,speaker,praying,6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",9nyyLZ9PJhX7LnAx7,listener,Bent knees,6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",teS8cAZWPXbdKTZP4,listener,Is he puking out a triangle,6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",WXmyGwByDtSr3gTyk,speaker,triangle,6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",9nyyLZ9PJhX7LnAx7,listener,"To me that looks like someone in a kimono going ""SAFE"" like at a baseball game",6_thick,5,8
+B,BTbGhXZvjdSFubTBg,20,1,0.7375955525120148,"(0.651,0.825]",j9qfbLnF9TpFABZaJ,listener,i can see that lol,6_thick,5,8
+C,47tccL2hHpmjgZT8o,14,1,0.7000030236480872,"(0.651,0.825]",EvFdP2G2k6NiphcPW,speaker,"Okay so to make this quick, this quick, this was the first one, it's a Olympic RUNNER passaging the line but this time going left",6_thick,4,2
+C,47tccL2hHpmjgZT8o,14,1,0.7000030236480872,"(0.651,0.825]",EvFdP2G2k6NiphcPW,speaker,they have both arms in the air like celebrating,6_thick,4,2
+C,47tccL2hHpmjgZT8o,14,1,0.7000030236480872,"(0.651,0.825]",SrQC27xLPE3vw8aJF,listener,and no legs,6_thick,4,2
+C,47tccL2hHpmjgZT8o,14,1,0.7000030236480872,"(0.651,0.825]",EvFdP2G2k6NiphcPW,speaker,No legs zuda,6_thick,4,2
+D,ajePseikJxYBmnFiL,58,4,0.6634446281327346,"(0.651,0.825]",AiCEjp8prCmGRkAok,speaker,"Standing, facing left, arms out in front",2_thin,1,10
+E,t3d4LuHZFazCzHhYq,45,3,0.7428751015628885,"(0.651,0.825]",MEzLvjsPcEa2JLSwn,speaker,Rabbit,5_rotate,4,9
+F,omQAFChFFHAuAbPT3,3,0,0.6517470607194259,"(0.651,0.825]",faazMWGBB5FbpcYAT,speaker,"Facing to the right, in sitting position",3_rotate,1,3
+F,omQAFChFFHAuAbPT3,3,0,0.6517470607194259,"(0.651,0.825]",faazMWGBB5FbpcYAT,speaker,"can see foot extended to the left, sorry character facing LEFT",3_rotate,1,3
+G,hZ2XNN9DzrhuXEEKk,21,1,0.6753902122374275,"(0.651,0.825]",eTvCDLo3A5r4i5B6B,speaker,two arms to right like a fan dance,6_thin,3,9
+G,hZ2XNN9DzrhuXEEKk,21,1,0.6753902122374275,"(0.651,0.825]",eTvCDLo3A5r4i5B6B,speaker,head falling off to left,6_thin,3,9
+G,hZ2XNN9DzrhuXEEKk,21,1,0.6753902122374275,"(0.651,0.825]",eTvCDLo3A5r4i5B6B,speaker,wearing a skirt out to left,6_thin,3,9
+G,hZ2XNN9DzrhuXEEKk,21,1,0.6753902122374275,"(0.651,0.825]",eTvCDLo3A5r4i5B6B,speaker,little shoulder under head points to left,6_thin,3,9
+H,g6tPwYeFzT3Cer5qC,19,1,0.7110364097380049,"(0.651,0.825]",SyzxCSX67Gx4LQRg7,speaker,The person has a diamond head facing towards you with no arms or legs and looks like its in something,6_thick,5,7
+I,aJmxCcm4qPQKzrTZA,26,2,0.6807109631524837,"(0.651,0.825]",EmgSocMvhQLaaApoe,speaker,"figure looks like an ice skater, figure is facing left",4_rotate,3,2
+J,Z2WAkYpWiXwuGcdME,49,4,0.8164786339253016,"(0.651,0.825]",R3cRgh4HmEtRsmQyp,speaker,rectangle,2_thick,1,1
+K,s3guGBwvgJRQvf9vF,48,4,0.8149469882823868,"(0.651,0.825]",NtboANZQQGp7vhzos,speaker,Woman kneeling holding tray to right with heels up Two squares heads',6_thin,5,0
+L,yYtSpzsEi4mnTuPrj,42,3,0.6542480684821692,"(0.651,0.825]",hY28gtQhhvyFvpihB,speaker,squats,4_rotate,3,6
+A,uBEeQNkPmETCWMFi8,24,2,0.894572970391703,"(0.825,0.949]",eHgnYSqXkkkmbg6Bj,speaker,Bird man person carrying a small square box bag on their back Bird person is looking down to the left towards their right foot that is raised in the air Like they have stepped in something Has a beak shape on the face and is stood on one leg,no_rotate,5,0
+B,ASJgHR2N8wCgN32cu,15,1,0.8331588301254519,"(0.825,0.949]",YT2Nq7XZoMqoZoRX9,speaker,"A person kneeling down, two triangle arms, head tilted down, facing to the right",6_thick,3,3
+C,3Sj3XTKmk9Rqe4Bim,0,0,0.901047263801888,"(0.825,0.949]",xGudhNiRmy2YuaHzK,speaker,looks like an angel with arms outstretched,6_thick,1,0
+D,3Sj3XTKmk9Rqe4Bim,22,1,0.8498082561118403,"(0.825,0.949]",xGudhNiRmy2YuaHzK,speaker,priest or pope,6_thick,1,10
+E,PCRgk3gvjjXXkMKqF,66,5,0.9349098868577838,"(0.825,0.949]",HrxvJAFPtJCGLf2Ez,speaker,"Man facing right, looking down, triangle dog ears",2_thin,1,6
+F,gjooqsuf2CPN5AWxi,71,5,0.9376089436722852,"(0.825,0.949]",SzYY9C53Ne7cMaPHC,speaker,sitting down knees up to chest,2_rotate,1,11
+G,LzNv7CD7gRuxpk7cQ,58,4,0.9353614923441672,"(0.825,0.949]",MrNX5Si499ovSY845,speaker,tango dancer,3_rotate,2,10
+H,8rdFCKG2CvuTrLnAM,18,1,0.9324663478909794,"(0.825,0.949]",sXCiFPWdDG3oRZb4u,speaker,Man with no arms and legs,2_thick,1,6
+I,6TPknLpCmx5X9X572,66,5,0.899347271099337,"(0.825,0.949]",QdpCSDuYmuT3niXiK,speaker,A person with triangles for his body ice skating,3_rotate,2,6
+J,WLGtWa6XCcSnB2FtQ,63,5,0.8671229508216531,"(0.825,0.949]",MbBKYyDSifwrCL5mx,speaker,Broken Square rectangle man,full_feedback,5,3
+K,8SNDsZXxLcR8895Lq,54,4,0.8584792588325318,"(0.825,0.949]",5Z84RxNyiQvR4MDQB,speaker,kneeling nun,3_rotate,2,6
+L,cLaK88862bv7MHMuQ,65,5,0.8810063632365934,"(0.825,0.949]",gd4Mbi8awyKfZgvka,speaker,zig zag legs,6_rotate,5,5
+A,Ccv6vkdmTr6cnNfC5,54,4,0.9817966627937502,"(0.949,1]",osdJLtm3pRz9sdzmK,speaker,"plague doctor, rock kicker",2_thick,1,6
+C,9AyhLQe5bddaES2Af,22,1,0.9993313276099108,"(0.949,1]",cQwcJfbudt82YiyEy,speaker,"Person trying to fly, arms reaching out",6_thin,2,10
+D,tWcPGsuGdiD2J7Nrw,71,5,0.972887348961994,"(0.949,1]",zLDZZY94PFQ6CXMtL,speaker,preacher,6_thin,5,11
+D,tWcPGsuGdiD2J7Nrw,71,5,0.972887348961994,"(0.949,1]",zLDZZY94PFQ6CXMtL,speaker,book to left,6_thin,5,11
+E,tWcPGsuGdiD2J7Nrw,19,1,0.999808206311974,"(0.949,1]",4ErRaLjLeCXS7EoC5,speaker,triangles for ears sitting against wall,6_thin,5,7
+F,4tr7Qqex9u9SjERvu,67,5,0.949621095637397,"(0.949,1]",4i47mQtM48dX6Ziyu,speaker,large body sitting guy,3_rotate,2,7
+F,4tr7Qqex9u9SjERvu,67,5,0.949621095637397,"(0.949,1]",4i47mQtM48dX6Ziyu,speaker,"knees up, feet to left",3_rotate,2,7
+G,K7iDK8xmfJbE9RZZE,68,5,0.949641746440542,"(0.949,1]",T6LMYkwKmKsFsFzre,speaker,dancing lady,6_thick,4,8
+H,MR4xnrE8c4oCHmZX2,56,4,0.9912406240996824,"(0.949,1]",QpXS5v3i8j6KhSQrr,speaker,swaddled baby,6_thin,4,8
+I,rSMFkjhskBteiyQMB,53,4,0.9566715597896512,"(0.949,1]",PzsrjpFbCRkuAMq8B,speaker,ice skater,4_rotate,3,5
+J,znKKpRy5yMqbmRwJs,67,5,0.9501542922477864,"(0.949,1]",BvaPCcwnMZiHzHzcz,speaker,"Unfinished rectangle on bottom, box on top in diamond shape",2_thick,1,7
+L,xvPneq3RbziGdEArC,2,0,0.977048628723021,"(0.949,1]",yFk7LEDg8Edgyx5Gd,speaker,Squatting,2_thick,1,2
+B,tN6MG8BtJwxfpi753,47,3,0.9157649392554356,"(0.825,0.949]",RT59wEgXZvCcKr8pw,speaker,girl with triangle hair or angel,6_thick,4,11
+B,tN6MG8BtJwxfpi753,47,3,0.9157649392554356,"(0.825,0.949]",RT59wEgXZvCcKr8pw,speaker,triangle bottom left,6_thick,4,11
+B,tN6MG8BtJwxfpi753,47,3,0.9157649392554356,"(0.825,0.949]",RT59wEgXZvCcKr8pw,speaker,square head facing upwards,6_thick,4,11
+B,tN6MG8BtJwxfpi753,47,3,0.9157649392554356,"(0.825,0.949]",RT59wEgXZvCcKr8pw,speaker,arm pointed left,6_thick,4,11
+K,znKKpRy5yMqbmRwJs,24,2,0.8411694660940218,"(0.825,0.949]",BvaPCcwnMZiHzHzcz,speaker,"Praying woman facing right, totally kneeling, toes sticking up on the left",2_thick,1,0
+G,FmuScBvZuEj2zegE2,28,2,0.00244966827124088,"[1.9e-10,0.0427]",pyBP4wTvPc2uhWfZ9,speaker,belly up guy,2_thick,1,4
+I,oJFB5dkDNtRxZNzec,35,2,0.04122722474742948,"[1.9e-10,0.0427]",q7PZmgpyPo6hEuEnt,speaker,person with leg behind them standing,2_thin,1,11
+K,BP9jqaXgDcqoupu9X,50,4,0.01181146436019766,"[1.9e-10,0.0427]",MjgM5qp98eAX4zuZL,speaker,seated person facing right,2_thin,1,2
+H,yf4vLYMpH9j84z98K,56,4,0.02741760096101333,"[1.9e-10,0.0427]",fRQb9DJBabAZCcAjY,speaker,Looks like it is facing forward with one triangle at the bottom right,6_thin,1,8
+K,G74GhYGrsaxrsfYxf,63,5,0.00674028350834051,"[1.9e-10,0.0427]",G7t4KfQdMhBApqMvT,speaker,person standing on boat,6_thick,4,3
+F,WLGtWa6XCcSnB2FtQ,13,1,0.03856310331091513,"[1.9e-10,0.0427]",CPMfA6Z3LWGQteHj7,speaker,"guy sitting down facing left, bowed head",full_feedback,5,1
+F,WLGtWa6XCcSnB2FtQ,13,1,0.03856310331091513,"[1.9e-10,0.0427]",qv4ygKrqdN6q9bswn,listener,Knees up,full_feedback,5,1
+F,WLGtWa6XCcSnB2FtQ,13,1,0.03856310331091513,"[1.9e-10,0.0427]",CPMfA6Z3LWGQteHj7,speaker,knees up,full_feedback,5,1
+K,GpF4Ge9YCd7ih3DFr,61,5,0.0310804668234783,"[1.9e-10,0.0427]",9DEoh9BWkZFYxhECs,speaker,seal!,2_rotate,1,1
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",GZh7aAvHM3rAtA2Hk,speaker,on ground,3_rotate,2,9
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",GZh7aAvHM3rAtA2Hk,speaker,knees raised,3_rotate,2,9
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",GZh7aAvHM3rAtA2Hk,speaker,looking left,3_rotate,2,9
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",yszfBdDaFb2xZH5aW,listener,hands,3_rotate,2,9
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",GZh7aAvHM3rAtA2Hk,speaker,square head,3_rotate,2,9
+F,TZ9ci9hD9LaYzHaJY,21,1,0.00226362241232989,"[1.9e-10,0.0427]",yszfBdDaFb2xZH5aW,listener,head leaning forward,3_rotate,2,9
+G,CNET4E5tvYW37ZevE,36,3,0.01969766141175756,"[1.9e-10,0.0427]",dxXnuyKwFTw4bdKd5,speaker,zombie,2_rotate,1,0
+C,xXhypRAC7tRGakzHn,20,1,0.01647812826931142,"[1.9e-10,0.0427]",LK6nCiq4mWKCExxjc,speaker,Like a who cares Both hands above shoulders Inverted type,2_thick,1,8
+F,dBAksjEwZCAZRyqJk,25,2,0.05945480767122554,"(0.0427,0.104]",g2sowCsDmoh28sbgq,speaker,looks like a depressed person feet facing left,2_rotate,1,1
+J,QeHxf8rJXN8MCSKYR,39,3,0.05487707402025221,"(0.0427,0.104]",NxLjuiDi5cuFnLeTt,speaker,scarecrow,6_thick,3,3
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",55rev8uSGneaTh75R,speaker,arms stretched out both sides,3_rotate,2,10
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",55rev8uSGneaTh75R,speaker,kneeling,3_rotate,2,10
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",55rev8uSGneaTh75R,speaker,legs behind,3_rotate,2,10
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",629mtmajvT87Dj6TX,listener,Hands on the left or right,3_rotate,2,10
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",55rev8uSGneaTh75R,speaker,looks like the figure has a tie on,3_rotate,2,10
+B,HzMWt9PN89uNHBpS8,22,1,0.09214253477988762,"(0.0427,0.104]",55rev8uSGneaTh75R,speaker,hands are both sides,3_rotate,2,10
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",hWLbCy7ApJfJBtYmh,speaker,Arms outstretched upwards Diamond for a head,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",jGAj7CJ4vBg2yTMiu,listener,"forget about the diamonds, they all have diamond heads lol",6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",oYQrK76yk2ZH3nkqZ,listener,looks like a floating ghost yes,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",TBeeYmzuYM6Tjf43b,listener,looks like a ghost or a flat guy,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",jGAj7CJ4vBg2yTMiu,listener,"the ghost, we are sure this time lol",6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",hWLbCy7ApJfJBtYmh,speaker,the mouse doesn't,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",oYQrK76yk2ZH3nkqZ,listener,"laju,,, ghost floating",6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",hWLbCy7ApJfJBtYmh,speaker,neither does the kicking low,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",unsmNBHoZYw6urtFq,listener,is it the ghost,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",jGAj7CJ4vBg2yTMiu,listener,go for ghost,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",hWLbCy7ApJfJBtYmh,speaker,does a ghost have outstretched arms upwards,6_thick,5,11
+C,idfdowLZKpkzB8ypa,23,1,0.0581100344764159,"(0.0427,0.104]",jGAj7CJ4vBg2yTMiu,listener,it wants to scare you,6_thick,5,11
+I,PCRgk3gvjjXXkMKqF,39,3,0.06219457738049294,"(0.0427,0.104]",HrxvJAFPtJCGLf2Ez,speaker,"Man striking a pose, back leg up and pointing to the right Head is tilted square on two stacked triangles",2_thin,1,3
+I,PCRgk3gvjjXXkMKqF,39,3,0.06219457738049294,"(0.0427,0.104]",HrxvJAFPtJCGLf2Ez,speaker,*triangles,2_thin,1,3
+J,sijMDqp4oocvXG8Sv,26,2,0.10119890113992364,"(0.0427,0.104]",FQQrSsuYhM8jdKhTz,speaker,squarish one,3_rotate,2,2
+B,HQCyESfw7Bwg5LM3Q,30,2,0.07798067561106485,"(0.0427,0.104]",ijqA9EF3MtMyzT6Ts,speaker,"person on their knees one arm up and out to the right, the other to the left one leg stretched out behind them head facing downwards",2_thin,1,6
+B,MM87KaCiwe9vRcvbi,30,2,0.04863484871444557,"(0.0427,0.104]",3DR3LKCnkxsbbDYdm,speaker,bullhorn,2_thick,1,6
+D,hu2zy5uGrN4qJ7qqe,32,2,0.07559180500115532,"(0.0427,0.104]",xwCpnpj4eoCiFYeCE,speaker,"arms and feet pointing left, looks like he's reading a book",2_rotate,1,8
+D,hu2zy5uGrN4qJ7qqe,32,2,0.07559180500115532,"(0.0427,0.104]",xwCpnpj4eoCiFYeCE,speaker,nothing on right side,2_rotate,1,8
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",HaYEtB56fe33ZSXjw,speaker,straight up body but curves to the right slightly at the bottom,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",HaYEtB56fe33ZSXjw,speaker,no arms or legs,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",MJxZ4a3KWksjWMEYq,listener,do they look like they are going to do the splits,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",4fTnjYS9Cge7Tv7ou,listener,hands out in front of it,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",MJxZ4a3KWksjWMEYq,listener,the metapod one,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",HaYEtB56fe33ZSXjw,speaker,"no hands, no arms",6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",y9i8sGWvbi53Zby2v,listener,legs,6_rotate,5,7
+H,znSiJdhs7sWk5xhgA,7,0,0.09863467321350444,"(0.0427,0.104]",HaYEtB56fe33ZSXjw,speaker,"Almost hexagon body, but has a bit at the bottom right",6_rotate,5,7
+L,cLaK88862bv7MHMuQ,5,0,0.15423982320546187,"(0.104,0.181]",XgpZ3ySCe7xA9xome,speaker,Legs in a zig zag,6_rotate,3,5
+L,cLaK88862bv7MHMuQ,5,0,0.15423982320546187,"(0.104,0.181]",XgpZ3ySCe7xA9xome,speaker,Head slightly to the right of shoulders,6_rotate,3,5
+L,cLaK88862bv7MHMuQ,5,0,0.15423982320546187,"(0.104,0.181]",XgpZ3ySCe7xA9xome,speaker,Flat back on left-hand side,6_rotate,3,5
+L,cLaK88862bv7MHMuQ,5,0,0.15423982320546187,"(0.104,0.181]",XgpZ3ySCe7xA9xome,speaker,Not left,6_rotate,3,5
+L,cLaK88862bv7MHMuQ,5,0,0.15423982320546187,"(0.104,0.181]",XgpZ3ySCe7xA9xome,speaker,Clear,6_rotate,3,5
+G,GfdodQMJHhNodveqQ,14,1,0.15295028875842298,"(0.104,0.181]",5HHG2vhFvkf56ugh3,speaker,Select the figure that looks like a horse with extended leg and head backwards,6_thin,1,2
+D,mFydM2BjifgM589Kq,26,2,0.16956570434032084,"(0.104,0.181]",zY3h7BkB5TkBGcwM4,speaker,candle shape,no_rotate,4,2
+D,mFydM2BjifgM589Kq,26,2,0.16956570434032084,"(0.104,0.181]",zY3h7BkB5TkBGcwM4,speaker,facing left,no_rotate,4,2
+D,mFydM2BjifgM589Kq,26,2,0.16956570434032084,"(0.104,0.181]",zY3h7BkB5TkBGcwM4,speaker,with bucket,no_rotate,4,2
+D,mFydM2BjifgM589Kq,26,2,0.16956570434032084,"(0.104,0.181]",RCtT8PJsDnFWBE44N,listener,That one reminds me of a bishop!,no_rotate,4,2
+D,mFydM2BjifgM589Kq,26,2,0.16956570434032084,"(0.104,0.181]",zY3h7BkB5TkBGcwM4,speaker,ok bishop,no_rotate,4,2
+G,rTdgorcZpRzAdoR3G,39,3,0.12629725839624198,"(0.104,0.181]",cy6HigPTSWTac7Xqy,speaker,the only one that doesn't look like a person,emoji,2,3
+G,rTdgorcZpRzAdoR3G,39,3,0.12629725839624198,"(0.104,0.181]",cy6HigPTSWTac7Xqy,speaker,has no arms no legs no body,emoji,2,3
+G,rTdgorcZpRzAdoR3G,39,3,0.12629725839624198,"(0.104,0.181]",cy6HigPTSWTac7Xqy,speaker,kind of looks like a windmill,emoji,2,3
+G,znKKpRy5yMqbmRwJs,13,1,0.1589678599908858,"(0.104,0.181]",BvaPCcwnMZiHzHzcz,speaker,"Looks like an abstract painting, the only one there that does Two triangles on the right the box on the top on the left and then a backwards L on the left",2_thick,0,1
+C,p8CZhTq5mEiuypAfk,46,3,0.14293420542608423,"(0.104,0.181]",mGtkMxGiXXs6j2cm3,speaker,goalie,2_thick,1,10
+B,hqPW2hTEhEE5ANa9u,8,0,0.12121566854745132,"(0.104,0.181]",vKzSKrkQii668Ft98,speaker,"two triangles facing out from body, diamond (head) is above triangle which is not fully connected to body",2_thin,1,8
+B,hqPW2hTEhEE5ANa9u,8,0,0.12121566854745132,"(0.104,0.181]",vKzSKrkQii668Ft98,speaker,small triangle on left side on the floor,2_thin,1,8
+K,rTdgorcZpRzAdoR3G,6,0,0.10565688397177306,"(0.104,0.181]",qXfAnzBoZ64SMpq3Q,speaker,Looks like a kneeling man with a bowl in his hand looking to your right,emoji,2,6
+G,znSiJdhs7sWk5xhgA,58,4,0.16242279183317246,"(0.104,0.181]",MJxZ4a3KWksjWMEYq,speaker,to triangles on the right side,6_rotate,5,10
+G,znSiJdhs7sWk5xhgA,58,4,0.16242279183317246,"(0.104,0.181]",y9i8sGWvbi53Zby2v,listener,high heel,6_rotate,5,10
+G,znSiJdhs7sWk5xhgA,58,4,0.16242279183317246,"(0.104,0.181]",4fTnjYS9Cge7Tv7ou,listener,"""italy""",6_rotate,5,10
+L,2gkxKTcPdQews5qTX,68,5,0.16143310479469472,"(0.104,0.181]",yN5pFmHQdR2zzStyt,speaker,kneeling in zig zag pose hands pointing right,6_thin,4,8
+C,7iF9MxsD2YYEcq3uq,1,0,0.23214168227131116,"(0.181,0.268]",SpSp42ZaBDB3pmoEx,speaker,both hands in the air to the sides,no_rotate,5,1
+C,7iF9MxsD2YYEcq3uq,1,0,0.23214168227131116,"(0.181,0.268]",SpSp42ZaBDB3pmoEx,speaker,no legs,no_rotate,5,1
+C,7iF9MxsD2YYEcq3uq,1,0,0.23214168227131116,"(0.181,0.268]",v7mArTXRTqKrndoDF,listener,almost like a goalkeeper saving a goal,no_rotate,5,1
+C,7iF9MxsD2YYEcq3uq,1,0,0.23214168227131116,"(0.181,0.268]",SpSp42ZaBDB3pmoEx,speaker,they are leaning left,no_rotate,5,1
+C,Ho7KBcTdiQgiorfmE,60,5,0.24471910315857695,"(0.181,0.268]",oockd8Hdym34fgHF7,speaker,Goalkeeper!,full_feedback,5,0
+I,2Csg2Snzrpkud2YRi,59,4,0.25133934522324325,"(0.181,0.268]",DugA5xyi4CvXJWvaC,speaker,"leaning on one foot to the left, with tail or other foot in the air on the right",2_rotate,1,11
+L,omQAFChFFHAuAbPT3,9,0,0.2037282059907255,"(0.181,0.268]",faazMWGBB5FbpcYAT,speaker,facing right,3_rotate,2,9
+L,omQAFChFFHAuAbPT3,9,0,0.2037282059907255,"(0.181,0.268]",faazMWGBB5FbpcYAT,speaker,in prayer pose,3_rotate,2,9
+L,omQAFChFFHAuAbPT3,9,0,0.2037282059907255,"(0.181,0.268]",faazMWGBB5FbpcYAT,speaker,arms to right,3_rotate,2,9
+L,omQAFChFFHAuAbPT3,9,0,0.2037282059907255,"(0.181,0.268]",GT3oEBtgrN342i2eN,listener,feet or no feet,3_rotate,2,9
+L,omQAFChFFHAuAbPT3,9,0,0.2037282059907255,"(0.181,0.268]",faazMWGBB5FbpcYAT,speaker,no feet visible,3_rotate,2,9
+L,8vDbP6xD36MAFSAFC,13,1,0.20161467087198895,"(0.181,0.268]",JPJgMw5EzQBQ6gw9a,speaker,"kneeling facing right, both arms in one triangle to right, kneeling, feet behind as triangle",emoji,0,1
+A,voSMQaG9H4nC4jy32,39,3,0.2518802369418767,"(0.181,0.268]",xCczn7ZDHtYRWQE6W,speaker,dancing guy nose downwards,2_thick,1,3
+H,S229J9M75mRCjm23C,0,0,0.2351181654711758,"(0.181,0.268]",z3Sm7qarDfdfnz8RN,speaker,diamond on the head in the centre with the bottom turning to the right,2_thick,1,0
+H,S229J9M75mRCjm23C,0,0,0.2351181654711758,"(0.181,0.268]",z3Sm7qarDfdfnz8RN,speaker,diamond in the centre then what looks like shoulders,2_thick,1,0
+H,S229J9M75mRCjm23C,0,0,0.2351181654711758,"(0.181,0.268]",z3Sm7qarDfdfnz8RN,speaker,then straight down both sides,2_thick,1,0
+L,HQFFuFvRujP3TicZT,23,1,0.24709236718166672,"(0.181,0.268]",voQ3MHuBEzvoDt2pu,speaker,shape is bent at the knees with a v shape on the right side,emoji,3,11
+L,HQFFuFvRujP3TicZT,23,1,0.24709236718166672,"(0.181,0.268]",voQ3MHuBEzvoDt2pu,speaker,the shape looks like its crouching,emoji,3,11
+B,TNRYprBpNcgCrb2HF,37,3,0.20580815817952391,"(0.181,0.268]",ZBAXeNd9hoDrFHWhf,speaker,Ponytail triangle image,6_thick,5,1
+J,2Csg2Snzrpkud2YRi,23,1,0.23759574177635504,"(0.181,0.268]",zyXatFB2smLy5NLCL,speaker,diamond on flat top,2_rotate,1,11
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,Straight back,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,triangle foot,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,to the right,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",EigvT8eA8dqhuxwk6,listener,what position,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,diamond head,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,standing,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",eJA6FpeTKabMYR8rb,listener,straight edge on left Back,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",5a7w57CMsYw6nbJgN,listener,one triangle hand,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,left,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",dyTDDFiSuSCvwZD9b,speaker,one hand yes,6_rotate,4,9
+J,93ZvRh5AYPNeTJxjv,21,1,0.374558790973786,"(0.268,0.375]",5a7w57CMsYw6nbJgN,listener,straight back,6_rotate,4,9
+L,GPXXTJBweJggYMYrF,64,5,0.329927549849948,"(0.268,0.375]",ZLmRMKZzibrTNB5sv,speaker,praying slim one facing right no bumps on the back,2_thick,1,4
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",4G9hab5MLzr3hzwbK,speaker,"Diamond head, flat back, feet facing to the right, arm facing right",6_rotate,4,7
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",4G9hab5MLzr3hzwbK,speaker,Standing,6_rotate,4,7
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",G2cRaG8fekyPR6Msn,listener,the one with the bite taken out,6_rotate,4,7
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",eXYo8Pa5AjP8RZ5ED,listener,very square shape,6_rotate,4,7
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",4G9hab5MLzr3hzwbK,speaker,Very square shape but cut outs on the right side where feet and arm would be,6_rotate,4,7
+J,57QkWqXASdPMDFRmA,19,1,0.3642261675614136,"(0.268,0.375]",eXYo8Pa5AjP8RZ5ED,listener,triangle arm pointing right,6_rotate,4,7
+K,QTLcapnjShjWX3s4t,63,5,0.31962806604287763,"(0.268,0.375]",xC7eosoFk4ekBGb85,speaker,square head on square neck facing the right,2_thin,1,3
+K,QTLcapnjShjWX3s4t,63,5,0.31962806604287763,"(0.268,0.375]",xC7eosoFk4ekBGb85,speaker,looks like kneeling,2_thin,1,3
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,ok it looks like a woman in a dress praying,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",2RCjqweynJHvehBGo,listener,Aimed right,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,facing right,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",bhgdLERsJZsyygLSq,listener,facing left,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",2RCjqweynJHvehBGo,listener,Kneeling,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",bohdK5Fufz9C4SewN,listener,not the crouching one right,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,kneeling,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",bhgdLERsJZsyygLSq,listener,the one whose left side is like a rectangle,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",bohdK5Fufz9C4SewN,listener,it looks similar to the other praying one right,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",bhgdLERsJZsyygLSq,listener,or is it the one that looks like a swaddled baby,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",2RCjqweynJHvehBGo,listener,"Kneeling, arms to the right, upright",5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,but it's a triangle,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,but kinda a rectangle,5_rotate,4,6
+K,LsnHGPbRLPabWRBSi,6,0,0.34397139776459623,"(0.268,0.375]",8E5cNEk3uBc5sktkX,speaker,her hands are straight out,5_rotate,4,6
+G,GpF4Ge9YCd7ih3DFr,53,4,0.29103236165227914,"(0.268,0.375]",cjtnTXrerxbK7pi39,speaker,head tilted to the right of body,2_rotate,1,5
+G,GpF4Ge9YCd7ih3DFr,53,4,0.29103236165227914,"(0.268,0.375]",cjtnTXrerxbK7pi39,speaker,arm and legs forming C shape,2_rotate,1,5
+G,GpF4Ge9YCd7ih3DFr,53,4,0.29103236165227914,"(0.268,0.375]",cjtnTXrerxbK7pi39,speaker,on right side,2_rotate,1,5
+G,GpF4Ge9YCd7ih3DFr,53,4,0.29103236165227914,"(0.268,0.375]",cjtnTXrerxbK7pi39,speaker,big left leg flat on bottom,2_rotate,1,5
+I,3QfyJMSuR6NqnvyjZ,49,4,0.3665592308008778,"(0.268,0.375]",da9qQSRFWpcgTxJHM,speaker,ice skating to the left,5_rotate,4,1
+A,oHLkd73zMwDSpso8k,69,5,0.33830848288922627,"(0.268,0.375]",MJnDMAZWWBXN6pmrK,speaker,"two feet, one on ground and one kicking, both pointed left, head pointed right",2_thick,1,9
+I,Z2WAkYpWiXwuGcdME,66,5,0.3382541777923675,"(0.268,0.375]",R3cRgh4HmEtRsmQyp,speaker,karate,2_thick,1,6
+L,JnYAkqq7mqk9Gxdse,40,3,0.3411749029650991,"(0.268,0.375]",KgdEYahjHpGSFCw4r,speaker,facing right **original** man praying,6_thin,2,4
+J,MyRbvfzsvHgTGSNRY,27,2,0.44536882691592034,"(0.375,0.498]",GqKpYNiW2MfTGTTbN,speaker,"Okay, this is the one where the square diamond is balanced on the long, flat surface",no_rotate,5,3
+J,MyRbvfzsvHgTGSNRY,27,2,0.44536882691592034,"(0.375,0.498]",Gp6brrd7obJTAq5ar,listener,the left side of the person is one large rectangle,no_rotate,5,3
+J,MyRbvfzsvHgTGSNRY,27,2,0.44536882691592034,"(0.375,0.498]",Gp6brrd7obJTAq5ar,listener,it looks like a diamond on a very long flat top of the rectangle,no_rotate,5,3
+K,g65Cv6YtLsdvZiRSX,69,5,0.41072315858334857,"(0.375,0.498]",ca7oTz8teDvaTaBTu,speaker,"kneeling, facing right, feet flicked to the left",2_thick,1,9
+E,QTLcapnjShjWX3s4t,50,4,0.4928475455613927,"(0.375,0.498]",7ycbvgZt9bc9A7AJj,speaker,two triangles on a square head,2_thin,1,2
+G,LfuChcnEB54q8Ztys,54,4,0.4063131095087786,"(0.375,0.498]",Dr6TQXga6KydoDzMN,speaker,trapezoid at the bottom leaning right,4_rotate,3,6
+B,uBEeQNkPmETCWMFi8,58,4,0.444922637227095,"(0.375,0.498]",eHgnYSqXkkkmbg6Bj,speaker,Small mouse looking upwards for cheese One raised square ear and one lower triangle ear Small triangle on the left close to the floor,no_rotate,4,10
+A,AdiA5JEZBKJ4F5r4i,46,3,0.43414387884953154,"(0.375,0.498]",Jm5k7ECi4X8Fbcv5Y,speaker,"facing to the left, rhino, head back, arms up to the right, both legs facing left",6_thin,2,10
+A,YLCrDGMMiennGjggY,30,2,0.44949703183450046,"(0.375,0.498]",9KnsNqjRjt4q7CtbN,speaker,the sad person with strange head,2_rotate,1,6
+A,YLCrDGMMiennGjggY,30,2,0.44949703183450046,"(0.375,0.498]",9KnsNqjRjt4q7CtbN,speaker,"diamond on the back, left leg in the air",2_rotate,1,6
+B,8vDbP6xD36MAFSAFC,20,1,0.3808063213293859,"(0.375,0.498]",JPJgMw5EzQBQ6gw9a,speaker,"square head facing right, kneeling, arms behind (looks like a wing) triangle out of head looking like a speech bubble",emoji,4,8
+B,8vDbP6xD36MAFSAFC,20,1,0.3808063213293859,"(0.375,0.498]",JPJgMw5EzQBQ6gw9a,speaker,small triangle feet on left,emoji,4,8
+C,vHHRDD5s36Ya2xGvS,36,3,0.4283721890452658,"(0.375,0.498]",R7ioWHKEJCBidQWRz,speaker,"Two hands to the top, half body",6_thin,0,0
+G,MDLyuv29jevaGLSeT,17,1,0.5845984014216945,"(0.498,0.651]",X8fyxirwxbpnvRKyy,speaker,"almost laying down, body facing right with one hand high and one low and head hanging back",6_thin,4,5
+K,6ZtMrReWRYFFydpHK,51,4,0.6393629069699547,"(0.498,0.651]",D3HFDGENYCiG9LDJf,speaker,Someone kneeling bowl to the right,2_thin,0,3
+B,idfdowLZKpkzB8ypa,62,5,0.515898110272268,"(0.498,0.651]",hWLbCy7ApJfJBtYmh,speaker,mouse with big ears,6_thick,5,2
+B,idfdowLZKpkzB8ypa,38,3,0.515898110272268,"(0.498,0.651]",hWLbCy7ApJfJBtYmh,speaker,mouse with big ears,6_thick,5,2
+B,idfdowLZKpkzB8ypa,38,3,0.515898110272268,"(0.498,0.651]",TBeeYmzuYM6Tjf43b,listener,not the rabbit,6_thick,5,2
+I,byWRCj2bTz2Guefog,1,0,0.6006855962053554,"(0.498,0.651]",AXLc5WsF9dMwS482A,speaker,"this looks like a ballet dancer with a leg stretched back, but the leg is a triangle and the head is a square",2_thin,1,1
+I,byWRCj2bTz2Guefog,1,0,0.6006855962053554,"(0.498,0.651]",AXLc5WsF9dMwS482A,speaker,the chest is two triangles on the left,2_thin,1,1
+I,H8WzWCYTYHQr8QQiy,47,3,0.6428901400326916,"(0.498,0.651]",noLFFX7u4tuMgAhYq,speaker,"on one leg with two triangle arms pointing the same way, looks like a figure skater",5_rotate,4,11
+I,H8WzWCYTYHQr8QQiy,47,3,0.6428901400326916,"(0.498,0.651]",4ofXJ86c3SLnG4ASe,listener,looks like an r,5_rotate,4,11
+I,H8WzWCYTYHQr8QQiy,47,3,0.6428901400326916,"(0.498,0.651]",noLFFX7u4tuMgAhYq,speaker,yes a r,5_rotate,4,11
+I,4mKoevW3ykd2FDr7L,71,5,0.5065475577430703,"(0.498,0.651]",vwpmmXPfWPvNcd9RA,speaker,kick,6_rotate,5,11
+I,4mKoevW3ykd2FDr7L,71,5,0.5065475577430703,"(0.498,0.651]",vwpmmXPfWPvNcd9RA,speaker,2 triangles on left,6_rotate,5,11
+I,4mKoevW3ykd2FDr7L,71,5,0.5065475577430703,"(0.498,0.651]",vwpmmXPfWPvNcd9RA,speaker,"2 triangles on left, back kick, one foot on ground",6_rotate,5,11
+I,NEo4TpvQSgpf5jZNx,30,2,0.6017574685323022,"(0.498,0.651]",eHpsMXG8wcabcn9Mp,speaker,This looks like the ballet dancer with one leg in the air,3_rotate,2,6
+I,NEo4TpvQSgpf5jZNx,30,2,0.6017574685323022,"(0.498,0.651]",eHpsMXG8wcabcn9Mp,speaker,facing to the right,3_rotate,2,6
+I,NEo4TpvQSgpf5jZNx,30,2,0.6017574685323022,"(0.498,0.651]",eHpsMXG8wcabcn9Mp,speaker,both arms left,3_rotate,2,6
+C,2gkxKTcPdQews5qTX,70,5,0.6358874652670837,"(0.498,0.651]",yN5pFmHQdR2zzStyt,speaker,no legs hands waving in air,6_thin,4,10
+K,MM87KaCiwe9vRcvbi,14,1,0.6802244804327799,"(0.651,0.825]",3DR3LKCnkxsbbDYdm,speaker,"Kneeling nun, book on the right, feet on the left",2_thick,1,2
+K,MM87KaCiwe9vRcvbi,14,1,0.6802244804327799,"(0.651,0.825]",3DR3LKCnkxsbbDYdm,speaker,diamond head,2_thick,1,2
+K,MM87KaCiwe9vRcvbi,14,1,0.6802244804327799,"(0.651,0.825]",3DR3LKCnkxsbbDYdm,speaker,looking straight ahead,2_thick,1,2
+K,MM87KaCiwe9vRcvbi,14,1,0.6802244804327799,"(0.651,0.825]",3DR3LKCnkxsbbDYdm,speaker,Outfit looks like it may have a collar,2_thick,1,2
+E,Ho7KBcTdiQgiorfmE,8,0,0.8043818202783477,"(0.651,0.825]",tSv4gaNn4sZn7PoKr,speaker,Looks like rabbit,full_feedback,4,8
+E,Ho7KBcTdiQgiorfmE,8,0,0.8043818202783477,"(0.651,0.825]",tSv4gaNn4sZn7PoKr,speaker,Flat back on left,full_feedback,4,8
+E,Ho7KBcTdiQgiorfmE,8,0,0.8043818202783477,"(0.651,0.825]",tSv4gaNn4sZn7PoKr,speaker,Head looking to the right,full_feedback,4,8
+E,Ho7KBcTdiQgiorfmE,8,0,0.8043818202783477,"(0.651,0.825]",oockd8Hdym34fgHF7,listener,It looks so much like a rabbit leaning against a wall or something,full_feedback,4,8
+G,2gkxKTcPdQews5qTX,22,1,0.7540714351550909,"(0.651,0.825]",CnKiQ7iNGKke5E9dt,speaker,Looks like a shoe with the heel on the right hand side slightly off the ground,6_thin,4,10
+I,K7iDK8xmfJbE9RZZE,6,0,0.7310784106157909,"(0.651,0.825]",T6LMYkwKmKsFsFzre,speaker,Standing with one leg hands facing left,6_thick,4,6
+I,K7iDK8xmfJbE9RZZE,6,0,0.7310784106157909,"(0.651,0.825]",LPvai2ptChL92dKEQ,listener,is one leg pointing backwards,6_thick,4,6
+I,K7iDK8xmfJbE9RZZE,6,0,0.7310784106157909,"(0.651,0.825]",q3QkkAc5WnzHzSJSe,listener,at an angle or straight,6_thick,4,6
+I,K7iDK8xmfJbE9RZZE,6,0,0.7310784106157909,"(0.651,0.825]",T6LMYkwKmKsFsFzre,speaker,straight,6_thick,4,6
+E,PF2Wo9cXvN4eYEgQm,48,4,0.7228662320106779,"(0.651,0.825]",8Dpsmcfr85fEhvbo5,speaker,sitting down facing right with head down and 2 triangles on their head,2_thick,1,0
+I,XJWjbBteCLNDAtjaR,59,4,0.8126375676346249,"(0.651,0.825]",REH8sf5fLW24xLJLe,speaker,"balancing on one leg, leg out",2_thick,1,11
+I,AdiA5JEZBKJ4F5r4i,22,1,0.723314500047651,"(0.651,0.825]",H75FkJDCL8W22MQFt,speaker,looks like someone figure skating or ice skating facing the left with their leg sticking out on the right,6_thin,2,10
+L,cCSd3v7a6AH8fHsJE,58,4,0.671891389395259,"(0.651,0.825]",Dmv2wGZJEid5oXz3M,speaker,crouching,2_thick,1,10
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,The body is in a slumped position Head on the right side and feet pointing to the left,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,The head is tipped slightly forward,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",t7qhGx4KeoNAa7Ro7,listener,It is in a sitting position,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,Only lying down person I can see,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,ie sat down,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",YQA28oL4e96JjQLKx,listener,feet slightly lower than the body,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",YQA28oL4e96JjQLKx,listener,well heels,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,The legs point left with the legs bent and the knee pointing up,no_rotate,3,2
+F,jqbckBkDqPTfmnAmt,2,0,0.7447343282003928,"(0.651,0.825]",CZjMnJYPjT9hJfLob,speaker,The foot points up to the top left,no_rotate,3,2
+F,FEPXqBHpf4Q5CfCju,63,5,0.7972102672099062,"(0.651,0.825]",KChzeps4GeL2rFbEh,speaker,sitting with leg to the left,6_thin,1,3
+E,htub6itv8siAtQv22,27,2,0.918646404151432,"(0.825,0.949]",HvkLtechHtpsjT9rJ,speaker,rabbit ears,2_thick,1,3
+A,G74GhYGrsaxrsfYxf,44,3,0.8991674387477872,"(0.825,0.949]",G7t4KfQdMhBApqMvT,speaker,dinosaur carrying square on shoulder,6_thick,4,8
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",FavLJQrT3u2zqtypC,speaker,this one looks like a man sitting down,5_rotate,4,5
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",FavLJQrT3u2zqtypC,speaker,leg to the left,5_rotate,4,5
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",FavLJQrT3u2zqtypC,speaker,looks sad and sulking lol,5_rotate,4,5
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",8EtzDGtxpchtoMmvu,listener,no arms,5_rotate,4,5
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",FavLJQrT3u2zqtypC,speaker,just sat there bored,5_rotate,4,5
+F,rHhNxKwZ5tqhMuiAF,5,0,0.8710785793426242,"(0.825,0.949]",FavLJQrT3u2zqtypC,speaker,no arms,5_rotate,4,5
+F,3NRHD2hCEgJ74Q4b2,52,4,0.8547826735561083,"(0.825,0.949]",eeCGATqzhP6qdRBP6,speaker,person sitting down facing left,2_thin,1,4
+F,cCSd3v7a6AH8fHsJE,62,5,0.925741594214272,"(0.825,0.949]",Dmv2wGZJEid5oXz3M,speaker,man seated,2_thick,1,2
+C,6cWDb4KB2JkQYoEn8,26,2,0.8748222176535713,"(0.825,0.949]",hMtbTjcXoP7mcPqWm,speaker,"flying angel, outstretched arms, going to the left",2_thick,1,2
+I,vb35TJcSHPpKxAzJo,53,4,0.8861407228478073,"(0.825,0.949]",z8enMeDQgujo5sq5j,speaker,the ice skater,6_thin,5,5
+A,LfuChcnEB54q8Ztys,30,2,0.9440210774285296,"(0.825,0.949]",tdJMBevkwaPaQKjM6,speaker,dancing birdman,4_rotate,2,6
+A,LfuChcnEB54q8Ztys,30,2,0.9440210774285296,"(0.825,0.949]",tdJMBevkwaPaQKjM6,speaker,facing left,4_rotate,2,6
+A,LfuChcnEB54q8Ztys,30,2,0.9440210774285296,"(0.825,0.949]",tdJMBevkwaPaQKjM6,speaker,big triangle for a head,4_rotate,2,6
+A,LfuChcnEB54q8Ztys,30,2,0.9440210774285296,"(0.825,0.949]",tdJMBevkwaPaQKjM6,speaker,square balanced over right shoulder with one leg up,4_rotate,2,6
+F,d3pirdbXLaHdgxR9t,0,0,0.9427751879812474,"(0.825,0.949]",YvaYGp3i8g88dxJR7,speaker,person sitting on their bottom,6_thick,5,0
+E,f69G9D9Q2uiv2MCJn,23,1,0.9894266554309686,"(0.949,1]",KhyGCb79wtn4KpfMc,speaker,bunny,2_thick,1,11
+I,2928FF7GcrkeFiDkh,65,5,0.9954678494312792,"(0.949,1]",5L7PZWTLhnYMGQE8b,speaker,figure skater,2_rotate,1,5
+D,CNET4E5tvYW37ZevE,43,3,0.9924539340258284,"(0.949,1]",dxXnuyKwFTw4bdKd5,speaker,robe man with book,2_rotate,1,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dTAmMQ6Zw5AbRzRiT,speaker,both arms up in the air,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dTAmMQ6Zw5AbRzRiT,speaker,diamond head,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dTAmMQ6Zw5AbRzRiT,speaker,slanted body,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",EigvT8eA8dqhuxwk6,listener,kind of like a bird,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",eJA6FpeTKabMYR8rb,listener,leaning to left,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dTAmMQ6Zw5AbRzRiT,speaker,leaning to the left,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dyTDDFiSuSCvwZD9b,listener,open arms,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",5a7w57CMsYw6nbJgN,listener,no legs right,6_rotate,5,7
+C,93ZvRh5AYPNeTJxjv,7,0,0.9790170403843104,"(0.949,1]",dTAmMQ6Zw5AbRzRiT,speaker,no legs,6_rotate,5,7
+F,ASJgHR2N8wCgN32cu,13,1,0.9606392107460988,"(0.949,1]",YT2Nq7XZoMqoZoRX9,speaker,"A person who looks depressed, sitting down with their knees bent at a 45 degree angle, their head is tilted downwards, they are facing to the left",6_thick,4,1
+C,HQCyESfw7Bwg5LM3Q,9,0,0.9916084495200932,"(0.949,1]",ijqA9EF3MtMyzT6Ts,speaker,"person with both arms up, slightly falling to the left",2_thin,1,9
+I,LWXs28TdQJxaEcPzm,71,5,0.9827243682611336,"(0.949,1]",kZ2NqwjtL4c9vCSCM,speaker,ice-skater,6_thin,3,11
+C,GpF4Ge9YCd7ih3DFr,39,3,0.9966250467644628,"(0.949,1]",9DEoh9BWkZFYxhECs,speaker,"flying ghost, no legs, two arms in the air",2_rotate,1,3
+E,22dyGMRgestp8u5Lc,54,4,0.9969089261092072,"(0.949,1]",aSeEmufWmsbLn7YEQ,speaker,bunny ears,2_thin,1,6
+F,qvcePeQSJ7k2HTcJt,62,5,0.9720576544445688,"(0.949,1]",arByDDp6uQRRyQPdZ,speaker,slumped man,no_rotate,5,2
+F,qvcePeQSJ7k2HTcJt,62,5,0.9720576544445688,"(0.949,1]",arByDDp6uQRRyQPdZ,speaker,facing left,no_rotate,5,2
+F,qvcePeQSJ7k2HTcJt,62,5,0.9720576544445688,"(0.949,1]",arByDDp6uQRRyQPdZ,speaker,knees up,no_rotate,5,2
+F,qvcePeQSJ7k2HTcJt,62,5,0.9720576544445688,"(0.949,1]",arByDDp6uQRRyQPdZ,speaker,toes up,no_rotate,5,2
