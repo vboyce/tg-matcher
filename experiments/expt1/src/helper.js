@@ -53,6 +53,23 @@ export function subset(items, total) {
   select_items = items.slice(0, total);
   return no_repetitions(select_items);
 }
+
+export function do_yoked_stimuli(stimuli, yoked) {
+  let conditions = [...new Set(stimuli.map((i) => i.gameId))];
+  console.log(conditions);
+  shuffle(conditions);
+  let target_condition = conditions[0];
+  console.log(target_condition);
+  let target_items = stimuli.filter((i) => i.gameId == target_condition);
+  if (yoked == "yoked") {
+    console.log(target_items);
+    return target_items;
+  } else {
+    shuffle(target_items);
+    console.log(target_items);
+    return no_repetitions(target_items);
+  }
+}
 export function counterbalance(item_types, items) {
   let select_items = [];
   for (let i = 0; i < item_types.length; i++) {

@@ -65,7 +65,6 @@ combined_results <- one_round_results |>
 
 chat <- combined_chat |>
   left_join(combined_results) |>
-  
   write_csv(here("expt_prep_code/combined_chat.csv"))
 ```
 
@@ -140,11 +139,10 @@ Here we take the game 3 round 1 and 6 stuff
 and again apply light censoring
 
 ```{r}
-
 pre_censor <- chat |>
   filter(repNum == 5 | repNum == 0) |>
   filter(!is.na(text)) |>
-  filter(condition %in% c("2_thin", "6_thin", "2_thick", "6_thick")) |> 
+  filter(condition %in% c("2_thin", "6_thin", "2_thick", "6_thick")) |>
   mutate(playerCount = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
   mutate(allCorrect = realCorrect == playerCount - 1) |>
   mutate(size_round = str_c(condition, "_", as.character(repNum + 1))) |>
@@ -180,16 +178,125 @@ good_strings |> write_json(here("experiments/expt1/src/test.js"))
 # Prep calibration
 
 ```{r}
-calibration <- read_csv("for_calibration.csv") |> select(-utterance) |> left_join(chat) |> 
+calibration <- read_csv("for_calibration.csv") |>
+  select(-utterance) |>
+  left_join(chat) |>
   select(-numPlayers, -activePlayerCount)
 
-bad_strings <- calibration |> mutate(has_bad=map_lgl(text, is_bad)) |> filter(has_bad)
+bad_strings <- calibration |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad)
 
-good_strings <- calibration  |>
+good_strings <- calibration |>
   mutate(has_bad = map_lgl(text, is_bad)) |>
   filter(has_bad == F) |>
-  select(-has_bad) |> 
-  #nest(text = c(role, playerId, text))
-   write_csv("labelled.csv")#|> #write_json(here("experiments/expt1/src/calibrate.js"))
+  select(-has_bad) #|>
+# nest(text = c(role, playerId, text))
+write_csv("labelled.csv") #|> #write_json(here("experiments/expt1/src/calibrate.js"))
 ```
 
+# Choose yoked
+
+
+```{r}
+theme_set(theme_bw())
+options <- combined_results |>
+  mutate(activePlayers = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(correct = ifelse(activePlayers == 1 + realCorrect, 1, 0)) |>
+  group_by(gameId, condition, numPlayers) |>
+  summarize(correct = sum(correct)) |>
+  group_by(condition, numPlayers) |>
+  arrange(desc(correct)) |>
+  filter(row_number() < 6) |>
+  filter(correct > 49)
+
+# choose 5 from each as a starting point
+
+good_games <- options |>
+  ungroup() |>
+  select(gameId)
+```
+
+```{r}
+options_2 <- combined_results |>
+  inner_join(good_games) |>
+  mutate(activePlayers = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(pct_correct = realCorrect / (activePlayers - 1)) |>
+  group_by(gameId, repNum, condition, numPlayers) |>
+  summarize(pct_correct = mean(pct_correct)) |>
+  filter(pct_correct > .8 | repNum != 5) |>
+  filter(pct_correct > .8 | repNum != 4) |>
+  filter(pct_correct > .7) |>
+  filter(pct_correct <= 1) |>
+  group_by(gameId) |>
+  tally() |>
+  filter(n == 6)
+
+better_games <- options_2 |>
+  ungroup() |>
+  select(gameId)
+
+
+combined_results |>
+  inner_join(better_games) |>
+  group_by(gameId) |>
+  mutate(activePlayers = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(pct_correct = realCorrect / (activePlayers - 1)) |>
+  group_by(gameId, repNum, condition, numPlayers) |>
+  summarize(pct_correct = mean(pct_correct)) |>
+  ggplot(aes(x = repNum, y = pct_correct, group = gameId, color = condition)) +
+  geom_line()
+```
+
+```{r}
+bad_word_games <- combined_chat |>
+  inner_join(better_games) |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(has_bad) |>
+  select(gameId) |>
+  unique()
+
+best_games <- better_games |> anti_join(bad_word_games)
+```
+
+```{r}
+combined_chat |>
+  filter(gameId %in% choose) |>
+  mutate(words = str_count(text, "\\S+")) |>
+  filter(!is.na(text)) |>
+  filter(!is.na(words)) |>
+  group_by(gameId, condition, repNum, role) |>
+  summarize(words = sum(words)) |>
+  filter(gameId %in% choose) |>
+  ggplot(aes(x = repNum, y = words, group = gameId, color = condition)) +
+  geom_line() +
+  facet_wrap(~role)
+
+combined_results |>
+  # filter(gameId %in% choose) |>
+  inner_join(best_games) |>
+  group_by(gameId) |>
+  mutate(activePlayers = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount)) |>
+  mutate(pct_correct = realCorrect / (activePlayers - 1)) |>
+  group_by(gameId, repNum, condition, numPlayers) |>
+  summarize(pct_correct = mean(pct_correct)) |>
+  View()
+ggplot(aes(x = repNum, y = pct_correct, group = gameId, color = condition)) +
+  geom_line()
+```
+
+```{r}
+choose <- c(
+  "Z2WAkYpWiXwuGcdME", "GWCD2NGoiA2n5Wh2i", "zviCQXNM4xWoYTmoY", "MEJ8y7jRW4947MPrH",
+  "x8BXJBHh3RxchPoHv", "rSMFkjhskBteiyQMB", "LzNv7CD7gRuxpk7cQ", "MDLyuv29jevaGLSeT",
+  "BTbGhXZvjdSFubTBg", "22dyGMRgestp8u5Lc"
+)
+
+combined_chat |>
+  filter(gameId %in% choose) |>
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(!has_bad) |>
+  select(-has_bad) |>
+  nest(text = c(role, playerId, text)) |>
+  write_json(here("experiments/expt1/src/yoked.js"))
+```

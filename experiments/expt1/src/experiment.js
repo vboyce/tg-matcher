@@ -18,9 +18,9 @@ import CallFunctionPlugin from "@jspsych/plugin-call-function";
 import SurveyTextPlugin from "@jspsych/plugin-survey-text";
 
 import { proliferate } from "./proliferate.js";
-import { subset } from "./helper.js";
+import { do_yoked_stimuli } from "./helper.js";
 
-import { stimuli } from "./calibrate.js";
+import { stimuli } from "./yoked.js";
 import {
   choices,
   all_images,
@@ -42,10 +42,12 @@ import {
  * @type {import("jspsych-builder").RunFunction}
  */
 
-const NUM_ITEMS = 64;
+const NUM_ITEMS = 72;
 const BONUS = 5;
 
-const select_stimuli = subset(stimuli, NUM_ITEMS);
+let yoked = Math.random() > 0.5 ? "yoked" : "shuffled";
+console.log(yoked);
+const select_stimuli = do_yoked_stimuli(stimuli, yoked);
 const trials = select_stimuli.length;
 export async function run({
   assetPaths,
@@ -194,6 +196,7 @@ export async function run({
     },
     style: "all",
     enable_keypress: false,
+    enable_button: false,
     css_classes: ["tangram-display"],
     data: { type: "feedback" },
     stimulus: function () {
@@ -244,10 +247,10 @@ export async function run({
 
     timeline.push(preload);
 
-    timeline.push(consent);
-    timeline.push(instructions);
+    //timeline.push(consent);
+    //timeline.push(instructions);
     const test = {
-      timeline: [trial, feedback],
+      timeline: [spr, trial, feedback],
       timeline_variables: select_stimuli,
     };
     timeline.push(test);

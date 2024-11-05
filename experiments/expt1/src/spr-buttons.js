@@ -320,7 +320,7 @@ function drawStimulus(trial_pars) {
   } else {
     for (let j = 0; j < words.length; j++) {
       let word = words[j];
-      if (j === group_index) {
+      if (j <= group_index) {
         word.drawText();
       } else {
         word.drawUnderline();

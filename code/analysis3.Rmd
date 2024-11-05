@@ -181,8 +181,12 @@ summ <- good |> group_by(grouping) |> summarize(human_acc=mean(correct), value=m
 
 for_corr <- good |> group_by(text, value, tangram, grouping) |> summarize(human_acc=mean(correct), human_n=n())
 
-for_corr|> ggplot(aes(y=human_acc, x=value))+geom_point(aes(color=grouping))+geom_line(data=summ, color="black")+geom_smooth(method="lm")+
+for_corr|> ggplot(aes(y=human_acc, x=value))+geom_point(aes(color=grouping))+geom_line(data=summ, color="black")+geom_smooth(method="lm")+geom_smooth()+
   theme(legend.position="none")+labs(x="Model predicted probability", y="Human accuracy")
+
+
+for_corr|> ggplot(aes(x=human_acc, y=value))+geom_point(aes(color=grouping))+geom_line(data=summ, color="black")+geom_smooth(method="lm")+
+  theme(legend.position="none")+labs(y="Model predicted probability", x="Human accuracy")
 
 
 cor.test(for_corr$value, for_corr$human_acc)
