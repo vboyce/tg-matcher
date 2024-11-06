@@ -56,17 +56,13 @@ export function subset(items, total) {
 
 export function do_yoked_stimuli(stimuli, yoked) {
   let conditions = [...new Set(stimuli.map((i) => i.gameId))];
-  console.log(conditions);
   shuffle(conditions);
   let target_condition = conditions[0];
-  console.log(target_condition);
   let target_items = stimuli.filter((i) => i.gameId == target_condition);
   if (yoked == "yoked") {
-    console.log(target_items);
     return target_items;
   } else {
     shuffle(target_items);
-    console.log(target_items);
     return no_repetitions(target_items);
   }
 }

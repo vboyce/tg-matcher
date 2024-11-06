@@ -35,6 +35,8 @@ import {
   POST_SURVEY_TEXT,
   DEBRIEF,
   INSTRUCTIONS,
+  spr_instructions,
+  select_instructions,
 } from "./instructions.js";
 /**
  * This function will be executed by jsPsych Builder and is expected to run the jsPsych experiment
@@ -46,7 +48,6 @@ const NUM_ITEMS = 72;
 const BONUS = 5;
 
 let yoked = Math.random() > 0.5 ? "yoked" : "shuffled";
-console.log(yoked);
 const select_stimuli = do_yoked_stimuli(stimuli, yoked);
 const trials = select_stimuli.length;
 export async function run({
@@ -58,21 +59,8 @@ export async function run({
 }) {
   const jsPsych = initJsPsych({
     on_close: function () {
-      console.log("start the thing");
       var data = jsPsych.data.get().values();
-      console.log("middle");
-      console.log(data);
-      console.log(data[0]);
-      proliferate.submit(
-        { trials: data },
-        () => {
-          console.log("doing the thing");
-        },
-        (i) => {
-          console.log("waaaah");
-          console.log(JSON.stringify(i));
-        }
-      );
+      proliferate.submit({ trials: data });
     },
   });
 
@@ -114,7 +102,9 @@ export async function run({
   let spr = {
     type: SprButtonPlugin,
     prompt: function () {
-      return format_header(done, trials, countCorrect, BONUS);
+      return (
+        spr_instructions + format_header(done, trials, countCorrect, BONUS)
+      );
     },
     style: "word",
     css_classes: ["tangram-display"],
@@ -133,20 +123,30 @@ export async function run({
 
       return html;
     }),
-    enable_button: false,
+    data: {
+      gameId: jsPsych.timelineVariable("gameId"),
+      correct_tangram: jsPsych.timelineVariable("tangram"),
+      text: jsPsych.timelineVariable("text"),
+      orig_repNum: jsPsych.timelineVariable("repNum"),
+      condition: yoked,
+      orig_trialNum: jsPsych.timelineVariable("trialNum"),
+      type: "reading",
+    },
+    button_enabled: false,
   };
 
   let trial = {
     type: SprButtonPlugin,
     prompt: function () {
-      return format_header(done, trials, countCorrect, BONUS);
+      return (
+        select_instructions + format_header(done, trials, countCorrect, BONUS)
+      );
     },
     style: "all",
     enable_keypress: false,
     feedback: "",
     css_classes: ["tangram-display"],
     stimulus: function () {
-      console.log(jsPsych.timelineVariable("tangram"));
       return format_spr(jsPsych.timelineVariable("text"));
     },
     button_choices: choices,
@@ -163,8 +163,10 @@ export async function run({
     data: {
       gameId: jsPsych.timelineVariable("gameId"),
       correct_tangram: jsPsych.timelineVariable("tangram"),
-      condition: jsPsych.timelineVariable("size_round"),
       text: jsPsych.timelineVariable("text"),
+      orig_repNum: jsPsych.timelineVariable("repNum"),
+      condition: yoked,
+      orig_trialNum: jsPsych.timelineVariable("trialNum"),
       type: "selection",
     },
     on_finish: function (data) {
@@ -192,13 +194,21 @@ export async function run({
       return give_feedback(last_trial_correct);
     },
     prompt: function () {
-      return format_header(done, trials, countCorrect, BONUS);
+      return "<p>&nbsp;</p>" + format_header(done, trials, countCorrect, BONUS);
     },
     style: "all",
     enable_keypress: false,
-    enable_button: false,
+    button_enabled: false,
     css_classes: ["tangram-display"],
-    data: { type: "feedback" },
+    data: {
+      gameId: jsPsych.timelineVariable("gameId"),
+      correct_tangram: jsPsych.timelineVariable("tangram"),
+      text: jsPsych.timelineVariable("text"),
+      orig_repNum: jsPsych.timelineVariable("repNum"),
+      condition: yoked,
+      orig_trialNum: jsPsych.timelineVariable("trialNum"),
+      type: "feedback",
+    },
     stimulus: function () {
       return format_spr(jsPsych.timelineVariable("text"));
     },
@@ -247,8 +257,8 @@ export async function run({
 
     timeline.push(preload);
 
-    //timeline.push(consent);
-    //timeline.push(instructions);
+    timeline.push(consent);
+    timeline.push(instructions);
     const test = {
       timeline: [spr, trial, feedback],
       timeline_variables: select_stimuli,

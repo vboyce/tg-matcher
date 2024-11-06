@@ -119,7 +119,7 @@ const info = {
     height: {
       type: ParameterType.INT,
       pretty_name: "height",
-      default: 400,
+      default: 500,
       description:
         "The height of the canvas in which the spr moving window is presented",
     },
@@ -229,7 +229,7 @@ function setupVariables(display_element, trial_pars) {
     stimulus,
     trial_pars,
     ctx,
-    document.getElementById(SPR_CANVAS).width
+    document.getElementById(SPR_CANVAS).width - 25
   );
   createCanvas(document.getElementById(SPR_CANVAS), height);
 }
@@ -381,7 +381,7 @@ class SprButtonPlugin {
       trial_data.rt.push(info.rt);
 
       group_index++;
-      if (group_index >= words.length) {
+      if (group_index >= words.length - 1) {
         end_trial();
       } else if (
         (trial_pars.style == "line") &
