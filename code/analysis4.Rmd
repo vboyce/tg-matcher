@@ -1,5 +1,5 @@
 ---
-title: "tg-matcher 2: Preliminary analysis"
+title: "tg-matcher 4: Yoked v shuffled"
 output:
   html_document:
     toc: true
@@ -48,21 +48,21 @@ good_stuff <- raw |>
          matcher_repNum=matcher_trialNum%/%12)
 ```
 
-##  Bonus
+<!--##  Bonus-->
 ```{r, eval=F}
-worker <- read_csv(here("data/tgmatcheryoked-workerids.csv")) |> mutate(workerid = as.factor(workerid))
-
-bonuses <- good_stuff |> filter(type=="selection") |> 
-  group_by(workerid) |>
-  summarize(bonus = round(sum(correct) * .05, 2)) |>
-  left_join(worker) |>
-  select(prolific_participant_id, bonus) |>
-  write_csv(here("bonus.csv"))
-
-cost <- bonuses |>
-  mutate(cost = bonus * 4 / 3) |>
-  summarize(s = sum(cost))
-
+# worker <- read_csv(here("data/tgmatcheryoked-workerids.csv")) |> mutate(workerid = as.factor(workerid))
+# 
+# bonuses <- good_stuff |> filter(type=="selection") |> 
+#   group_by(workerid) |>
+#   summarize(bonus = round(sum(correct) * .05, 2)) |>
+#   left_join(worker) |>
+#   select(prolific_participant_id, bonus) |>
+#   write_csv(here("bonus.csv"))
+# 
+# cost <- bonuses |>
+#   mutate(cost = bonus * 4 / 3) |>
+#   summarize(s = sum(cost))
+# 
 
 ```
 
@@ -163,3 +163,43 @@ good_stuff |> filter(type=="selection") |>
   group_by(gameId, condition, trial_index) |>
   summarize(acc = sum(correct) / n())  |> ggplot(aes(x=trial_index, y=acc, color=condition))+geom_jitter(alpha=.1, color="black")+geom_smooth()+coord_cartesian(ylim=c(0,1))+theme(legend.position="bottom")
 ```
+
+
+# SPR
+
+need to re-match the words and RTs
+
+```{r}
+
+spr <- good_stuff |> filter(type=="reading") |>select(-button_rt, -correct, -selected) |>  mutate(rt=map(rt, fromJSON)) |> left_join(read_csv(here("labeled_yoked.csv"))) |> mutate(words=str_split(words, "\\s+")) |> unnest(rt, words) |> group_by(workerid,correct_tangram, condition, gameId, text, trial_index, type, orig_trialNum, orig_repNum, matcher_trialNum, matcher_repNum) |> mutate(words=lag(words))
+
+```
+
+
+# What we said in the pre-reg
+
+Condition differences: condition refers to yoked or shuffled.
+
+Logistic model of target selection accuracy: Accuracy ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+
+Time to selection:  Selection_time ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+
+Per-word reading time analyses: We will compare different predictors of RTs. Because SPR notoriously has lagged effects, we will consider models that incorporate the predictors of either just the target word, or the target word as well as up to three prior words. We are unsure of exactly what predictors will work, so these should be considered exploratory analyses. 
+
+We are unsure of how well mixed effects will fit, but we will aim for this structure. 
+
+Base_model: RT ~ (word_len + word_freq) + original_rep_num * condition + viewing_order + (1| gameId) +  (1| participant) + (1|tangram)
+
+KL divergence of information: From our CLIP model, we will look at the KL divergence in the model’s predicted distribution of adding that word based on the distributions for the partial description up to that word and the partial description including that word.  RT ~ (word_len + word_freq + KL_div) + original_rep_num * condition + viewing_order + (1| gameId) +  (1| participant) + (1|tangram)
+
+LM surprisal: We will use a non-vision language model (a llama model) to calculate per-word surprisal. RT ~ (word_len + word_freq + surprisal) + original_rep_num * condition + viewing_order + (1| gameId) +  (1| participant) + (1|tangram)
+
+VLM surprisal: We will use a vision language model (llama 3.2) to calculate per-word surprisal conditioned on either the target image or the grid of images with the target highlighted. RT ~ (word_len + word_freq + vision_surprisal) + original_rep_num * condition + viewing_order + (1| gameId) +  (1| participant) + (1|tangram)
+
+We will also do model comparisons using models with multiple of these predictors into order to look at which sources of information (KL divergence, surprisal, vlm surprisal) lead to better fitting models and whether adding multiple of these sources provides additional fit. 
+
+We will also look at which items and  words are best or worst fit by these models. 
+
+Outliers and Exclusions
+Describe exactly how outliers will be defined and handled, and your precise rule(s) for excluding observations.
+We will exclude individual word RTs that are greater than 2000 ms. 

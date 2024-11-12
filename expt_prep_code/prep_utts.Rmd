@@ -297,6 +297,27 @@ combined_chat |>
   mutate(has_bad = map_lgl(text, is_bad)) |>
   filter(!has_bad) |>
   select(-has_bad) |>
-  nest(text = c(role, playerId, text)) |>
-  write_json(here("experiments/expt1/src/yoked.js"))
+  write_csv("yoked_shuffled.csv")
+# nest(text = c(role, playerId, text)) |>
+# write_json(here("experiments/expt1/src/yoked.js"))
+
+
+# want to make a word by word version to align for RTs
+combined_chat |>
+  filter(gameId %in% choose) |> 
+  mutate(has_bad = map_lgl(text, is_bad)) |>
+  filter(!has_bad) |>
+  select(-has_bad) |>
+    group_by(gameId, trialNum, repNum, tangram) |>
+  mutate(
+    same_person = playerId == lag(playerId),
+    label = case_when(
+      same_person ~ "",
+      is.na(same_person) ~ str_c(role, " "),
+      T ~str_c(role, " ")),
+    words = str_c(label, text)
+  ) |> 
+  group_by(gameId, trialNum, repNum, tangram) |>
+  summarize(words = str_c(words, collapse=" ")) |> 
+  rename(correct_tangram=tangram, orig_trialNum=trialNum) |> select(-repNum) |> write_csv(here("labeled_yoked.csv"))
 ```
