@@ -342,7 +342,7 @@ function drawStimulus(trial_pars) {
  *
  * Borrowed and adapted from:
  * https://stackoverflow.com/questions/11452022/measure-text-height-on-an-html5-canvas-element/19547748
- */
+ *
 
 class SprButtonPlugin {
   /**

@@ -19,10 +19,14 @@ library(knitr)
 library(ggtext)
 library(ggimage)
 library(jsonlite)
+library(brms)
+library(rstan)
+library(rstanarm)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 dat_loc <- "data/tgmatcheryoked-trials.csv"
-
 ```
 
 
@@ -40,68 +44,109 @@ free_response <- raw |>
 good_stuff <- raw |>
   filter(!is.na(correct_tangram)) |>
   select(
-    workerid, button_rt, correct, correct_tangram,condition,
+    workerid, button_rt, correct, correct_tangram, condition,
     gameId, selected, text, trial_index, type, rt, orig_trialNum, orig_repNum
   ) |>
-  mutate(workerid = as.factor(workerid)) |> 
-  mutate(matcher_trialNum=(trial_index-3)%/%3,
-         matcher_repNum=matcher_trialNum%/%12)
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(
+    matcher_trialNum = (trial_index - 3) %/% 3,
+    matcher_repNum = matcher_trialNum %/% 12
+  ) |>
+  mutate(workerid = ifelse(workerid == "3157" & condition == "yoked", "3157a", workerid)) |> # somehow two participants were assigned to 3157 -- but each set looks complete?
+  filter(workerid != "141") |>
+  filter(workerid != "35") # exclude two participants who didn't finish
+```
+
+TODO there's something weird where participant 3157 has data for two complete expts (yoked and shuffled). Looks from free response like it's two separate people who just both got the same participant number?  
+
+```{r}
+good_stuff |>
+  select(workerid, condition) |>
+  unique() |>
+  group_by(condition) |>
+  tally()
 ```
 
 <!--##  Bonus-->
 ```{r, eval=F}
 # worker <- read_csv(here("data/tgmatcheryoked-workerids.csv")) |> mutate(workerid = as.factor(workerid))
-# 
-# bonuses <- good_stuff |> filter(type=="selection") |> 
+#
+# bonuses <- good_stuff |> filter(type=="selection") |>
 #   group_by(workerid) |>
 #   summarize(bonus = round(sum(correct) * .05, 2)) |>
 #   left_join(worker) |>
 #   select(prolific_participant_id, bonus) |>
 #   write_csv(here("bonus.csv"))
-# 
+#
 # cost <- bonuses |>
 #   mutate(cost = bonus * 4 / 3) |>
 #   summarize(s = sum(cost))
-# 
-
+#
 ```
 
 # Checks
 ## SPR trials
 
 ```{r}
-spr <- good_stuff |> filter(type=="reading") |>select(-button_rt, -correct, -selected) |>  mutate(rt=map(rt, fromJSON)) |> unnest(rt)
+spr <- good_stuff |>
+  filter(type == "reading") |>
+  select(-button_rt, -correct, -selected) |>
+  mutate(rt = map(rt, fromJSON)) |>
+  unnest(rt)
 
-spr_sum <- spr |> group_by(workerid) |> summarize(RT=sum(rt)/1000)
+spr_sum <- spr |>
+  group_by(workerid) |>
+  summarize(RT = sum(rt) / 1000)
 
-ggplot(spr |> filter(rt<2000), aes(x=rt))+geom_histogram()+geom_vline(aes(xintercept=100))
-
+ggplot(spr |> filter(rt < 2000), aes(x = rt)) +
+  geom_histogram() +
+  geom_vline(aes(xintercept = 100))
 ```
 ## Selections
 
 ```{r}
-selections <- good_stuff |> filter(type=="selection") |> 
-  mutate(correct=as.numeric(selected==correct_tangram))
+selections <- good_stuff |>
+  filter(type == "selection") |>
+  mutate(correct = as.numeric(selected == correct_tangram))
 
-selections |> ggplot(aes(x=orig_repNum, y=button_rt/1000, color=condition))+geom_jitter(alpha=.05)+stat_summary()+geom_hline(yintercept=3)
+selections |> ggplot(aes(x = orig_repNum, y = button_rt / 1000, color = condition)) +
+  geom_jitter(alpha = .05) +
+  stat_summary() +
+  geom_hline(yintercept = 3)
 
-selections |> ggplot(aes(x=trial_index, y=button_rt/1000, color=condition))+geom_jitter(alpha=.05)+geom_smooth()+geom_hline(yintercept=3)
+selections |> ggplot(aes(x = trial_index, y = button_rt / 1000, color = condition)) +
+  geom_jitter(alpha = .05) +
+  geom_smooth() +
+  geom_hline(yintercept = 3)
 
 
-selections |> group_by(gameId, correct_tangram, orig_repNum, condition) |> summarize(pct_correct=mean(correct)) |> ggplot(aes(x=orig_repNum, y=pct_correct, color=condition))+geom_jitter(alpha=.1, color="black")+stat_summary(fun.data="mean_cl_boot")+geom_smooth()+theme(legend.position="bottom")
+selections |>
+  group_by(gameId, correct_tangram, orig_repNum, condition) |>
+  summarize(pct_correct = mean(correct)) |>
+  ggplot(aes(x = orig_repNum, y = pct_correct, color = condition)) +
+  geom_jitter(alpha = .1, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot") +
+  geom_smooth() +
+  theme(legend.position = "bottom")
 
-selections |> group_by(trial_index, condition, gameId) |> summarize(pct_correct=mean(correct)) |> ggplot(aes(x=trial_index, y=pct_correct, color=condition))+geom_jitter(alpha=.1, color="black")+geom_smooth()+coord_cartesian(ylim=c(0,1))+theme(legend.position="bottom")
-
+selections |>
+  group_by(trial_index, condition, gameId) |>
+  summarize(pct_correct = mean(correct)) |>
+  ggplot(aes(x = trial_index, y = pct_correct, color = condition)) +
+  geom_jitter(alpha = .1, color = "black") +
+  geom_smooth() +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(legend.position = "bottom")
 ```
 
 
 ## Accuracy
 
 ```{r}
-acc_by_participant <- good_stuff |> filter(type=="selection") |> 
+acc_by_participant <- good_stuff |>
+  filter(type == "selection") |>
   group_by(workerid, condition) |>
   summarize(acc = sum(correct) / n())
-
 ```
 
 Maybe 1 or 2 random guessers, not bad. 
@@ -109,10 +154,10 @@ Maybe 1 or 2 random guessers, not bad.
 ```{r}
 ggplot(acc_by_participant, aes(x = condition, y = acc)) +
   geom_jitter(height = 0, width = .1) +
-  coord_cartesian(ylim = c(0, 1),xlim=c(.5, 2.5), expand = F) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 2.5), expand = F) +
   geom_hline(yintercept = 1 / 12, linetype = "dashed", color = "blue") +
   stat_summary(data.fun = "mean_cl_boot", color = "blue") +
-  labs( y = "Percent correct")
+  labs(y = "Percent correct")
 ```
 
 ## Distribution across games
@@ -120,61 +165,231 @@ ggplot(acc_by_participant, aes(x = condition, y = acc)) +
 Small number randomness means we have 5-18 in each cell, but that's decent!
 
 ```{r}
-good_stuff |> select(workerid, gameId, condition) |> unique() |> group_by(gameId, condition) |> tally() |> pivot_wider(names_from=condition, values_from=n)
+good_stuff |>
+  select(workerid, gameId, condition) |>
+  unique() |>
+  group_by(gameId, condition) |>
+  tally() |>
+  pivot_wider(names_from = condition, values_from = n)
 ```
 
 # Accuracy
 
 ```{r}
- good_stuff |> filter(type=="selection") |> 
+good_stuff |>
+  filter(type == "selection") |>
   group_by(workerid, condition, orig_repNum) |>
-  summarize(acc = sum(correct) / n()) |> ggplot(aes(x=orig_repNum, y=acc, color=condition))+geom_jitter(alpha=.1)+theme(legend.position = "bottom")+geom_smooth()
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = orig_repNum, y = acc, color = condition)) +
+  geom_jitter(alpha = .1) +
+  theme(legend.position = "bottom") +
+  geom_smooth()
 
- good_stuff |> filter(type=="selection") |> 
+
+
+good_stuff |>
+  filter(type == "selection") |>
   group_by(gameId, condition, correct_tangram) |>
-  summarize(acc = sum(correct) / n()) |> ggplot(aes(x=reorder(correct_tangram, acc, mean), y=acc, color=condition))+geom_jitter(alpha=.5)+theme(legend.position = "none")+stat_summary(fun.data="mean_cl_boot", position=position_dodge(width=.2))
- 
-  good_stuff |> filter(type=="selection") |> 
-  group_by(gameId, condition, correct_tangram, orig_repNum) |>
-  summarize(acc = sum(correct) / n()) |> ggplot(aes(x=reorder(correct_tangram, acc, mean), y=acc, color=condition))+theme(legend.position = "none")+stat_summary(fun.data="mean_cl_boot", position=position_dodge(width=.2))+facet_wrap(~orig_repNum)
-  
-    good_stuff |> filter(type=="selection") |> 
-  group_by(gameId, condition, orig_repNum, workerid) |>
-  summarize(acc = sum(correct) / n()) |> ggplot(aes(x=reorder(str_sub(gameId,1,2), acc, mean), y=acc, color=condition))+theme(legend.position = "none")+stat_summary(fun.data="mean_cl_boot", position=position_dodge(width=.2))
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = reorder(correct_tangram, acc, mean), y = acc, color = condition)) +
+  geom_jitter(alpha = .5) +
+  theme(legend.position = "none") +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2))
 
+good_stuff |>
+  filter(type == "selection") |>
+  group_by(gameId, condition, correct_tangram, orig_repNum) |>
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = reorder(correct_tangram, acc, mean), y = acc, color = condition)) +
+  theme(legend.position = "none") +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2)) +
+  facet_wrap(~orig_repNum)
+
+good_stuff |>
+  filter(type == "selection") |>
+  group_by(gameId, condition, orig_repNum, workerid) |>
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = reorder(str_sub(gameId, 1, 2), acc, mean), y = acc, color = condition)) +
+  theme(legend.position = "none") +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2))
 ```
     
 ```{r}  
-    good_stuff |> filter(type=="selection") |> 
+good_stuff |>
+  filter(type == "selection") |>
   group_by(workerid, condition, orig_repNum) |>
-  summarize(acc = sum(correct) / n())  |> ggplot(aes(x=orig_repNum, y=acc, color=condition))+geom_jitter(alpha=.1, color="black")+stat_summary(fun.data="mean_cl_boot")+geom_smooth()+theme(legend.position="bottom")
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = orig_repNum, y = acc, color = condition)) +
+  geom_jitter(alpha = .1, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot") +
+  geom_smooth() +
+  theme(legend.position = "bottom")
 
-good_stuff |> filter(type=="selection") |> 
+good_stuff |>
+  filter(type == "selection") |>
   group_by(gameId, condition, trial_index) |>
-  summarize(acc = sum(correct) / n())  |> ggplot(aes(x=trial_index, y=acc, color=condition))+geom_jitter(alpha=.1, color="black")+geom_smooth()+coord_cartesian(ylim=c(0,1))+theme(legend.position="bottom")
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = trial_index, y = acc, color = condition)) +
+  geom_jitter(alpha = .1, color = "black") +
+  geom_smooth() +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(legend.position = "bottom")
 ```
 
 ```{r}  
-    good_stuff |> filter(type=="selection") |> 
+good_stuff |>
+  filter(type == "selection") |>
   group_by(gameId, condition, orig_repNum, matcher_repNum) |>
-  summarize(acc = sum(correct) / n())  |> ggplot(aes(x=orig_repNum, y=acc, group=matcher_repNum, color=matcher_repNum))+geom_jitter(alpha=.1, color="black")+stat_summary(fun.data="mean_cl_boot")+theme(legend.position="bottom")+facet_wrap(~condition)
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = orig_repNum, y = acc, group = matcher_repNum, color = matcher_repNum)) +
+  geom_jitter(alpha = .1, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot") +
+  theme(legend.position = "bottom") +
+  facet_wrap(~condition)
 
-good_stuff |> filter(type=="selection") |> 
+good_stuff |>
+  filter(type == "selection") |>
   group_by(gameId, condition, trial_index) |>
-  summarize(acc = sum(correct) / n())  |> ggplot(aes(x=trial_index, y=acc, color=condition))+geom_jitter(alpha=.1, color="black")+geom_smooth()+coord_cartesian(ylim=c(0,1))+theme(legend.position="bottom")
+  summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = trial_index, y = acc, color = condition)) +
+  geom_jitter(alpha = .1, color = "black") +
+  geom_smooth() +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme(legend.position = "bottom")
 ```
 
+## For HSP
+
+```{r}
+good_stuff |>
+  filter(type == "selection") |>
+  group_by(condition, correct_tangram, matcher_repNum) |>
+  # summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = matcher_repNum + 1, y = as.numeric(correct), color = condition)) +
+  # geom_jitter(alpha = .1) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2)) +
+  stat_summary(fun.data = "mean_cl_boot", geom = "line", position = position_dodge(width = .2, )) +
+  theme(legend.position = "bottom") +
+  labs(y = "Accuracy", x = "Trial block for matchers")
+
+good_stuff |>
+  filter(type == "selection") |>
+  group_by(condition, correct_tangram, orig_repNum) |>
+  # summarize(acc = sum(correct) / n()) |>
+  ggplot(aes(x = orig_repNum + 1, y = as.numeric(correct), color = condition)) +
+  # geom_jitter(alpha = .1) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2)) +
+  stat_summary(fun.data = "mean_cl_boot", geom = "line", position = position_dodge(width = .2, )) +
+  theme(legend.position = "bottom") +
+  labs(y = "Accuracy", x = "Trial block original game")
+```
 
 # SPR
 
 need to re-match the words and RTs
 
 ```{r}
+spr <- good_stuff |>
+  filter(type == "reading") |>
+  select(-button_rt, -correct, -selected) |>
+  mutate(rt = map(rt, fromJSON)) |>
+  left_join(read_csv(here("labeled_yoked.csv"))) |>
+  mutate(words = str_split(words, "\\s+")) |>
+  unnest(rt, words) |>
+  group_by(workerid, correct_tangram, condition, gameId, text, trial_index, type, orig_trialNum, orig_repNum, matcher_trialNum, matcher_repNum) |>
+  mutate(words = lag(words)) |>
+  mutate(is_from_speaker = case_when(
+    words == "speaker**" ~ 1,
+    words == "listener**" ~ 0,
+    T ~ NA
+  )) |>
+  fill(is_from_speaker) |>
+  mutate(
+    is_valid_word = case_when(
+      is.na(words) ~ 0,
+      words %in% c("speaker**", "listener**") ~ 0,
+      T ~ 1
+    ),
+    word_index = cumsum(is_valid_word),
+    is_valid_speaker = ifelse(is_from_speaker == 1 & is_valid_word == 1, 1, 0),
+    word_speaker_index = cumsum(is_valid_speaker),
+    word_speaker_index = ifelse(is_valid_speaker, word_speaker_index, NA)
+  ) |>
+  select(-is_valid_word, -is_valid_speaker)
 
-spr <- good_stuff |> filter(type=="reading") |>select(-button_rt, -correct, -selected) |>  mutate(rt=map(rt, fromJSON)) |> left_join(read_csv(here("labeled_yoked.csv"))) |> mutate(words=str_split(words, "\\s+")) |> unnest(rt, words) |> group_by(workerid,correct_tangram, condition, gameId, text, trial_index, type, orig_trialNum, orig_repNum, matcher_trialNum, matcher_repNum) |> mutate(words=lag(words))
+# spr |> filter(is_from_speaker==0) |> View()
 
+# words <- spr |> ungroup() |> select(words) |> unique() |> filter(!is.na(words))|> write_csv(here("words.csv"))
 ```
 
+```{r}
+read_csv(here("labeled_yoked.csv")) |> View()
+# read_csv(here("word_freq.csv"))
+kl_pred <- read_csv(here("kl_preds.csv")) |>
+  select(-text, -partial, -condition) |>
+  rename(word_index = partial_length, correct_tangram = tangram, orig_repNum = repNum)
+
+llm_probs <- read_csv(here("llm_probs_concat.csv")) |>
+  mutate(word_speaker_index = word_idx + 1, words = full_text) |>
+  left_join(read_csv(here("expt_prep_code/expt_4_games_concat.csv"))) |>
+  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, logprob, word)
+
+
+# inner_join(read_csv(here("target_sentences.csv"))) |> #rename(correct_tangram=tangram, orig_repNum=repNum) |> select(correct_tangram, #gameId, orig_repNum, word_index, word, logprob)
+
+# read_csv(here("yoked_shuffled.csv")) |>filter(role=="speaker") |> #group_by(gameId, repNum, tangram) |> summarize(full_text=str_c(text, collapse=" #")) |>  left_join(read_csv(here("llm_probs.csv"))) |> filter(is.na(logprob)) |> #View()
+```
+
+A very crappy first pass at seeing if there's any signal 
+
+```{r}
+spr_labeled <- spr |>
+  left_join(llm_probs) |>
+  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_index")) |>
+  left_join(read_csv(here("word_freq.csv"))) |>
+  filter(!is.na(words)) |>
+  mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |>
+  mutate(
+    word_len_lag1 = lag(word_len),
+    freq_lag1 = lag(freq),
+    word_len_lag2 = lag(word_len, 2),
+    freq_lag2 = lag(freq, 2),
+    word_len_lag3 = lag(word_len, 3),
+    freq_lag3 = lag(freq, 3)
+  ) |>
+  select(-text, -type) |>
+  filter(rt < 2000)
+```
+
+
+```{r}
+library(lme4)
+
+
+
+
+pred1 <- lm(rt ~ word_len * freq + orig_repNum * condition + matcher_trialNum, data = spr_labeled)
+
+pred2 <- lmer(rt ~ word_len * freq + word_len_lag1 * freq_lag1 + word_len_lag2 * freq_lag2 + word_len_lag3 * freq_lag3 + orig_repNum * condition + matcher_trialNum + (1 | workerid) + (1 | correct_tangram) + (1 | gameId), data = spr_labeled)
+
+summary(pred2)
+```
+
+```{r}
+spr_priors <- c(
+  set_prior("normal(200,200)", class = "Intercept"),
+  set_prior("normal(0, 10)", class = "b")
+)
+
+spr_priors <- c(
+  set_prior("normal(500,200)", class = "Intercept"),
+  set_prior("normal(0, 10)", class = "b")
+)
+
+foo <- brm(rt ~ word_len * freq + orig_repNum * condition + matcher_trialNum + (1 | workerid) + (1 | gameId) + (1 | correct_tangram), data = spr_labeled, prior = spr_priors, file = "spr1.rds")
+
+summary(foo)
+```
 
 # What we said in the pre-reg
 

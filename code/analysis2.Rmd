@@ -20,7 +20,6 @@ library(here)
 library(brms)
 library(rstan)
 library(googledrive)
-library(glmnet)
 library(tidybayes)
 library(ggstance)
 library("lattice")
@@ -76,6 +75,11 @@ good_stuff <- raw |>
   group_by(workerid) |>
   mutate(trial_order = row_number()) |>
   ungroup()
+```
+
+
+```{r}
+good_stuff  |> unique()
 ```
 
 ##  Bonus

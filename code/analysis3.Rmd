@@ -55,6 +55,12 @@ good_stuff <- raw |>
   ungroup()
 ```
 
+```{r}
+good_stuff |> select(text) |> unique()
+good_stuff |> unique()
+```
+
+
 ##  Bonus
 ```{r, eval=F}
 worker <- read_csv(here("data/tgmatchercalibration-workerids.csv")) |> mutate(workerid = as.factor(workerid))

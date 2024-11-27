@@ -20,7 +20,6 @@ library(here)
 library(brms)
 library(rstan)
 library(googledrive)
-library(glmnet)
 library(tidybayes)
 library(ggstance)
 library("lattice")
@@ -41,6 +40,10 @@ images <- "experiments/expt1/assets/images"
 ```
 
 # Experiment
+
+2 and 6 player games from rotate condition (medium thick), on 1st and 6th rounds 
+
+60 participants, 60 items each
 
 [try the experiment](vboyce.github.io/tg-matcher)
 
@@ -74,6 +77,7 @@ good_stuff <- raw |>
   mutate(trial_order = row_number()) |>
   ungroup()
 ```
+
 
 ##  Bonus
 ```{r, eval=F}
