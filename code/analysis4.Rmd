@@ -27,6 +27,7 @@ options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 dat_loc <- "data/tgmatcheryoked-trials.csv"
+pred_loc <- "code/predictors"
 ```
 
 
@@ -261,16 +262,34 @@ good_stuff |>
 ## For HSP
 
 ```{r}
+summary2 <- good_stuff |>
+  filter(type == "selection") |>
+  group_by(condition, gameId, matcher_repNum) |>
+  summarize(correct = sum(correct) / n())
+
 good_stuff |>
   filter(type == "selection") |>
-  group_by(condition, correct_tangram, matcher_repNum) |>
-  # summarize(acc = sum(correct) / n()) |>
+  group_by(condition, workerid, matcher_repNum) |>
   ggplot(aes(x = matcher_repNum + 1, y = as.numeric(correct), color = condition)) +
-  # geom_jitter(alpha = .1) +
+  geom_jitter(data = summary2, alpha = .4, position = position_dodge(width = .2)) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2)) +
   stat_summary(fun.data = "mean_cl_boot", geom = "line", position = position_dodge(width = .2, )) +
+  labs(y = "Accuracy", x = "Trial block for matchers") +
   theme(legend.position = "bottom") +
-  labs(y = "Accuracy", x = "Trial block for matchers")
+  scale_x_continuous(breaks = seq(1, 6, 1)) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 6.5), expand = F) +
+  theme(
+    legend.title = element_blank(),
+    panel.grid = element_blank()
+  )
+
+ggsave(here("writing/hsp2.png"), width = 5, height = 3)
+
+summary <- good_stuff |>
+  filter(type == "selection") |>
+  group_by(condition, gameId, orig_repNum) |>
+  summarize(correct = sum(correct) / n())
+
 
 good_stuff |>
   filter(type == "selection") |>
@@ -278,25 +297,60 @@ good_stuff |>
   # summarize(acc = sum(correct) / n()) |>
   ggplot(aes(x = orig_repNum + 1, y = as.numeric(correct), color = condition)) +
   # geom_jitter(alpha = .1) +
+  geom_jitter(data = summary, alpha = .4, position = position_dodge(width = .2)) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .2)) +
   stat_summary(fun.data = "mean_cl_boot", geom = "line", position = position_dodge(width = .2, )) +
   theme(legend.position = "bottom") +
-  labs(y = "Accuracy", x = "Trial block original game")
-```
+  scale_x_continuous(breaks = seq(1, 6, 1)) +
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 6.5), expand = F) +
+  labs(y = "Accuracy", x = "Block in original game") +
+  theme(
+    legend.title = element_blank(),
+    panel.grid = element_blank()
+  )
 
+ggsave(here("writing/hsp1.png"), width = 5, height = 3)
+```
+TODO 
+
+Logistic model of target selection accuracy: Accuracy ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+
+Time to selection:  Selection_time ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+
+
+```{r}
+
+for_acc_mod <- good_stuff |> 
+  filter(type == "selection") |>
+  mutate(correct=as.numeric(correct)) |> 
+  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
+
+acc_priors <- c(
+  set_prior("normal(0, 1)", class = "b"),
+  set_prior("normal(0,1)", class="sd")
+)
+
+library(lme4)
+#test <- glmer(correct~orig_repNum*condition + matcher_trialNum +     (1|gameId)+(1|correct_tangram)+(1|workerid), family=binomial(), data=for_acc_mod)
+
+foo <- brm(correct~orig_repNum*condition + matcher_trialNum + (1|gameId)+(1|correct_tangram)+(1|workerid),family=bernoulli(link="logit"), data = for_acc_mod, prior = acc_priors, file = "acc1.rds")
+
+```
 # SPR
 
 need to re-match the words and RTs
 
 ```{r}
+labeled_yoked <- read_csv(here(pred_loc, "labeled_yoked.csv")) |> rename(orig_repNum = repNum)
+
 spr <- good_stuff |>
   filter(type == "reading") |>
   select(-button_rt, -correct, -selected) |>
   mutate(rt = map(rt, fromJSON)) |>
-  left_join(read_csv(here("labeled_yoked.csv"))) |>
+  left_join(labeled_yoked) |>
   mutate(words = str_split(words, "\\s+")) |>
   unnest(rt, words) |>
-  group_by(workerid, correct_tangram, condition, gameId, text, trial_index, type, orig_trialNum, orig_repNum, matcher_trialNum, matcher_repNum) |>
+  group_by(workerid, correct_tangram, condition, gameId, text, type, orig_trialNum, orig_repNum, matcher_trialNum) |>
   mutate(words = lag(words)) |>
   mutate(is_from_speaker = case_when(
     words == "speaker**" ~ 1,
@@ -315,52 +369,67 @@ spr <- good_stuff |>
     word_speaker_index = cumsum(is_valid_speaker),
     word_speaker_index = ifelse(is_valid_speaker, word_speaker_index, NA)
   ) |>
-  select(-is_valid_word, -is_valid_speaker)
-
-# spr |> filter(is_from_speaker==0) |> View()
-
-# words <- spr |> ungroup() |> select(words) |> unique() |> filter(!is.na(words))|> write_csv(here("words.csv"))
+  select(-is_valid_word, -is_valid_speaker, -trial_index, -matcher_repNum)
 ```
 
+TODO check units for everything 
+
 ```{r}
-read_csv(here("labeled_yoked.csv")) |> View()
-# read_csv(here("word_freq.csv"))
-kl_pred <- read_csv(here("kl_preds.csv")) |>
-  select(-text, -partial, -condition) |>
-  rename(word_index = partial_length, correct_tangram = tangram, orig_repNum = repNum)
+kl_pred <- read_csv(here(pred_loc, "kl_preds.csv")) |>
+  # select(-text, -partial, -condition, -trialNum) |>
+  select(-condition, -trialNum, -text) |>
+  rename(word_speaker_index = partial_length, correct_tangram = tangram, orig_repNum = repNum)
 
-llm_probs <- read_csv(here("llm_probs_concat.csv")) |>
+llm_concat_probs <- read_csv(here(pred_loc, "llm_probs_concat.csv")) |>
   mutate(word_speaker_index = word_idx + 1, words = full_text) |>
-  left_join(read_csv(here("expt_prep_code/expt_4_games_concat.csv"))) |>
-  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, logprob, word)
+  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv"))) |>
+  mutate(surprisal_llm_concat = logprob * log2(exp(1)) * -1) |>
+  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_llm_concat, word)
 
+vlm_concat_probs <- read_csv(here(pred_loc, "vlm_probs_concat.csv")) |>
+  mutate(word_speaker_index = word_idx + 1, words = full_text) |>
+  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv"))) |>
+  mutate(surprisal_vlm_concat = logprob * log2(exp(1)) * -1) |>
+  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_vlm_concat, word)
 
-# inner_join(read_csv(here("target_sentences.csv"))) |> #rename(correct_tangram=tangram, orig_repNum=repNum) |> select(correct_tangram, #gameId, orig_repNum, word_index, word, logprob)
-
-# read_csv(here("yoked_shuffled.csv")) |>filter(role=="speaker") |> #group_by(gameId, repNum, tangram) |> summarize(full_text=str_c(text, collapse=" #")) |>  left_join(read_csv(here("llm_probs.csv"))) |> filter(is.na(logprob)) |> #View()
+word_freq <- read_csv(here(pred_loc, "word_freq.csv"))
 ```
 
 A very crappy first pass at seeing if there's any signal 
 
 ```{r}
 spr_labeled <- spr |>
-  left_join(llm_probs) |>
-  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_index")) |>
-  left_join(read_csv(here("word_freq.csv"))) |>
+  left_join(llm_concat_probs) |>
+  left_join(vlm_concat_probs) |>
+  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |>
+  left_join(word_freq) |>
   filter(!is.na(words)) |>
   mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |>
-  mutate(
-    word_len_lag1 = lag(word_len),
-    freq_lag1 = lag(freq),
-    word_len_lag2 = lag(word_len, 2),
-    freq_lag2 = lag(freq, 2),
-    word_len_lag3 = lag(word_len, 3),
-    freq_lag3 = lag(freq, 3)
-  ) |>
+  mutate(across(c("freq", "word_len", "surprisal_llm_concat", "surprisal_vlm_concat", "kl"), list(lag = ~ lag(.x), lag2 = ~ lag(.x, 2), lag3 = ~ lag(.x, 3)))) |>
+  ungroup() |>
+  filter(is_from_speaker == 1) |>
   select(-text, -type) |>
   filter(rt < 2000)
+
+
+spr_labeled |>
+  filter(is.na(surprisal_vlm_concat)) |>
+  filter(!is.na(word_speaker_index))
+spr_labeled |>
+  filter(is.na(surprisal_llm_concat)) |>
+  filter(!is.na(word_speaker_index))
+spr_labeled |>
+  filter(is.na(freq)) |>
+  filter(!is.na(word_speaker_index))
+spr_labeled |>
+  filter(is.na(word_len)) |>
+  filter(!is.na(word_speaker_index))
+spr_labeled |>
+  filter(is.na(kl)) |>
+  filter(!is.na(word_speaker_index)) # This one says we need to fix things!!!!
 ```
 
+TODO check that we have values for everything we expect to
 
 ```{r}
 library(lme4)
