@@ -7,7 +7,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
 options(knitr.table.format = "html")
 knitr::opts_chunk$set(echo = F)
@@ -319,22 +319,20 @@ Time to selection:  Selection_time ~ original_rep_num * condition + viewing_orde
 
 
 ```{r}
-
-for_acc_mod <- good_stuff |> 
+for_acc_mod <- good_stuff |>
   filter(type == "selection") |>
-  mutate(correct=as.numeric(correct)) |> 
+  mutate(correct = as.numeric(correct)) |>
   select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
 
 acc_priors <- c(
   set_prior("normal(0, 1)", class = "b"),
-  set_prior("normal(0,1)", class="sd")
+  set_prior("normal(0,1)", class = "sd")
 )
 
 library(lme4)
-#test <- glmer(correct~orig_repNum*condition + matcher_trialNum +     (1|gameId)+(1|correct_tangram)+(1|workerid), family=binomial(), data=for_acc_mod)
+# test <- glmer(correct~orig_repNum*condition + matcher_trialNum +     (1|gameId)+(1|correct_tangram)+(1|workerid), family=binomial(), data=for_acc_mod)
 
-foo <- brm(correct~orig_repNum*condition + matcher_trialNum + (1|gameId)+(1|correct_tangram)+(1|workerid),family=bernoulli(link="logit"), data = for_acc_mod, prior = acc_priors, file = "acc1.rds")
-
+foo <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = "acc1.rds")
 ```
 # SPR
 
@@ -352,6 +350,7 @@ spr <- good_stuff |>
   unnest(rt, words) |>
   group_by(workerid, correct_tangram, condition, gameId, text, type, orig_trialNum, orig_repNum, matcher_trialNum) |>
   mutate(words = lag(words)) |>
+  filter(!is.na(words)) |> 
   mutate(is_from_speaker = case_when(
     words == "speaker**" ~ 1,
     words == "listener**" ~ 0,
@@ -367,66 +366,89 @@ spr <- good_stuff |>
     word_index = cumsum(is_valid_word),
     is_valid_speaker = ifelse(is_from_speaker == 1 & is_valid_word == 1, 1, 0),
     word_speaker_index = cumsum(is_valid_speaker),
-    word_speaker_index = ifelse(is_valid_speaker, word_speaker_index, NA)
+    word_speaker_index = ifelse(is_valid_speaker, word_speaker_index, NA),
+    overall_index = row_number()
   ) |>
   select(-is_valid_word, -is_valid_speaker, -trial_index, -matcher_repNum)
 ```
 
 TODO check units for everything 
 
-```{r}
-kl_pred <- read_csv(here(pred_loc, "kl_preds.csv")) |>
+```{r, message=T}
+kl_pred <- read_csv(here(pred_loc, "kl_full.csv")) |>
   # select(-text, -partial, -condition, -trialNum) |>
-  select(-condition, -trialNum, -text) |>
-  rename(word_speaker_index = partial_length, correct_tangram = tangram, orig_repNum = repNum)
+  select( -trialNum) |>
+  rename(word_speaker_index = partial_length, correct_tangram = tangram, orig_repNum = repNum) |> 
+  select(kl,correct_tangram, gameId, orig_repNum, word_speaker_index)
 
-llm_concat_probs <- read_csv(here(pred_loc, "llm_probs_concat.csv")) |>
-  mutate(word_speaker_index = word_idx + 1, words = full_text) |>
-  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv"))) |>
+llm_concat_probs <- read_csv(here(pred_loc, "llm_probs_concat.csv")) |> 
+  group_by(full_text, word, word_idx) |> 
+  summarize(logprob=mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
+  mutate(word_speaker_index = word_idx + 1) |>
+  rename(words=full_text) |> 
+  ungroup() |> 
+  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv")), by=c("words")) |> 
   mutate(surprisal_llm_concat = logprob * log2(exp(1)) * -1) |>
-  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_llm_concat, word)
+  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_llm_concat)
 
 vlm_concat_probs <- read_csv(here(pred_loc, "vlm_probs_concat.csv")) |>
-  mutate(word_speaker_index = word_idx + 1, words = full_text) |>
+   group_by(full_text, word, word_idx) |> 
+  summarize(logprob=mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
+    mutate(word_speaker_index = word_idx + 1) |>
+  rename(words=full_text) |> 
+  ungroup() |> 
   left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv"))) |>
   mutate(surprisal_vlm_concat = logprob * log2(exp(1)) * -1) |>
-  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_vlm_concat, word)
+  select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_vlm_concat)
+
+llm_as_seen_probs <- read_csv(here(pred_loc, "llm_probs_as_seen.csv")) |> 
+  group_by(full_text, word_idx, word) |> 
+  summarize(logprob=mean(logprob)) |> 
+  mutate(overall_index = word_idx+1, words=full_text) |>
+  left_join(read_csv(here(pred_loc, "expt_4_games_as_seen.csv"))) |>
+  mutate(surprisal_llm_as_seen = logprob * log2(exp(1)) * -1) |>
+  select(correct_tangram, gameId, orig_repNum = repNum, overall_index, surprisal_llm_as_seen, word)
 
 word_freq <- read_csv(here(pred_loc, "word_freq.csv"))
+
+test <- read_csv(here(pred_loc, "expt_4_games_concat.csv")
+)
 ```
 
 A very crappy first pass at seeing if there's any signal 
 
 ```{r}
+#177,185
+
 spr_labeled <- spr |>
-  left_join(llm_concat_probs) |>
-  left_join(vlm_concat_probs) |>
-  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |>
-  left_join(word_freq) |>
+  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |> 
+left_join(word_freq) |> 
+  left_join(llm_concat_probs, by=c("correct_tangram", "gameId","orig_repNum", "word_speaker_index")) |> 
+  left_join(vlm_concat_probs) |> 
   filter(!is.na(words)) |>
-  mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |>
-  mutate(across(c("freq", "word_len", "surprisal_llm_concat", "surprisal_vlm_concat", "kl"), list(lag = ~ lag(.x), lag2 = ~ lag(.x, 2), lag3 = ~ lag(.x, 3)))) |>
+  mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |> ungroup() 
+
+
+spr_resid_1 <- spr_labeled |> 
+  mutate(surprisal_llm_concat_resid = lm(surprisal_llm_concat ~ freq + word_len, data=spr_labeled, na.action=na.exclude) |> residuals())
+
+spr_resid_2 <- spr_resid_1 |> 
+  mutate(surprisal_vlm_concat_resid = lm(surprisal_vlm_concat ~ freq + word_len + surprisal_llm_concat_resid, data=spr_resid_1, na.action=na.exclude) |> residuals())
+
+spr_resid_3 <- spr_resid_2|> 
+  mutate(kl_resid = lm(kl ~ freq + word_len + surprisal_llm_concat_resid, data=spr_resid_2, na.action=na.exclude) |> residuals())
+
+
+spr_resid_lag <- spr_resid_3 |>
+  mutate(across(c("freq", "word_len", "surprisal_llm_concat_resid", "surprisal_vlm_concat_resid", "kl_resid"), list(lag1 = ~ lag(.x), lag2 = ~ lag(.x, 2), lag3 = ~ lag(.x, 3)))) |>
   ungroup() |>
   filter(is_from_speaker == 1) |>
   select(-text, -type) |>
   filter(rt < 2000)
 
+write_csv(spr_resid_lag, "spr_resid_lag.csv")
 
-spr_labeled |>
-  filter(is.na(surprisal_vlm_concat)) |>
-  filter(!is.na(word_speaker_index))
-spr_labeled |>
-  filter(is.na(surprisal_llm_concat)) |>
-  filter(!is.na(word_speaker_index))
-spr_labeled |>
-  filter(is.na(freq)) |>
-  filter(!is.na(word_speaker_index))
-spr_labeled |>
-  filter(is.na(word_len)) |>
-  filter(!is.na(word_speaker_index))
-spr_labeled |>
-  filter(is.na(kl)) |>
-  filter(!is.na(word_speaker_index)) # This one says we need to fix things!!!!
+
 ```
 
 TODO check that we have values for everything we expect to
@@ -435,27 +457,43 @@ TODO check that we have values for everything we expect to
 library(lme4)
 
 
+everything_lag3 <- lmer( rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid+
+                         word_len_lag1 * freq_lag1+ kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1+
+                         word_len_lag2 * freq_lag2+ kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2+
+                         word_len_lag3 * freq_lag3+ kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3+
+  orig_repNum * condition + matcher_trialNum+
+     (1 | workerid) + (1 | correct_tangram) + (1 | gameId), 
+data = spr_resid_lag)
+
+```
 
 
-pred1 <- lm(rt ~ word_len * freq + orig_repNum * condition + matcher_trialNum, data = spr_labeled)
+```{r}
 
-pred2 <- lmer(rt ~ word_len * freq + word_len_lag1 * freq_lag1 + word_len_lag2 * freq_lag2 + word_len_lag3 * freq_lag3 + orig_repNum * condition + matcher_trialNum + (1 | workerid) + (1 | correct_tangram) + (1 | gameId), data = spr_labeled)
+summary(everything_lag3)$coef |> as_tibble(rownames="term") |> filter(abs(`t value`)>2) |> View()
 
-summary(pred2)
 ```
 
 ```{r}
-spr_priors <- c(
-  set_prior("normal(200,200)", class = "Intercept"),
-  set_prior("normal(0, 10)", class = "b")
-)
+
+spr_labeled <- read_csv("spr_resid_lag.csv")
 
 spr_priors <- c(
-  set_prior("normal(500,200)", class = "Intercept"),
-  set_prior("normal(0, 10)", class = "b")
+  set_prior("normal(400,100)", class = "Intercept"),
+  set_prior("normal(0, 5)", class = "b"),
+  set_prior("normal(0, 5)", class = "sd")
+
 )
 
-foo <- brm(rt ~ word_len * freq + orig_repNum * condition + matcher_trialNum + (1 | workerid) + (1 | gameId) + (1 | correct_tangram), data = spr_labeled, prior = spr_priors, file = "spr1.rds")
+foo <- brm( rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid+
+                         word_len_lag1 * freq_lag1+ kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1+
+                         word_len_lag2 * freq_lag2+ kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2+
+                         word_len_lag3 * freq_lag3+ kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3+
+  orig_repNum * condition + matcher_trialNum+
+     (1 | workerid) + (1 | correct_tangram) + (1 | gameId), 
+           data = spr_labeled, prior = spr_priors,
+           control = list(adapt_delta = 0.99),
+           file = "everything_lag3.rds")
 
 summary(foo)
 ```
