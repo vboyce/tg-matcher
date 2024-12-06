@@ -306,7 +306,10 @@ good_stuff |>
   labs(y = "Accuracy", x = "Block in original game") +
   theme(
     legend.title = element_blank(),
-    panel.grid = element_blank()
+    panel.grid = element_blank(),
+    legend.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 14)
   )
 
 ggsave(here("writing/hsp1.png"), width = 5, height = 3)
@@ -334,9 +337,10 @@ library(lme4)
 
 foo <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = "acc1.rds")
 ```
+
 # SPR
 
-need to re-match the words and RTs
+## Prep
 
 ```{r}
 labeled_yoked <- read_csv(here(pred_loc, "labeled_yoked.csv")) |> rename(orig_repNum = repNum)
@@ -350,7 +354,7 @@ spr <- good_stuff |>
   unnest(rt, words) |>
   group_by(workerid, correct_tangram, condition, gameId, text, type, orig_trialNum, orig_repNum, matcher_trialNum) |>
   mutate(words = lag(words)) |>
-  filter(!is.na(words)) |> 
+  filter(!is.na(words)) |>
   mutate(is_from_speaker = case_when(
     words == "speaker**" ~ 1,
     words == "listener**" ~ 0,
@@ -377,69 +381,70 @@ TODO check units for everything
 ```{r, message=T}
 kl_pred <- read_csv(here(pred_loc, "kl_full.csv")) |>
   # select(-text, -partial, -condition, -trialNum) |>
-  select( -trialNum) |>
-  rename(word_speaker_index = partial_length, correct_tangram = tangram, orig_repNum = repNum) |> 
-  select(kl,correct_tangram, gameId, orig_repNum, word_speaker_index)
+  select(-trialNum) |>
+  rename(word_speaker_index = partial_length, correct_tangram = tangram, orig_repNum = repNum) |>
+  select(kl, correct_tangram, gameId, orig_repNum, word_speaker_index)
 
-llm_concat_probs <- read_csv(here(pred_loc, "llm_probs_concat.csv")) |> 
-  group_by(full_text, word, word_idx) |> 
-  summarize(logprob=mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
+llm_concat_probs <- read_csv(here(pred_loc, "llm_probs_concat.csv")) |>
+  group_by(full_text, word, word_idx) |>
+  summarize(logprob = mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
   mutate(word_speaker_index = word_idx + 1) |>
-  rename(words=full_text) |> 
-  ungroup() |> 
-  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv")), by=c("words")) |> 
+  rename(words = full_text) |>
+  ungroup() |>
+  left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv")), by = c("words")) |>
   mutate(surprisal_llm_concat = logprob * log2(exp(1)) * -1) |>
   select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_llm_concat)
 
 vlm_concat_probs <- read_csv(here(pred_loc, "vlm_probs_concat.csv")) |>
-   group_by(full_text, word, word_idx) |> 
-  summarize(logprob=mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
-    mutate(word_speaker_index = word_idx + 1) |>
-  rename(words=full_text) |> 
-  ungroup() |> 
+  group_by(full_text, word, word_idx) |>
+  summarize(logprob = mean(logprob)) |> # deal with stochasticity in surprisal estimates for when the exact same phrase occurred repeatedly
+  mutate(word_speaker_index = word_idx + 1) |>
+  rename(words = full_text) |>
+  ungroup() |>
   left_join(read_csv(here(pred_loc, "expt_4_games_concat.csv"))) |>
   mutate(surprisal_vlm_concat = logprob * log2(exp(1)) * -1) |>
   select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_vlm_concat)
 
-llm_as_seen_probs <- read_csv(here(pred_loc, "llm_probs_as_seen.csv")) |> 
-  group_by(full_text, word_idx, word) |> 
-  summarize(logprob=mean(logprob)) |> 
-  mutate(overall_index = word_idx+1, words=full_text) |>
+llm_as_seen_probs <- read_csv(here(pred_loc, "llm_probs_as_seen.csv")) |>
+  group_by(full_text, word_idx, word) |>
+  summarize(logprob = mean(logprob)) |>
+  mutate(overall_index = word_idx + 1, words = full_text) |>
   left_join(read_csv(here(pred_loc, "expt_4_games_as_seen.csv"))) |>
   mutate(surprisal_llm_as_seen = logprob * log2(exp(1)) * -1) |>
   select(correct_tangram, gameId, orig_repNum = repNum, overall_index, surprisal_llm_as_seen, word)
 
 word_freq <- read_csv(here(pred_loc, "word_freq.csv"))
 
-test <- read_csv(here(pred_loc, "expt_4_games_concat.csv")
-)
+test <- read_csv(here(pred_loc, "expt_4_games_concat.csv"))
 ```
 
 A very crappy first pass at seeing if there's any signal 
 
 ```{r}
-#177,185
+# 177,185
 
 spr_labeled <- spr |>
-  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |> 
-left_join(word_freq) |> 
-  left_join(llm_concat_probs, by=c("correct_tangram", "gameId","orig_repNum", "word_speaker_index")) |> 
-  left_join(vlm_concat_probs) |> 
+  left_join(kl_pred, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |>
+  left_join(word_freq) |>
+  left_join(llm_concat_probs, by = c("correct_tangram", "gameId", "orig_repNum", "word_speaker_index")) |>
+  left_join(vlm_concat_probs) |>
   filter(!is.na(words)) |>
-  mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |> ungroup() 
+  mutate(word_len = ifelse(words %in% c("speaker**", "listener**"), NA, str_length(words))) |>
+  ungroup()
 
 
-spr_resid_1 <- spr_labeled |> 
-  mutate(surprisal_llm_concat_resid = lm(surprisal_llm_concat ~ freq + word_len, data=spr_labeled, na.action=na.exclude) |> residuals())
+spr_resid_1 <- spr_labeled |>
+  mutate(surprisal_llm_concat_resid = lm(surprisal_llm_concat ~ freq + word_len, data = spr_labeled, na.action = na.exclude) |> residuals())
 
-spr_resid_2 <- spr_resid_1 |> 
-  mutate(surprisal_vlm_concat_resid = lm(surprisal_vlm_concat ~ freq + word_len + surprisal_llm_concat_resid, data=spr_resid_1, na.action=na.exclude) |> residuals())
+spr_resid_2 <- spr_resid_1 |>
+  mutate(surprisal_vlm_concat_resid = lm(surprisal_vlm_concat ~ freq + word_len + surprisal_llm_concat_resid, data = spr_resid_1, na.action = na.exclude) |> residuals())
 
-spr_resid_3 <- spr_resid_2|> 
-  mutate(kl_resid = lm(kl ~ freq + word_len + surprisal_llm_concat_resid, data=spr_resid_2, na.action=na.exclude) |> residuals())
+spr_resid_3 <- spr_resid_2 |>
+  mutate(kl_resid = lm(kl ~ freq + word_len + surprisal_llm_concat_resid, data = spr_resid_2, na.action = na.exclude) |> residuals())
 
 
 spr_resid_lag <- spr_resid_3 |>
+  mutate(across(c("freq", "word_len", "surprisal_llm_concat_resid", "surprisal_vlm_concat_resid", "kl_resid"), ~ scale(.x)[, 1])) |>
   mutate(across(c("freq", "word_len", "surprisal_llm_concat_resid", "surprisal_vlm_concat_resid", "kl_resid"), list(lag1 = ~ lag(.x), lag2 = ~ lag(.x, 2), lag3 = ~ lag(.x, 3)))) |>
   ungroup() |>
   filter(is_from_speaker == 1) |>
@@ -447,55 +452,323 @@ spr_resid_lag <- spr_resid_3 |>
   filter(rt < 2000)
 
 write_csv(spr_resid_lag, "spr_resid_lag.csv")
-
-
 ```
 
 TODO check that we have values for everything we expect to
+## LMER residualized 
 
 ```{r}
 library(lme4)
 
 
-everything_lag3 <- lmer( rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid+
-                         word_len_lag1 * freq_lag1+ kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1+
-                         word_len_lag2 * freq_lag2+ kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2+
-                         word_len_lag3 * freq_lag3+ kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3+
-  orig_repNum * condition + matcher_trialNum+
-     (1 | workerid) + (1 | correct_tangram) + (1 | gameId), 
-data = spr_resid_lag)
+everything_lag3 <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    word_len_lag2 * freq_lag2 + kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2 +
+    word_len_lag3 * freq_lag3 + kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag
+)
 
+
+everything_lag2 <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    word_len_lag2 * freq_lag2 + kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag
+)
+
+everything_lag1 <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag
+)
+
+everything_lag0 <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag
+)
 ```
 
 
 ```{r}
+lag3 <- summary(everything_lag3)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag3")
+lag2 <- summary(everything_lag2)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag2")
+lag1 <- summary(everything_lag1)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag1")
+lag0 <- summary(everything_lag0)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag0")
 
-summary(everything_lag3)$coef |> as_tibble(rownames="term") |> filter(abs(`t value`)>2) |> View()
+all <- lag3 |>
+  bind_rows(lag2, lag1, lag0) |>
+  mutate(lower = Estimate - 1.96 * `Std. Error`, upper = Estimate + 1.96 * `Std. Error`) |>
+  mutate(
+    type = case_when(
+      str_detect(term, "llm") ~ "LLM",
+      str_detect(term, "vlm") ~ "VLM",
+      str_detect(term, "kl") ~ "KL",
+      str_detect(term, "orig") ~ term,
+      str_detect(term, ":") ~ "freq x len",
+      str_detect(term, "freq") ~ "freq",
+      str_detect(term, "len") ~ "len",
+      T ~ term
+    ),
+    lag = case_when(
+      str_detect(term, "lag1") ~ -1,
+      str_detect(term, "lag2") ~ -2,
+      str_detect(term, "lag3") ~ -3,
+      type %in% c("LLM", "VLM", "KL", "freq x len", "freq", "len") ~ 0,
+      T ~ NA
+    )
+  ) |>
+  mutate(
+    type = factor(type, levels = c("len", "freq", "freq x len", "LLM", "VLM", "KL", "conditionyoked", "orig_repNum", "orig_repNum:conditionyoked", "matcher_trialNum")),
+    type = fct_rev(type)
+  )
 
+
+ggplot(all |> filter(term != "(Intercept)") |> filter(!is.na(lag)), aes(x = type, y = Estimate, ymin = lower, ymax = upper, col = as.factor(model))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge(width = .6)) +
+  coord_flip() +
+  facet_grid(. ~ lag) +
+  theme(legend.position = "bottom")
+
+
+ggplot(all |> filter(term != "(Intercept)") |> filter(is.na(lag)), aes(x = type, y = Estimate, ymin = lower, ymax = upper, col = as.factor(model))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge(width = .6)) +
+  coord_flip() +
+  theme(legend.position = "bottom")
+```
+
+## No NA version
+
+```{r}
+library(lme4)
+
+spr_resid_lag_no_na <- spr_resid_lag |> drop_na()
+
+everything_lag3_no_na <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    word_len_lag2 * freq_lag2 + kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2 +
+    word_len_lag3 * freq_lag3 + kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag_no_na
+)
+
+
+everything_lag2_no_na <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    word_len_lag2 * freq_lag2 + kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag_no_na
+)
+
+everything_lag1_no_na <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag_no_na
+)
+
+everything_lag0_no_na <- lmer(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_resid_lag_no_na
+)
 ```
 
 ```{r}
+lag3_no_na <- summary(everything_lag3_no_na)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag3")
+lag2_no_na <- summary(everything_lag2_no_na)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag2")
+lag1_no_na <- summary(everything_lag1_no_na)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag1")
+lag0_no_na <- summary(everything_lag0_no_na)$coef |>
+  as_tibble(rownames = "term") |>
+  mutate(model = "lag0")
 
+all_no_na <- lag3_no_na |>
+  bind_rows(lag2_no_na, lag1_no_na, lag0_no_na) |>
+  mutate(lower = Estimate - 1.96 * `Std. Error`, upper = Estimate + 1.96 * `Std. Error`) |>
+  mutate(
+    type = case_when(
+      str_detect(term, "llm") ~ "LLM",
+      str_detect(term, "vlm") ~ "VLM",
+      str_detect(term, "kl") ~ "KL",
+      str_detect(term, "orig") ~ term,
+      str_detect(term, ":") ~ "freq x len",
+      str_detect(term, "freq") ~ "freq",
+      str_detect(term, "len") ~ "len",
+      T ~ term
+    ),
+    lag = case_when(
+      str_detect(term, "lag1") ~ -1,
+      str_detect(term, "lag2") ~ -2,
+      str_detect(term, "lag3") ~ -3,
+      type %in% c("LLM", "VLM", "KL", "freq x len", "freq", "len") ~ 0,
+      T ~ NA
+    )
+  ) |>
+  mutate(
+    type = factor(type, levels = c("len", "freq", "freq x len", "LLM", "VLM", "KL", "conditionyoked", "orig_repNum", "orig_repNum:conditionyoked", "matcher_trialNum")),
+    type = fct_rev(type)
+  )
+
+
+ggplot(all_no_na |> filter(term != "(Intercept)") |> filter(!is.na(lag)), aes(x = type, y = Estimate, ymin = lower, ymax = upper, col = as.factor(model))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge(width = .6)) +
+  coord_flip() +
+  facet_grid(. ~ lag) +
+  theme(legend.position = "bottom")
+
+
+ggplot(all_no_na |> filter(term != "(Intercept)") |> filter(is.na(lag)), aes(x = type, y = Estimate, ymin = lower, ymax = upper, col = as.factor(model))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge(width = .6)) +
+  coord_flip() +
+  theme(legend.position = "bottom")
+```
+## BRMS residualized
+
+```{r}
 spr_labeled <- read_csv("spr_resid_lag.csv")
 
 spr_priors <- c(
   set_prior("normal(400,100)", class = "Intercept"),
   set_prior("normal(0, 5)", class = "b"),
   set_prior("normal(0, 5)", class = "sd")
-
 )
 
-foo <- brm( rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid+
-                         word_len_lag1 * freq_lag1+ kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1+
-                         word_len_lag2 * freq_lag2+ kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2+
-                         word_len_lag3 * freq_lag3+ kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3+
-  orig_repNum * condition + matcher_trialNum+
-     (1 | workerid) + (1 | correct_tangram) + (1 | gameId), 
-           data = spr_labeled, prior = spr_priors,
-           control = list(adapt_delta = 0.99),
-           file = "everything_lag3.rds")
+foo <- brm(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    word_len_lag1 * freq_lag1 + kl_resid_lag1 + surprisal_llm_concat_resid_lag1 + surprisal_vlm_concat_resid_lag1 +
+    word_len_lag2 * freq_lag2 + kl_resid_lag2 + surprisal_llm_concat_resid_lag2 + surprisal_vlm_concat_resid_lag2 +
+    word_len_lag3 * freq_lag3 + kl_resid_lag3 + surprisal_llm_concat_resid_lag3 + surprisal_vlm_concat_resid_lag3 +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_labeled, prior = spr_priors,
+  control = list(adapt_delta = 0.99),
+  file = "everything_lag3_normalized.rds"
+)
 
 summary(foo)
+```
+
+```{r}
+nolag <- brm(
+  rt ~ word_len * freq + kl_resid + surprisal_llm_concat_resid + surprisal_vlm_concat_resid +
+    orig_repNum * condition + matcher_trialNum +
+    (1 | workerid) + (1 | correct_tangram) + (1 | gameId),
+  data = spr_labeled, prior = spr_priors,
+  control = list(adapt_delta = 0.99),
+  file = "everything_nolag_normalized.rds"
+)
+```
+
+```{r}
+blah <- fixef(foo) |>
+  as_tibble(rownames = "term") |>
+  mutate(
+    type = case_when(
+      str_detect(term, "llm") ~ "LLM",
+      str_detect(term, "vlm") ~ "VLM",
+      str_detect(term, "kl") ~ "KL",
+      str_detect(term, "orig") ~ term,
+      str_detect(term, ":") ~ "freq x len",
+      str_detect(term, "freq") ~ "freq",
+      str_detect(term, "len") ~ "length",
+      T ~ term
+    ),
+    lag = case_when(
+      str_detect(term, "lag1") ~ "word n-1",
+      str_detect(term, "lag2") ~ "word n-2",
+      str_detect(term, "lag3") ~ "word n-3",
+      type %in% c("LLM", "VLM", "KL", "freq x len", "freq", "length") ~ "word n",
+      T ~ NA
+    )
+  ) |>
+  mutate(
+    type = factor(type, levels = c("length", "freq", "freq x len", "LLM", "VLM", "KL", "conditionyoked", "orig_repNum", "orig_repNum:conditionyoked", "matcher_trialNum")),
+    type = fct_rev(type)
+  )
+
+ggplot(blah |> filter(term != "Intercept"), aes(x = type, y = Estimate, ymin = `Q2.5`, ymax = `Q97.5`, col = as.factor(lag))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge(width = .6)) +
+  coord_flip()
+
+
+blah |>
+  filter(!is.na(lag)) |>
+  ggplot(aes(x = type, y = Estimate, ymin = `Q2.5`, ymax = `Q97.5`, col = as.factor(lag))) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge2(width = .6, reverse = T)) +
+  coord_flip() +
+  scale_color_manual(values = c("#5DC863", "#21908C", "#3B538B", "#440154")) +
+  labs(x = "Estimated coefficient", color = "Predictor lag") +
+  theme(
+    axis.title.y = element_blank(),
+    legend.position = "inside",
+    legend.position.inside = c(.82, .35),
+    legend.background = element_blank(),
+    legend.box.background = element_rect(colour = "black"),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 14)
+  )
+
+ggsave(here("writing/word_preds.pdf"), width = 5, height = 3)
+
+
+blah |>
+  filter(is.na(lag)) |>
+  filter(term != "Intercept") |>
+  mutate(type = factor(type, levels = c("conditionyoked", "orig_repNum", "orig_repNum:conditionyoked", "matcher_trialNum"), labels = c("Condition (yoked)", "Original Block", "Block x condition", "Viewing order")) |> fct_rev()) |>
+  ggplot(aes(x = type, y = Estimate, ymin = `Q2.5`, ymax = `Q97.5`)) +
+  geom_hline(yintercept = 0, lty = "dotted") +
+  geom_pointrange(position = position_dodge2(width = .6, reverse = T)) +
+  coord_flip() +
+  labs(x = "Estimated coefficient", color = "Predictor lag") +
+  theme(
+    axis.title.y = element_blank(),
+    legend.position = "inside",
+    legend.position.inside = c(.8, .5),
+    legend.background = element_blank(),
+    legend.box.background = element_rect(colour = "black"),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 14)
+  )
+
+ggsave(here("writing/other_preds.pdf"), width = 5, height = 1.5)
 ```
 
 # What we said in the pre-reg
