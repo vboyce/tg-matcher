@@ -1,8 +1,17 @@
+analysis-code/*.html
+*.aux
+*.out
+*.synctex.gz
+*.nb.html
+*.Rhistory
+*/rsconnect/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-analysis-code/*.html
+
+
 # C extensions
 *.so
 
