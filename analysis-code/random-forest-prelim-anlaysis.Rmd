@@ -1,0 +1,126 @@
+---
+title: "Random forest analysis"
+output:
+  html_document:
+    df_print: paged
+    toc: TRUE
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"), fig.width = 10, fig.height = 4)
+options(knitr.table.format = "html")
+knitr::opts_chunk$set(echo = F)
+library(tidyverse)
+library(viridis)
+library(Replicate)
+library(metafor)
+library(esc)
+library(here)
+library(brms)
+library(rstan)
+library(googledrive)
+library(glmnet)
+library(tidybayes)
+library(ggstance)
+library("lattice")
+library(reshape2)
+library(ggrepel)
+library(ggthemes)
+library(knitr)
+library(cowplot)
+library(ggtext)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+library(ggtext)
+library(ggridges)
+
+theme_set(theme_bw())
+
+images <- "images"
+
+prediction_loc <- "model_predictions"
+dat_loc <- "other_data"
+
+human <- read_csv(here(dat_loc, "human_data.csv")) # tg-matcher data
+
+source(here("analyses/helper.R"))
+
+```
+
+```{r}
+rf_mod <- read_csv(here(prediction_loc, "random_forest_stimulus_predictions.csv")) |> rename(prediction = predicted, label = tangram)
+
+```
+
+# Model Accuracy by round and condition 
+
+It increases over repNum, which is ... interesting?!
+
+```{r}
+plot_accuracy(rf_mod, "random forest")
+```
+
+## Model accuracy by tangram
+
+Above chance at everything! No longer hates the ice skater. 
+
+```{r}
+plot_accuracy_tangram(rf_mod, "random forest")
+```
+
+## Accuracy as funct of number of words
+
+TODO needs work
+
+could try ridge plots for by round number 
+
+want density
+
+and want to debate functional form
+
+
+```{r}
+
+rf_mod |>
+  left_join(combined_chat) |>
+  mutate(correct = ifelse(prediction == label, 1, 0)) |>
+  ggplot(aes(x = words, y = as.factor(repNum), fill = as.factor(repNum))) +
+  geom_density_ridges() +
+  scale_fill_viridis(discrete = T) +
+  labs(y="Round")+
+  theme(legend.position = "none")
+
+plot_accuracy_length(rf_mod, "Random forest")
+```
+
+## Confusion Matrix
+
+versus truth 
+
+```{r}
+do_confusion(rf_mod, "random_forest")
+```
+
+
+
+# Comparison with all tg-matcher
+Compare the random forest  with human results 
+
+
+```{r, message=F}
+plot_model_naive_human(rf_mod, "random forest")
+```
+
+
+## Individual correlation
+
+Item level correlation between correct and wrong responses (model & per-human response)
+
+Not sure how to look for correlated error patterns...
+
+```{r}
+
+plot_individual_corr(rf_mod, "random forest")
+```
