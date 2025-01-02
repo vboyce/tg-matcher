@@ -1,0 +1,118 @@
+---
+title: "How to Make a Proceedings Paper Submission"
+bibliography: library.bib
+csl: apa7.csl
+document-params: "10pt, letterpaper"
+
+author-information: > 
+    \author{{\large \bf Morton Ann Gernsbacher (MAG@Macc.Wisc.Edu)} \\ Department of Psychology, 1202 W. Johnson Street \\ Madison, WI 53706 USA
+    \AND {\large \bf Sharon J.~Derry (SDJ@Macc.Wisc.Edu)} \\ Department of Educational Psychology, 1025 W. Johnson Street \\ Madison, WI 53706 USA}
+
+abstract: >
+    Include no author information in the initial submission, to facilitate
+    blind review.  The abstract should be one paragraph, indented 1/8 inch on both sides,
+    in 9~point font with single spacing. The heading 'Abstract'
+    should be 10~point, bold, centered, with one line of space below
+    it. This one-paragraph abstract section is required only for standard
+    six page proceedings papers. Following the abstract should be a blank
+    line, followed by the header 'Keywords' and a list of
+    descriptive keywords separated by semicolons, all in 9~point font, as
+    shown below.
+    
+keywords: >
+    Add your choice of indexing terms or keywords; kindly use a semi-colon; between each term.
+    
+output: cogsci2024::cogsci_paper
+#final-submission: \cogscifinalcopy
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
+                      fig.pos = "tb", fig.path='figs/',
+                      echo=F, warning=F, cache=F, 
+                      message=F, sanitize = T)
+```
+
+```{r, libraries}
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+```
+
+# Intro
+
+when is eavesdropping effective? 
+
+reference games are used as a microcosm for understanding convention formation with claims of partner specificity 
+
+it's unclear how and when these conventions are transparent to others
+* cite the old work about side participants etc
+* may be able to understand more than what you'd say (ex. regionalisms)
+how well can people understand descriptions from reference games, and what accounts for variation (iconicity of targets, when the references came from, structure of interaction)
+* possibly introduce ideas of schelling point or "priors"
+but depends on what we think we're coming back to in discussion!
+
+* mention Judy's paper that has the yoked not yoked part 
+
+Need to introduce model perspective!
+* models are useful in that we can run expts on them far in excess of what we can in humans
+* caption type models are pretty good 
+* cite prior work on trying to add pragmatics to models
+
+Introduce dataset that we use for this 
+
+How good is "eavesdropper" comprehension and what factors matter to better comprehension? (need to set up whatever the factors are in intro!)
+
+# Human expts on isolated accuracy 
+
+expts 1 & 2 
+
+tg-matcher 1& 2 (what veronica ran in May) 
+1 is 2 and 6 player games, rounds 1 and 6 in medium thick (60 participants, 60 items each)
+2 is 2 and 6 player games, rounds 1 and 6 in thin and thick (60 participants, 64 items each)
+
+Key questions:
+* how accurate
+* what are biggest predictors (conditions, round, target) 
+
+Large item level differences, but not a lot else. 
+
+## Model + calibration
+
+modeling approach and selection 
+
+how well can models proxy humans? are there differences? 
+
+tg-matcher 3 (calibration)
+61 participants, 64 items each, from a pool of 217 transcripts spanning the models full accuracy range
+
+given this proxy -- what can we think we learn -- for instance about most important parts of the utterances? (rolling window?)
+
+## Human yoked v not yoked expt
+
+tg-matcher 4 (SPR + yoked/unyoked)
+196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
+games not chosen at random
+
+seeing things in the same order helps
+look at item level accuracy differences? 
+
+# Discussion
+
+role of context 
+
+limitations, incuding out of distribution for models 
+
+might want to address language comprehension v inference 
+
+# References 
+
+```{r}
+# References will be generated automatically by Pandoc and included here.
+# The following code is some latex to format the bibliography. Do not remove it.
+```
+
+\setlength{\parindent}{-0.1in} 
+\setlength{\leftskip}{0.125in}
+\noindent
