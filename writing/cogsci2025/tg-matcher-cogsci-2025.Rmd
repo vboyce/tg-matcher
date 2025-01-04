@@ -1,43 +1,196 @@
 ---
-title: "How to Make a Proceedings Paper Submission"
+title: "TODO"
 bibliography: library.bib
 csl: apa7.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Morton Ann Gernsbacher (MAG@Macc.Wisc.Edu)} \\ Department of Psychology, 1202 W. Johnson Street \\ Madison, WI 53706 USA
-    \AND {\large \bf Sharon J.~Derry (SDJ@Macc.Wisc.Edu)} \\ Department of Educational Psychology, 1025 W. Johnson Street \\ Madison, WI 53706 USA}
+    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf TODO (TODO email) } Department of Psychology, \\Stanford University
+    \AND {\large \bf TODO (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
 
 abstract: >
-    Include no author information in the initial submission, to facilitate
-    blind review.  The abstract should be one paragraph, indented 1/8 inch on both sides,
-    in 9~point font with single spacing. The heading 'Abstract'
-    should be 10~point, bold, centered, with one line of space below
-    it. This one-paragraph abstract section is required only for standard
-    six page proceedings papers. Following the abstract should be a blank
-    line, followed by the header 'Keywords' and a list of
-    descriptive keywords separated by semicolons, all in 9~point font, as
-    shown below.
+    TODO abstract
     
 keywords: >
-    Add your choice of indexing terms or keywords; kindly use a semi-colon; between each term.
+    TODO keywords
     
 output: cogsci2024::cogsci_paper
 #final-submission: \cogscifinalcopy
 ---
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
-                      fig.pos = "tb", fig.path='figs/',
-                      echo=F, warning=F, cache=F, 
-                      message=F, sanitize = T)
-```
+knitr::opts_chunk$set(
+  fig.width = 3, fig.height = 3, fig.crop = F,
+  fig.pos = "tb", fig.path = "figs/",
+  echo = F, warning = F, cache = F,
+  message = F, sanitize = T
+)
 
-```{r, libraries}
 library(png)
 library(grid)
 library(ggplot2)
 library(xtable)
+library(tidyverse)
+library(here)
+library(brms)
+library(rstan)
+library(rstanarm)
+library(ggthemes)
+library(jsonlite)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+data_loc <- "data"
+mod_loc <- "analysis-code/models"
+images <- "experiments/expt1/assets/images"
+
+
+expt_1_data <- read_csv(here(data_loc, "expt1_full_data.csv")) |>
+  select(-proliferate.condition) |>
+  filter(!is.na(response)) |>
+  filter(!is.na(correct_tangram)) |>
+  select(
+    workerid, button_rt, condition, correct, correct_tangram,
+    gameId, selected, text, trial_index
+  ) |>
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(rt_sec = button_rt / 1000) |>
+  separate(condition, c("group_size", NA, "round")) |>
+  mutate(
+    group_size = str_c(group_size, "_player"),
+    round = str_c("round_", round),
+    correct = as.numeric(correct)
+  ) |>
+  group_by(workerid) |>
+  mutate(trial_order = row_number()) |>
+  ungroup()
+
+expt_2_data <- read_csv(here(data_loc, "expt2_full_data.csv")) |>
+  select(-proliferate.condition) |>
+  filter(!is.na(response)) |>
+  filter(!is.na(correct_tangram)) |>
+  select(
+    workerid, button_rt, condition, correct, correct_tangram,
+    gameId, selected, text, trial_index
+  ) |>
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(rt_sec = button_rt / 1000) |>
+  separate(condition, c("group_size", "thickness", "round")) |>
+  mutate(
+    condition = str_c(group_size, "_", thickness),
+    group_size = str_c(group_size, "_player"),
+    round = str_c("round_", round),
+    correct = as.numeric(correct)
+  ) |>
+  group_by(workerid) |>
+  mutate(trial_order = row_number()) |>
+  ungroup()
+
+expt_3_data <- read_csv(here(data_loc, "tgmatchercalibration-trials.csv")) |>
+  select(-proliferate.condition) |>
+  filter(!is.na(response)) |>
+  filter(!is.na(correct_tangram)) |>
+  select(
+    workerid, button_rt, correct, correct_tangram,
+    gameId, selected, text, trial_index
+  ) |>
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(
+    rt_sec = button_rt / 1000,
+    correct = as.numeric(correct)
+  ) |>
+  group_by(workerid) |>
+  mutate(trial_order = row_number()) |>
+  ungroup()
+
+
+expt_4_data <- read_csv(here(data_loc, "tgmatcheryoked-trials.csv")) |>
+  select(-proliferate.condition) |>
+  filter(!is.na(correct_tangram)) |>
+  select(
+    workerid, button_rt, correct, correct_tangram, condition,
+    gameId, selected, text, trial_index, type, rt, orig_trialNum, orig_repNum
+  ) |>
+  mutate(workerid = as.factor(workerid)) |>
+  mutate(
+    matcher_trialNum = (trial_index - 3) %/% 3,
+    matcher_repNum = matcher_trialNum %/% 12
+  ) |>
+  mutate(workerid = ifelse(workerid == "3157" & condition == "yoked", "3157a", workerid)) |> # somehow two participants were assigned to 3157 -- but each set looks complete?
+  filter(workerid != "141") |>
+  filter(workerid != "35") # exclude two participants who didn't finish
+```
+
+```{r, eval=F}
+library(tidybayes)
+
+save_summary <- function(model) {
+  intervals <- gather_draws(model, `b_.*`, regex = T) %>% mean_qi()
+
+  stats <- gather_draws(model, `b_.*`, regex = T) %>%
+    mutate(above_0 = ifelse(.value > 0, 1, 0)) %>%
+    group_by(.variable) %>%
+    summarize(pct_above_0 = mean(above_0)) %>%
+    left_join(intervals, by = ".variable") %>%
+    mutate(
+      lower = .lower,
+      upper = .upper,
+      Term = str_sub(.variable, 3, -1),
+      Estimate = .value
+    ) %>%
+    select(Term, Estimate, lower, upper)
+
+  stats
+}
+
+do_model <- function(path) {
+  model <- read_rds(here(mod_loc, path))
+  save_summary(model) |> write_rds(here(mod_loc, "summary", path))
+  model$formula |> write_rds(here(mod_loc, "formulae", path))
+  print(summary(model))
+}
+
+
+mods <- list.files(path = here(mod_loc), pattern = ".*rds") |> walk(~ do_model(.))
+```
+
+```{r}
+stats <- function(model, row, decimal = 2) {
+  model <- model |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
+    select(Term, Estimate, `Credible Interval`)
+  str_c(model[row, 1], ": ", model[row, 2], " ", model[row, 3])
+}
+
+stats_text <- function(model, row, decimal = 2) {
+  model <- model |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
+    select(Term, Estimate, `Credible Interval`)
+  str_c(model[row, 2], "  ", model[row, 3])
+}
+
+form <- function(model_form) {
+  dep <- as.character(model_form$formula[2])
+  ind <- as.character(model_form$formula[3])
+
+  str_c(dep, " ~ ", ind) |>
+    str_replace_all(" ", "") |>
+    str_replace_all("\\*", " $\\\\times$ ") |>
+    str_replace_all("\\+", "&nbsp;+ ") |>
+    str_replace_all("~", "$\\\\sim$ ")
+}
 ```
 
 # Intro
@@ -47,9 +200,12 @@ when is eavesdropping effective?
 reference games are used as a microcosm for understanding convention formation with claims of partner specificity 
 
 it's unclear how and when these conventions are transparent to others
+
 * cite the old work about side participants etc
+
 * may be able to understand more than what you'd say (ex. regionalisms)
 how well can people understand descriptions from reference games, and what accounts for variation (iconicity of targets, when the references came from, structure of interaction)
+
 * possibly introduce ideas of schelling point or "priors"
 but depends on what we think we're coming back to in discussion!
 
@@ -57,7 +213,9 @@ but depends on what we think we're coming back to in discussion!
 
 Need to introduce model perspective!
 * models are useful in that we can run expts on them far in excess of what we can in humans
+
 * caption type models are pretty good 
+
 * cite prior work on trying to add pragmatics to models
 
 Introduce dataset that we use for this 
@@ -65,6 +223,66 @@ Introduce dataset that we use for this
 How good is "eavesdropper" comprehension and what factors matter to better comprehension? (need to set up whatever the factors are in intro!)
 
 # Human expts on isolated accuracy 
+
+```{r}
+combined_data <- expt_1_data |>
+  select(workerid, group_size, round, correct, correct_tangram, gameId) |>
+  mutate(thickness = "medium", expt = "expt1") |>
+  bind_rows(expt_2_data |> select(workerid, group_size, round, correct, correct_tangram, thickness, gameId) |> mutate(expt = "expt2")) |> 
+  mutate(thickness=factor(thickness, levels=c("thin", "medium", "thick")),
+         round=str_sub(round, -1))
+# group_by(group_size, round, correct_tangram, thickness, expt) |>
+# summarize(acc=mean(correct))
+```
+
+```{r}
+combined_data |> ggplot(aes(x = round, color = group_size, group = group_size, y = correct)) +
+  geom_point(data = combined_data |> group_by(group_size, round, correct_tangram, thickness, expt) |>
+    summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
+        stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6), geom="line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6)) +
+  facet_grid(. ~ thickness)+
+  scale_y_continuous(lim=c(0,1), expand=c(0,0))+
+  geom_hline(yintercept=1/12, lty="dashed")+
+  labs(x="Source block", y="Accuracy")
+```
+
+TODO going to need to use model preds for this instead? B/c error bars might be too close?
+
+```{r}
+library(ggtext)
+correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
+
+
+acc_by_target <- combined_data |>
+  group_by(correct_tangram) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+
+foo <- tibble(correct_tangram, labels) |>
+  left_join(acc_by_target) |>
+  arrange(acc)
+
+acc_by_type_target <- combined_data |>
+  group_by(correct_tangram, group_size, round, thickness, expt) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+
+ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, )) +
+  geom_point() +
+  stat_summary(color="red")+
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed") +
+  scale_x_discrete(name = NULL, labels = foo$labels) +
+  theme(axis.text.x = element_markdown(color = "black", size = 11))
+
+
+# acc_by_target
+```
+
+expt 1 prereg at https://osf.io/k45dr
+expt 2 prereg at https://osf.io/rdp5k
 
 expts 1 & 2 
 
@@ -74,11 +292,83 @@ tg-matcher 1& 2 (what veronica ran in May)
 
 Key questions:
 * how accurate
-* what are biggest predictors (conditions, round, target) 
+
+ what are biggest predictors (conditions, round, target) 
 
 Large item level differences, but not a lot else. 
 
+
+```{r}
+acc_priors <- c(
+  set_prior("normal(0,1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd"),
+  set_prior("lkj(1)", class = "cor")
+)
+
+
+acc_mod_1 <- brm(
+  correct ~ group_size * round + trial_order +
+    (group_size * round | correct_tangram) +
+    (group_size * round + trial_order | workerid),
+  data = expt_1_data,
+  family = bernoulli(),
+  file = here(mod_loc, "acc_1"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+# summary(acc_mod_1)
+```
+
+
+
+
+
+Tangrams vary a lot in guessability. 
+
+
+
+As secondary analyses we also 
+[not doing drift diffusion, we tried that and not happening]
+
+* a model of the relationship between accuracy of the reference game participants and accuracy in this task. 
+
+* We may also do exploratory analyses relating to the transcript length as a predictor of RT and accuracy. 
+
+Analyses
+
+Primary analysis is a logistic model of accuracy as a function of block and game-conditions. We include a predictor of trial_number to account for practice effects. 
+
+```{r}
+acc_mod_2 <- brm(
+  correct ~ group_size * thickness * round + trial_order +
+    (group_size * thickness * round | correct_tangram) +
+    (group_size * thickness * round + trial_order | workerid),
+  data = expt_2_data,
+  family = bernoulli(),
+  file = here(mod_loc, "acc_2"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+
+#summary(acc_mod_2)
+```
+
+As secondary analyses we also plan a model of the relationship between accuracy of the reference game participants and accuracy in this task. 
+
+We may also do exploratory analyses relating to the transcript length as a predictor of RT and accuracy. 
+We may analyze this data jointly with experiment 1 data. 
+
+Outliers and Exclusions
+
+We will include all complete submissions. For RT analyses, we will exclude reading times greater than 1 minute (piloting indicates these are rare, and likely signs of task-switching). 
+
+
+
 ## Model + calibration
+
+pre-reg at https://osf.io/6pv5e
 
 modeling approach and selection 
 
@@ -89,7 +379,117 @@ tg-matcher 3 (calibration)
 
 given this proxy -- what can we think we learn -- for instance about most important parts of the utterances? (rolling window?)
 
+
+
+Analyses
+
+Our primary goal is to compare human and model calibration so we will visually compare the a) % of humans who guessed the correct target with b) the probability the model assigns to the correct target for each image. We will also look at correlations between these accuracies. 
+We will also use this data to better calibrate a future model. 
+
+Outliers and Exclusions
+
+We will exclude participants who take a mean of less than 3 seconds on trials (after excluding trials that take over a minute, which we think from piloting is a sign of task switching). We believe responses of this speed are very likely to correspond to random guessing. 
+
+Sample Size
+
+We plan to recruit 60 participants. 
+
+Other
+
+We think it likely that we will end up analyzing this data jointly with prior (and future) experiments to look at what factors contribute to whether the target is easier or harder for a naive matcher to guess. 
+
+# Accuracy
+
+# Calibration
+
+```{r, eval=F}
+ParseJSONColumn <- function(x) {
+  str_replace_all(x, "'", '"') %>%
+    str_replace_all('Don"t know', "Don't know") %>%
+    str_replace_all('don"t', "don't") |>
+    str_replace_all("None", '"NA"') |>
+    str_replace_all('"SAFE"', "'SAFE'") |>
+    str_replace_all('he"s', "he's") |>
+    str_replace_all('doesn"t', "doesn't") |>
+    str_replace_all('hasn"t', "hasn't") |>
+    str_replace_all('it"s', "it's") |>
+    str_replace_all('It"s', "It's") |>
+    str_replace_all('X" shaped', "'X' shaped") |>
+    str_replace_all('"missing', "missing") |>
+    str_replace_all('"flying"', "flying") |>
+    str_replace_all('"skating"', "skating") |>
+    str_replace_all('"partially sitting"', "partially sitting") |>
+    str_replace_all('"kneeling" and ', "kneeling and ") |>
+    str_replace_all('"partially kneeling"', "partially kneeling") |>
+    str_replace_all('and "bunny"', "and bunny") |>
+    str_replace_all('"square"', "square") |>
+    str_replace_all('heads"', "heads") |>
+    str_replace_all('"italy"', "italy") |>
+    str_replace_all('they"re', "they're") |>
+    str_replace_all('"but why"', "'but why'") |>
+    fromJSON(flatten = T)
+}
+labels <- read_csv(here("expt_prep_code/labelled.csv")) |>
+  mutate(text = str_replace_all(text, "'", "") |> str_replace_all('"', "")) |>
+  group_by(tangram, gameId, trialNum, repNum, value, grouping) |>
+  summarize(text = str_c(text, collapse = " "))
+
+
+ready <- expt_3_data |>
+  mutate(new = map(text, ParseJSONColumn)) |>
+  select(-text) |>
+  unnest(new) |>
+  mutate(text = text |> str_replace_all("'", ""), tangram = correct_tangram) |>
+  group_by(workerid, correct, tangram, gameId, trial_order) |>
+  summarize(text = str_c(text, collapse = " "))
+
+good <- ready |> left_join(labels)
+
+good |>
+  select(workerid, correct, tangram, gameId, trialNum, repNum, value, grouping) |>
+  write_csv(here("calibration_results.csv"))
+```
+
+```{r, eval=F}
+summ <- good |>
+  group_by(grouping) |>
+  summarize(human_acc = mean(correct), value = mean(value))
+
+for_corr <- good |>
+  group_by(text, value, tangram, grouping) |>
+  summarize(human_acc = mean(correct), human_n = n())
+
+for_corr |> ggplot(aes(y = human_acc, x = value)) +
+  geom_point(aes(color = grouping)) +
+  geom_line(data = summ, color = "black") +
+  geom_smooth(method = "lm") +
+  geom_smooth() +
+  theme(legend.position = "none") +
+  labs(x = "Model predicted probability", y = "Human accuracy")
+
+
+for_corr |> ggplot(aes(x = human_acc, y = value)) +
+  geom_point(aes(color = grouping)) +
+  geom_line(data = summ, color = "black") +
+  geom_smooth(method = "lm") +
+  theme(legend.position = "none") +
+  labs(y = "Model predicted probability", x = "Human accuracy")
+
+
+cor.test(for_corr$value, for_corr$human_acc)
+
+
+for_corr |> ggplot(aes(y = human_acc, x = value, color = tangram)) +
+  geom_point(aes(color = tangram)) +
+  geom_smooth(method = "lm", se = F) +
+  theme(legend.position = "none") +
+  labs(x = "Model predicted probability", y = "Human accuracy")
+```
+
+
 ## Human yoked v not yoked expt
+
+pre-reg at https://osf.io/zqwp5
 
 tg-matcher 4 (SPR + yoked/unyoked)
 196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
@@ -97,6 +497,80 @@ games not chosen at random
 
 seeing things in the same order helps
 look at item level accuracy differences? 
+
+We will exclude individual word RTs that are greater than 2000 ms. 
+
+Condition differences: condition refers to yoked or shuffled.
+Logistic model of target selection accuracy: Accuracy ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+Time to selection:  Selection_time ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
+
+This dataset was collected using a modified self-paced reading procedure, but for present purposes, we focus only on the selection results and not on the incremental reading time patterns.
+
+TODO assuming we don't want to include the RT predictor mess here? (and so not including that whole set of questions)
+
+
+```{r}
+expt_4_acc_data <-  expt_4_data |> 
+  filter(type == "selection") |>
+  mutate(correct = as.numeric(correct)) |>
+  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
+
+expt_4_acc_data |> ggplot(aes(x = orig_repNum, color = condition, y = correct)) +
+  geom_point(data =  expt_4_acc_data|> group_by(condition, orig_repNum, correct_tangram) |>
+    summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
+        stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6), geom="line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6)) +
+  scale_y_continuous(lim=c(0,1), expand=c(0,0))+
+  geom_hline(yintercept=1/12, lty="dashed")+
+  labs(x="Source block", y="Accuracy")
+```
+
+```{r}
+library(ggtext)
+correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
+
+
+acc_by_target <- expt_4_acc_data |>
+  group_by(correct_tangram) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+
+foo <- tibble(correct_tangram, labels) |>
+  left_join(acc_by_target) |>
+  arrange(acc)
+
+acc_by_type_target <- expt_4_acc_data |>
+  group_by(correct_tangram, orig_repNum, condition) |>
+  summarize(acc = sum(correct) / n()) |>
+  arrange(acc)
+
+ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, )) +
+  geom_point() +
+  stat_summary(color="red")+
+  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
+  geom_hline(yintercept = 1 / 12, linetype = "dashed") +
+  scale_x_discrete(name = NULL, labels = foo$labels) +
+  theme(axis.text.x = element_markdown(color = "black", size = 11))
+
+
+# acc_by_target
+```
+
+```{r}
+for_acc_mod_4 <- expt_4_data |>
+  filter(type == "selection") |>
+  mutate(correct = as.numeric(correct)) |>
+  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
+
+acc_priors <- c(
+  set_prior("normal(0, 1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd")
+)
+
+
+acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = here(mod_loc, "acc_4.rds"))
+```
 
 # Discussion
 
