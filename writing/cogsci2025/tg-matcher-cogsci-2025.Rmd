@@ -5,8 +5,8 @@ csl: apa7.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf TODO (TODO email) } Department of Psychology, \\Stanford University
-    \AND {\large \bf TODO (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
+    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf Ben (TODO email) } Department of Psychology, \\Stanford University
+    \AND {\large \bf Alvin (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
 
 abstract: >
     TODO abstract
@@ -34,7 +34,7 @@ library(tidyverse)
 library(here)
 library(brms)
 library(rstan)
-library(rstanarm)
+#library(rstanarm)
 library(ggthemes)
 library(jsonlite)
 library(ggthemes)
@@ -370,7 +370,7 @@ Large item level differences, but not a lot else.
 TODO will need to extract mixed effects from models into small format (see mpt for code)
 
 
-```{r}
+```{r, eval=F}
 acc_priors <- c(
   set_prior("normal(0,1)", class = "b"),
   set_prior("normal(0,1)", class = "sd"),
@@ -393,7 +393,7 @@ acc_mod_1 <- brm(
 ```
 
 
-```{r}
+```{r, eval=F}
 acc_mod_2 <- brm(
   correct ~ group_size * thickness * round + trial_order +
     (group_size * thickness * round | correct_tangram) +
@@ -629,7 +629,7 @@ ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, )) +
 # acc_by_target
 ```
 
-```{r}
+```{r, eval=F}
 for_acc_mod_4 <- expt_4_data |>
   filter(type == "selection") |>
   mutate(correct = as.numeric(correct)) |>
