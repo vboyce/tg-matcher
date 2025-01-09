@@ -217,8 +217,10 @@ Judy’s work Visual resemblance and interaction history jointly constrain picto
 
 possible could also mention other times when naive comprehender has been used to better understand iteractive dialogues?
 
+## ALvin gets to write computational intro here
 Do we also want to motivate this from a computational angle? (i.e. trying to add pragmatics to models) TODO not me
 
+## back to Veronica 
 Key question: What properties of conversational pacts and the process of their formation make them more or less easy for an outsider to understand? 
 
 We use both human experiments and models to assess when and why expressions are opaque or understandable to outside observers. 
@@ -234,7 +236,7 @@ Tangram on accuracy (expt 1+2) (?) (? + model?)
 
 
 
-# Experimental Methods
+# General Methods
 
 We ran multiple human experiments that shared methods, so here we present the general methods, followed by specifics for each experiment. 
 
@@ -252,26 +254,14 @@ The task was implemented in jsPsych.
 message("placeholder.png")
 ```
 
-## Experiment 1 
-For the first experiment, we primarily wanted to test our methods and establish a baseline of how well new matchers could do from reading random transcripts out of order. We did a 2x2 within subjects design, where we drew the target transcripts from 2 and 6 player games from Experiment 1 of TODO cite Boyce et al 2024 and from the first and last blocks of these games. Thus, we would also be able to check whether early descriptions (before much partner- or group- specific history could accumulate, but also before a "good" description had been created) or late descriptions (after both history and practice) would be easier to understand. 
-We recruited XX participants in May 2024 (check) who each read YY trials (ZZ in each condition). 
+## Computational models that Ben gets to write
 
-expt 1 prereg at https://osf.io/k45dr
-expt 2 prereg at https://osf.io/rdp5k
+Computational methods
+TODO V doesn’t know how to write this
+QUESTION: do we focus on mlp pre- or post- calibration?
 
-expts 1 & 2 
 
-tg-matcher 1& 2 (what veronica ran in May) 
-1 is 2 and 6 player games, rounds 1 and 6 in medium thick (60 participants, 60 items each)
-2 is 2 and 6 player games, rounds 1 and 6 in thin and thick (60 participants, 64 items each)
-
-## Experiment 2 
-*TODO where should this go, since it's motivated by the results from expt 1?*
-After seeing the not big condition differences in experiment 1, we tried a second experiment drawing from the expt 3 of Boyce et al in a 2x2x2 within subjects, using the "thick" and "thin", 2 and 6 person, 1st and last block utterances. 
-
-We recruited XX participants in DATE who each read YY trials (ZZ in each of the 8 conditions). 
-
-## Calibration expt
+# Calibration expt that Alvin gets to write
 
 TODO methods
 
@@ -284,23 +274,24 @@ how well can models proxy humans? are there differences?
 tg-matcher 3 (calibration)
 61 participants, 64 items each, from a pool of 217 transcripts spanning the models full accuracy range
 
-## Yoked v shuffled 
+# Experiment 2
+For the first experiment, we primarily wanted to test our methods and establish a baseline of how well new matchers could do from reading random transcripts out of order. We did a 2x2 within subjects design, where we drew the target transcripts from 2 and 6 player games from Experiment 1 of TODO cite Boyce et al 2024 and from the first and last blocks of these games. Thus, we would also be able to check whether early descriptions (before much partner- or group- specific history could accumulate, but also before a "good" description had been created) or late descriptions (after both history and practice) would be easier to understand. 
+We recruited XX participants in May 2024 (check) who each read YY trials (ZZ in each condition). 
 
-TODO methods 
-pre-reg at https://osf.io/zqwp5
+expt 1 prereg at https://osf.io/k45dr
+expt 2 prereg at https://osf.io/rdp5k
 
-tg-matcher 4 (SPR + yoked/unyoked)
-196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
-games not chosen at random
+expts 1 & 2 
 
-# Computational models
+tg-matcher 1& 2 (what veronica ran in May) 
+1 is 2 and 6 player games, rounds 1 and 6 in medium thick (60 participants, 60 items each)
+2 is 2 and 6 player games, rounds 1 and 6 in thin and thick (60 participants, 64 items each)
 
-Computational methods
-TODO V doesn’t know how to write this
-QUESTION: do we focus on mlp pre- or post- calibration?
+## Experiment 2b
+*TODO where should this go, since it's motivated by the results from expt 1?*
+After seeing the not big condition differences in experiment 1, we tried a second experiment drawing from the expt 3 of Boyce et al in a 2x2x2 within subjects, using the "thick" and "thin", 2 and 6 person, 1st and last block utterances. 
 
-
-# Results
+We recruited XX participants in DATE who each read YY trials (ZZ in each of the 8 conditions). 
 
 ## Human accuracy
 
@@ -420,7 +411,7 @@ acc_mod_2 <- brm(
 
 
 
-## Model results (+ calibration results??)
+## Model results
 
 
 
@@ -431,12 +422,6 @@ predictors of human accuracy + discussion of high variability
 model of relationship between original accuracy & new matcher accuracy 
 
 adding transcript length as an additional predictor of human accuracy 
-
-
-
-
-
-(?) What model results to include – rolling window / anti-rolling / etc ← is there anything good in the what parts of more important stuff (see incremental-analysis.Rmd, but also all the links broke)
 
 given this proxy -- what can we think we learn -- for instance about most important parts of the utterances? (rolling window?)
 does seem to go up over time
@@ -566,6 +551,14 @@ for_corr |> ggplot(aes(y = human_acc, x = value, color = tangram)) +
 ```
 
 
+# Yoked v shuffled 
+
+TODO methods 
+pre-reg at https://osf.io/zqwp5
+
+tg-matcher 4 (SPR + yoked/unyoked)
+196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
+games not chosen at random
 ## Human yoked v not yoked expt
 
 Yoked v shuffled plot of accuracy (+ model?)
@@ -651,7 +644,10 @@ acc_priors <- c(
 acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = here(mod_loc, "acc_4.rds"))
 ```
 
-# Discussion
+# Discussion ? 
+
+
+## Part of discussion that Alvin gets to write??
 
 Discussion
 
