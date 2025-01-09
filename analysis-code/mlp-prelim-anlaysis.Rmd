@@ -40,10 +40,10 @@ theme_set(theme_bw())
 
 images <- "images"
 
-prediction_loc <- "model_predictions"
+prediction_loc <- "model-code/model_predictions"
 dat_loc <- "other_data"
 
-human <- read_csv(here(dat_loc, "human_data.csv")) # tg-matcher data
+human <- read_csv(here(dat_loc, "human_data.csv")) # tg-mat
 
 source(here("analyses/helper.R"))
 

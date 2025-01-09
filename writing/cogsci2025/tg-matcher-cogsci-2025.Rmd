@@ -37,6 +37,11 @@ library(rstan)
 library(rstanarm)
 library(ggthemes)
 library(jsonlite)
+library(ggthemes)
+library(scales)
+library(viridis)
+library(ggridges)
+library(cowplot)
 
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -45,6 +50,7 @@ theme_set(theme_bw())
 data_loc <- "data"
 mod_loc <- "analysis-code/models"
 images <- "experiments/expt1/assets/images"
+prediction_loc <- "model-code/model_predictions"
 
 
 expt_1_data <- read_csv(here(data_loc, "expt1_full_data.csv")) |>
@@ -193,36 +199,112 @@ form <- function(model_form) {
 }
 ```
 
-# Intro
 
-when is eavesdropping effective? 
+# Introduction
 
-reference games are used as a microcosm for understanding convention formation with claims of partner specificity 
+Conversation pacts and partner specificity are often studied by looking at how they are constructed; an additional perspective comes from how opaque or interpretable they are to outsiders who weren’t part of the pact
 
-it's unclear how and when these conventions are transparent to others
+By measuring opaqueness in different conditions related to how the pacts were formed or what the language looks like, can get another perspective on the process of pact formation
 
-* cite the old work about side participants etc
+An empirical test of partner - specificity 
 
-* may be able to understand more than what you'd say (ex. regionalisms)
-how well can people understand descriptions from reference games, and what accounts for variation (iconicity of targets, when the references came from, structure of interaction)
+Prior work to cover
+Summary of ref games & claims around them @hawkins2020b @clark1986 etc
 
-* possibly introduce ideas of schelling point or "priors"
-but depends on what we think we're coming back to in discussion!
+The side-participant / overhearer etc literature @wilkes-gibbs1992, & lit search for more
 
-* mention Judy's paper that has the yoked not yoked part 
+Judy’s work Visual resemblance and interaction history jointly constrain pictorial meaning @hawkinsb
 
-Need to introduce model perspective!
-* models are useful in that we can run expts on them far in excess of what we can in humans
+possible could also mention other times when naive comprehender has been used to better understand iteractive dialogues?
 
-* caption type models are pretty good 
+Do we also want to motivate this from a computational angle? (i.e. trying to add pragmatics to models) TODO not me
 
-* cite prior work on trying to add pragmatics to models
+Key question: What properties of conversational pacts and the process of their formation make them more or less easy for an outsider to understand? 
 
-Introduce dataset that we use for this 
+We use both human experiments and models to assess when and why expressions are opaque or understandable to outside observers. 
 
-How good is "eavesdropper" comprehension and what factors matter to better comprehension? (need to set up whatever the factors are in intro!)
 
-# Human expts on isolated accuracy 
+
+
+Results 
+Figures
+Conditions/Rounds on accuracy (expt 1+2) (? + model?)
+Tangram on accuracy (expt 1+2) (?) (? + model?)
+
+
+
+
+# Experimental Methods
+
+We ran multiple human experiments that shared methods, so here we present the general methods, followed by specifics for each experiment. 
+
+## Materials
+
+TODO discussion of @boyce2024 and how this is useful 
+
+## Procedure
+We recruited participants from Prolific (TODO criteria). Participants were directed to the experiment, where it was explained that previously, other participants had described these shapes to one another. They would see a series of transcripts from the prior game, and their task was the guess what the intended target was. Participants recieved feedback on whether they were right or wrong on each trial. Participants were informed that the descriptions could come from different games. TODO what were the instructions for yoked experiment!. Except when the items were yoked to an original viewing order, items were shown in a random order, subject to the constraint that the same target could not repeat on adjacent trials. 
+
+The task was implemented in jsPsych. 
+
+```{r interface, fig.env = "figure*", fig.pos = "t!", out.width="\\textwidth", fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Experimental Setup and Procedure.TODO \\label{game}", cache=FALSE}
+
+message("placeholder.png")
+```
+
+## Experiment 1 
+For the first experiment, we primarily wanted to test our methods and establish a baseline of how well new matchers could do from reading random transcripts out of order. We did a 2x2 within subjects design, where we drew the target transcripts from 2 and 6 player games from Experiment 1 of TODO cite Boyce et al 2024 and from the first and last blocks of these games. Thus, we would also be able to check whether early descriptions (before much partner- or group- specific history could accumulate, but also before a "good" description had been created) or late descriptions (after both history and practice) would be easier to understand. 
+We recruited XX participants in May 2024 (check) who each read YY trials (ZZ in each condition). 
+
+expt 1 prereg at https://osf.io/k45dr
+expt 2 prereg at https://osf.io/rdp5k
+
+expts 1 & 2 
+
+tg-matcher 1& 2 (what veronica ran in May) 
+1 is 2 and 6 player games, rounds 1 and 6 in medium thick (60 participants, 60 items each)
+2 is 2 and 6 player games, rounds 1 and 6 in thin and thick (60 participants, 64 items each)
+
+## Experiment 2 
+*TODO where should this go, since it's motivated by the results from expt 1?*
+After seeing the not big condition differences in experiment 1, we tried a second experiment drawing from the expt 3 of Boyce et al in a 2x2x2 within subjects, using the "thick" and "thin", 2 and 6 person, 1st and last block utterances. 
+
+We recruited XX participants in DATE who each read YY trials (ZZ in each of the 8 conditions). 
+
+## Calibration expt
+
+TODO methods
+
+pre-reg at https://osf.io/6pv5e
+
+modeling approach and selection 
+
+how well can models proxy humans? are there differences? 
+
+tg-matcher 3 (calibration)
+61 participants, 64 items each, from a pool of 217 transcripts spanning the models full accuracy range
+
+## Yoked v shuffled 
+
+TODO methods 
+pre-reg at https://osf.io/zqwp5
+
+tg-matcher 4 (SPR + yoked/unyoked)
+196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
+games not chosen at random
+
+# Computational models
+
+Computational methods
+TODO V doesn’t know how to write this
+QUESTION: do we focus on mlp pre- or post- calibration?
+
+
+# Results
+
+## Human accuracy
+
+
 
 ```{r}
 combined_data <- expt_1_data |>
@@ -235,7 +317,8 @@ combined_data <- expt_1_data |>
 # summarize(acc=mean(correct))
 ```
 
-```{r}
+```{r fig-1, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO We may want to add model predictions onto this as well ; may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO}" }
+
 combined_data |> ggplot(aes(x = round, color = group_size, group = group_size, y = correct)) +
   geom_point(data = combined_data |> group_by(group_size, round, correct_tangram, thickness, expt) |>
     summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
@@ -247,9 +330,9 @@ combined_data |> ggplot(aes(x = round, color = group_size, group = group_size, y
   labs(x="Source block", y="Accuracy")
 ```
 
-TODO going to need to use model preds for this instead? B/c error bars might be too close?
 
-```{r}
+```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO2}" }
+
 library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
@@ -281,21 +364,19 @@ ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, )) +
 # acc_by_target
 ```
 
-expt 1 prereg at https://osf.io/k45dr
-expt 2 prereg at https://osf.io/rdp5k
 
-expts 1 & 2 
+Expt 1 / 2 : predictors of human accuracy + discussion of high variability
 
-tg-matcher 1& 2 (what veronica ran in May) 
-1 is 2 and 6 player games, rounds 1 and 6 in medium thick (60 participants, 60 items each)
-2 is 2 and 6 player games, rounds 1 and 6 in thin and thick (60 participants, 64 items each)
+Expt 1 / 2: (?) model of relationship between original accuracy & new matcher accuracy 
 
-Key questions:
-* how accurate
+Expt 1 / 2: (?) adding transcript length as an additional predictor of human accuracy 
+
 
  what are biggest predictors (conditions, round, target) 
 
 Large item level differences, but not a lot else. 
+
+TODO will need to extract mixed effects from models into small format (see mpt for code)
 
 
 ```{r}
@@ -321,24 +402,6 @@ acc_mod_1 <- brm(
 ```
 
 
-
-
-
-Tangrams vary a lot in guessability. 
-
-
-
-As secondary analyses we also 
-[not doing drift diffusion, we tried that and not happening]
-
-* a model of the relationship between accuracy of the reference game participants and accuracy in this task. 
-
-* We may also do exploratory analyses relating to the transcript length as a predictor of RT and accuracy. 
-
-Analyses
-
-Primary analysis is a logistic model of accuracy as a function of block and game-conditions. We include a predictor of trial_number to account for practice effects. 
-
 ```{r}
 acc_mod_2 <- brm(
   correct ~ group_size * thickness * round + trial_order +
@@ -355,52 +418,68 @@ acc_mod_2 <- brm(
 #summary(acc_mod_2)
 ```
 
-As secondary analyses we also plan a model of the relationship between accuracy of the reference game participants and accuracy in this task. 
 
-We may also do exploratory analyses relating to the transcript length as a predictor of RT and accuracy. 
-We may analyze this data jointly with experiment 1 data. 
 
-Outliers and Exclusions
-
-We will include all complete submissions. For RT analyses, we will exclude reading times greater than 1 minute (piloting indicates these are rare, and likely signs of task-switching). 
+## Model results (+ calibration results??)
 
 
 
-## Model + calibration
+Predictors of model accuracy (what metric?) with some predictors as above (x3) – do the same factors that affect human accuracy affect model accuracy? 
 
-pre-reg at https://osf.io/6pv5e
+predictors of human accuracy + discussion of high variability
 
-modeling approach and selection 
+model of relationship between original accuracy & new matcher accuracy 
 
-how well can models proxy humans? are there differences? 
+adding transcript length as an additional predictor of human accuracy 
 
-tg-matcher 3 (calibration)
-61 participants, 64 items each, from a pool of 217 transcripts spanning the models full accuracy range
+
+
+
+
+(?) What model results to include – rolling window / anti-rolling / etc ← is there anything good in the what parts of more important stuff (see incremental-analysis.Rmd, but also all the links broke)
 
 given this proxy -- what can we think we learn -- for instance about most important parts of the utterances? (rolling window?)
+does seem to go up over time
 
 
 
-Analyses
 
-Our primary goal is to compare human and model calibration so we will visually compare the a) % of humans who guessed the correct target with b) the probability the model assigns to the correct target for each image. We will also look at correlations between these accuracies. 
-We will also use this data to better calibrate a future model. 
+```{r}
+human <- combined_data |> mutate(condition=case_when(
+  thickness =="medium" ~ "rotate",
+  T ~ thickness),
+  condition=str_c(str_sub(group_size,1,1), "_", condition),
+  round=str_c("round_",round)
+)
+                                   
+                                 
+source(here("analysis-code/helper.R"))
 
-Outliers and Exclusions
+mlp_mod <- read_csv(here(prediction_loc, "mlp_best.csv")) |> pivot_longer(p_A:p_L) |> 
+  group_by(tangram, utterance, gameId, trialNum, repNum, playerId) |> 
+  filter(value == max(value)) |> 
+  mutate(prediction=str_sub(name,3)) |> 
+rename(label = tangram)
+```
 
-We will exclude participants who take a mean of less than 3 seconds on trials (after excluding trials that take over a minute, which we think from piloting is a sign of task switching). We believe responses of this speed are very likely to correspond to random guessing. 
 
-Sample Size
 
-We plan to recruit 60 participants. 
 
-Other
+```{r fig-4, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "Model TODO unclear if this is worth including or in what form, but we do have model on far more than we have human ??" }
+plot_accuracy(mlp_mod, "mlp best")
+```
 
-We think it likely that we will end up analyzing this data jointly with prior (and future) experiments to look at what factors contribute to whether the target is easier or harder for a naive matcher to guess. 
 
-# Accuracy
 
-# Calibration
+
+
+TODO not sure what to say re the calibration expt 
+
+Numeric results related to calibration ? 
+
+TODO ? image related to calibration? 
+
+TODO is our "primary" model the one pre or post calibration ??? 
 
 ```{r, eval=F}
 ParseJSONColumn <- function(x) {
@@ -489,11 +568,11 @@ for_corr |> ggplot(aes(y = human_acc, x = value, color = tangram)) +
 
 ## Human yoked v not yoked expt
 
-pre-reg at https://osf.io/zqwp5
+Yoked v shuffled plot of accuracy (+ model?)
+Human accuracy on yoked v shuffled presentation (expt 4) 
+(?) no context model comparison on expt 4 dataset?
 
-tg-matcher 4 (SPR + yoked/unyoked)
-196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
-games not chosen at random
+
 
 seeing things in the same order helps
 look at item level accuracy differences? 
@@ -509,7 +588,7 @@ This dataset was collected using a modified self-paced reading procedure, but fo
 TODO assuming we don't want to include the RT predictor mess here? (and so not including that whole set of questions)
 
 
-```{r}
+```{r fig-n, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO also TODO add model comparison ?? \\label{yoked}" }
 expt_4_acc_data <-  expt_4_data |> 
   filter(type == "selection") |>
   mutate(correct = as.numeric(correct)) |>
@@ -525,7 +604,7 @@ expt_4_acc_data |> ggplot(aes(x = orig_repNum, color = condition, y = correct)) 
   labs(x="Source block", y="Accuracy")
 ```
 
-```{r}
+```{r, eval=F}
 library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
@@ -573,6 +652,14 @@ acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gam
 ```
 
 # Discussion
+
+Discussion
+
+Understanding varies much more based on item than on anything else; potentially due to priors or iconicity of image (? that might be beyond scope – how well does this match up with say diversity of descriptions)
+
+Models do pretty well? IDK what our model take away is
+
+Especially when there is strong or idiosyncratic reduction, context helps
 
 role of context 
 
