@@ -9,7 +9,7 @@
 \title{TODO}
 
 
-\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf TODO (TODO email) } Department of Psychology, \\Stanford University \AND {\large \bf TODO (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
+\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf Ben (TODO email) } Department of Psychology, \\Stanford University \AND {\large \bf Alvin (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
 
 
 \begin{document}
@@ -48,6 +48,10 @@ pictorial meaning (\textbf{hawkinsb?})
 possible could also mention other times when naive comprehender has been
 used to better understand iteractive dialogues?
 
+``Why use models'' -- can frame opaqueness as semantic distance between
+utterance and referent -- models are an explicit test of this! ``Naive
+comprehender'' / ``matcher''
+
 \subsection{ALvin gets to write computational intro
 here}\label{alvin-gets-to-write-computational-intro-here}
 
@@ -63,39 +67,70 @@ understand?
 We use both human experiments and models to assess when and why
 expressions are opaque or understandable to outside observers.
 
-Results Figures Conditions/Rounds on accuracy (expt 1+2) (? + model?)
-Tangram on accuracy (expt 1+2) (?) (? + model?)
-
-\section{General Methods}\label{general-methods}
-
-We ran multiple human experiments that shared methods, so here we
-present the general methods, followed by specifics for each experiment.
+\section{Task Setup}\label{task-setup}
 
 \subsection{Materials}\label{materials}
 
-TODO discussion of (\textbf{boyce2024?}) and how this is useful
+We draw on the corpus of reference game transcripts and results from
+(\textbf{boyce2024?}). There were all 6 round iterated reference games
+using the same 12 target images, but varied in how large the groups were
+(2-6 participants per group) and how ``thick'' the communication channel
+between group members was. For our human experiments, we sample
+different subsets of this corpus in different experiments. We use the
+entire corpus for our computational modelling component. TODO discussion
+of (\textbf{boyce2024?}) and how this is useful
 
-\subsection{Procedure}\label{procedure}
+\subsection{Experimental procedure}\label{experimental-procedure}
 
 We recruited participants from Prolific (TODO criteria). Participants
 were directed to the experiment, where it was explained that previously,
 other participants had described these shapes to one another. They would
 see a series of transcripts from the prior game, and their task was the
-guess what the intended target was. Participants recieved feedback on
-whether they were right or wrong on each trial. Participants were
-informed that the descriptions could come from different games. TODO
-what were the instructions for yoked experiment!. Except when the items
-were yoked to an original viewing order, items were shown in a random
-order, subject to the constraint that the same target could not repeat
-on adjacent trials.
-
-The task was implemented in jsPsych.
+guess what the intended target was. On each trial participants saw the
+full transcript from that trial, containing all the chat messages marked
+by whether they were from the speaker or a listener (TODO confirm the
+language used), except for lines that (\textbf{boyce2024?}) had marked
+as not having any referential content. Participants selected the image
+they thought was the target from the tableau of 12. Participants
+recieved feedback on whether they were right or wrong on each trial.
+Except when the specific viewing order was part of the experimental
+manipulation, we randomized the order of trials, subject to the
+constraint that the same target could not repeat on adjacent trials.\\
+The task was implemented in jsPsych. We paid participants \$10 an hour
+plus a bonus of TODO look up per correct response.
 
 \subsection{Computational models that Ben gets to
 write}\label{computational-models-that-ben-gets-to-write}
 
 Computational methods TODO V doesn't know how to write this QUESTION: do
 we focus on mlp pre- or post- calibration?
+
+\begin{CodeChunk}
+\begin{CodeOutput}
+
+    Pearson's product-moment correlation
+
+data:  for_corr$value and for_corr$human_acc
+t = 5.2099, df = 215, p-value = 4.418e-07
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.2110314 0.4480128
+sample estimates:
+      cor 
+0.3348057 
+\end{CodeOutput}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+\begin{figure}[t]
+
+{\centering \includegraphics[width=1\linewidth]{figs/fig-calibration-1} 
+
+}
+
+\caption[TODO Make all pretty \label{FOOBAR}]{TODO Make all pretty \label{FOOBAR}}\label{fig:fig-calibration}
+\end{figure}
+\end{CodeChunk}
 
 \section{Calibration expt that Alvin gets to
 write}\label{calibration-expt-that-alvin-gets-to-write}
@@ -113,40 +148,68 @@ of 217 transcripts spanning the models full accuracy range
 
 \section{Experiment 2}\label{experiment-2}
 
-For the first experiment, we primarily wanted to test our methods and
-establish a baseline of how well new matchers could do from reading
-random transcripts out of order. We did a 2x2 within subjects design,
-where we drew the target transcripts from 2 and 6 player games from
-Experiment 1 of TODO cite Boyce et al 2024 and from the first and last
-blocks of these games. Thus, we would also be able to check whether
+As a starting point for examining what makes referential expressions
+more or less opaque, we had people read the descriptions from the
+beginnings and ends and games. Thus, we would be able to check whether
 early descriptions (before much partner- or group- specific history
 could accumulate, but also before a ``good'' description had been
 created) or late descriptions (after both history and practice) would be
-easier to understand. We recruited XX participants in May 2024 (check)
-who each read YY trials (ZZ in each condition).
+easier to understand.
 
-expt 1 prereg at \url{https://osf.io/k45dr} expt 2 prereg at
-\url{https://osf.io/rdp5k}
+\subsection{Methods}\label{methods}
 
-expts 1 \& 2
+\subsubsection{Experiment 2a}\label{experiment-2a}
 
-tg-matcher 1\& 2 (what veronica ran in May) 1 is 2 and 6 player games,
-rounds 1 and 6 in medium thick (60 participants, 60 items each) 2 is 2
-and 6 player games, rounds 1 and 6 in thin and thick (60 participants,
-64 items each)
+To test our methods and establish a baseline of how well new matchers
+could do from reading random transcripts out of order, we ran a 2x2
+within subjects design, where we drew the target transcripts from 2 and
+6 player games from Experiment 1 of (\textbf{boyce2024?}) and from the
+first and last (sixth) blocks of these games. These games had medium
+thick communication channels, in that the matchers could send textual
+messages to the shared chat interface, but the describer role rotated
+each round, and matchers recieved feedback only about whether their
+selection was correct or not. We recruited XX participants in May 2024
+(check) who each saw 60 trials (15 in each condition). This experiment
+was pre-registered at \url{https://osf.io/k45dr}.
 
-\subsection{Experiment 2b}\label{experiment-2b}
+\subsubsection{Experiment 2b}\label{experiment-2b}
 
-\emph{TODO where should this go, since it's motivated by the results
-from expt 1?} After seeing the not big condition differences in
-experiment 1, we tried a second experiment drawing from the expt 3 of
-Boyce et al in a 2x2x2 within subjects, using the ``thick'' and
-``thin'', 2 and 6 person, 1st and last block utterances.
+After observing small condition differences in experiment 2a, we ran a
+second study drawing from the more extreme conditions of Experiment 3 in
+(\textbf{boyce2024?}). Here, we used a 2x2x2 within subjects design,
+drawing our transcripts from the ``thick'' and ``thin'', 2 and 6 person,
+1st and last block utterances. The ``thick'' condition had a consistent
+describer throughout the entire game, let matchers send messages to the
+chat freely, and showed all participants feedback on everyone's
+selections, including what the correct answer was. In contrast, the
+``thin'' condition, rotated the role of describer, gave feedback only on
+individual selections, and describers could not send text messages to
+the chat, but could only communicate via 4 emoji buttons (to indicate
+level of understanding). Emojis did not have referential content and so
+were not included in the transcripts be showed naive matchers. For
+experiment 2b, we recruited XX participants in DATE who each saw 64
+trials (8 in each condition). This expeirment was pre-registered at
+\url{https://osf.io/rdp5k}.
 
-We recruited XX participants in DATE who each read YY trials (ZZ in each
-of the 8 conditions).
+\subsection{Results}\label{results}
 
-\subsection{Human accuracy}\label{human-accuracy}
+Our primary question of interest was how accurate naive matchers would
+be at selecting the correct target, and how much this would vary
+depending on what game and what round the description came from. We did
+not have clear predictions, as we thought there could be countervailing
+pressures. On the one hand, the idea of reduction and
+partner-specificity would suggest that the conventionalized, later round
+utterances would rely on the history of the game that naive matchers
+were not privy to, and thus that late round utterances would be more
+opaque and difficult to understand. On the other hand, describers gained
+practice over repetitions, so later round utterances might better pick
+up on visually salient features and include less extraneous verbiage.
+
+In terms of group conditions, based on the patterns of cross-game
+similarity in (\textbf{boyce2024?}), we thought that smaller and thicker
+games were more likely to rapidly develop ideosyncratic conventions that
+would be more opaque than the less ideosyncratic conventions from larger
+groups with thinner communication channels.
 
 \begin{CodeChunk}
 \begin{figure}[t]
@@ -170,11 +233,21 @@ of the 8 conditions).
 \end{figure}
 \end{CodeChunk}
 
-Expt 1 / 2 : predictors of human accuracy + discussion of high
-variability
+For Experiment 2a, we ran a mixed effects logistic model of naive
+matcher accuracy: TODO and TODO model results. There were not large
+fixed effects (FIGURE) TODO Much of the variation in accuracy was
+instead driven by the target images (TODO STATS), with some images
+recieving much more transparent descriptions than others (FIGURE).
 
-Expt 1 / 2: (?) model of relationship between original accuracy \& new
-matcher accuracy
+For Experiment 2b we ran a similar mixed effects logistic model: TODO.
+Again, there was not a clear pattern of fixed effects TODO, and again
+some of the uncertainty in estimating the fixed effects was driven by
+the strong variation by target image (TODO STATS).
+
+As additional measures, we also looked whether there was predictive
+value from the level of accuracy of the original matchers or the number
+of words used by the original describer TODO. Expt 1 / 2: (?) model of
+relationship between original accuracy \& new matcher accuracy
 
 Expt 1 / 2: (?) adding transcript length as an additional predictor of
 human accuracy
@@ -188,38 +261,12 @@ TODO will need to extract mixed effects from models into small format
 
 \subsection{Model results}\label{model-results}
 
-Predictors of model accuracy (what metric?) with some predictors as
-above (x3) -- do the same factors that affect human accuracy affect
-model accuracy?
+As a computational comparison, we looked at the CLIP-MLP model's
+performance on the same descriptions. We used the probability the model
+assigned as a measure of the model's accuracy. The CLIP-MLP model was
+far above chance, but had lower accuracy than the human participants.
 
-predictors of human accuracy + discussion of high variability
-
-model of relationship between original accuracy \& new matcher accuracy
-
-adding transcript length as an additional predictor of human accuracy
-
-given this proxy -- what can we think we learn -- for instance about
-most important parts of the utterances? (rolling window?) does seem to
-go up over time
-
-\begin{CodeChunk}
-\begin{figure}[t]
-
-{\centering \includegraphics[width=1\linewidth]{figs/fig-4-1} 
-
-}
-
-\caption[Model TODO unclear if this is worth including or in what form, but we do have model on far more than we have human ??]{Model TODO unclear if this is worth including or in what form, but we do have model on far more than we have human ??}\label{fig:fig-4}
-\end{figure}
-\end{CodeChunk}
-
-TODO not sure what to say re the calibration expt
-
-Numeric results related to calibration ?
-
-TODO ? image related to calibration?
-
-TODO is our ``primary'' model the one pre or post calibration ???
+TODO model results
 
 \section{Yoked v shuffled}\label{yoked-v-shuffled}
 
@@ -227,7 +274,10 @@ TODO methods pre-reg at \url{https://osf.io/zqwp5}
 
 tg-matcher 4 (SPR + yoked/unyoked) 196 participants (99 in yoked, 97 in
 shuffled), each saw all 72 trials from 1 of 10 games. games not chosen
-at random \#\# Human yoked v not yoked expt
+at random
+
+\subsection{Human yoked v not yoked
+expt}\label{human-yoked-v-not-yoked-expt}
 
 Yoked v shuffled plot of accuracy (+ model?) Human accuracy on yoked v
 shuffled presentation (expt 4) (?) no context model comparison on expt 4
@@ -238,31 +288,28 @@ differences?
 
 We will exclude individual word RTs that are greater than 2000 ms.
 
-Condition differences: condition refers to yoked or shuffled. Logistic
-model of target selection accuracy: Accuracy \textasciitilde{}
+Condition differences: condition refers to yoked or shuffled.
+
+Logistic model of target selection accuracy: Accuracy \textasciitilde{}
 original\_rep\_num * condition + viewing\_order + (1 \textbar{} gameId)
-+ (1 \textbar{} tangram) + (1 \textbar{} participant) Time to selection:
-Selection\_time \textasciitilde{} original\_rep\_num * condition +
-viewing\_order + (1 \textbar{} gameId) + (1 \textbar{} tangram) + (1
-\textbar{} participant)
++ (1 \textbar{} tangram) + (1 \textbar{} participant)
 
 This dataset was collected using a modified self-paced reading
 procedure, but for present purposes, we focus only on the selection
 results and not on the incremental reading time patterns.
 
-TODO assuming we don't want to include the RT predictor mess here? (and
-so not including that whole set of questions)
-
 \begin{CodeChunk}
 \begin{figure}[t]
 
-{\centering \includegraphics[width=1\linewidth]{figs/fig-n-1} 
+{\centering \includegraphics[width=1\linewidth]{figs/fig-yoked-1} 
 
 }
 
-\caption[TODO also TODO add model comparison ?? \label{yoked}]{TODO also TODO add model comparison ?? \label{yoked}}\label{fig:fig-n}
+\caption[TODO also TODO add model comparison ?? \label{yoked}]{TODO also TODO add model comparison ?? \label{yoked}}\label{fig:fig-yoked}
 \end{figure}
 \end{CodeChunk}
+
+not sure how to work model in b/c different scale \ldots{}
 
 \section{Discussion ?}\label{discussion}
 
