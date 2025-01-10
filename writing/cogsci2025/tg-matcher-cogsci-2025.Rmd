@@ -51,6 +51,9 @@ data_loc <- "data"
 mod_loc <- "analysis-code/models"
 images <- "experiments/expt1/assets/images"
 prediction_loc <- "model-code/model_predictions"
+mod_results <- "analysis-code/models/summary"
+mod_form <- "analysis-code/models/formulae"
+mod_me <- "analysis-code/models/mixed_fx"
 
 
 expt_1_data <- read_csv(here(data_loc, "expt1_full_data.csv")) |>
@@ -181,9 +184,9 @@ original_results_raw <- one_round_results |>
     correct_tangram = tangram,
     correct = ifelse(correct, 1, 0),
     source = "original"
-  ) 
-  
-  original_results <- original_results_raw |> 
+  )
+
+original_results <- original_results_raw |>
   group_by(gameId, correct_tangram, round, source) |>
   summarize(correct = mean(correct)) |>
   select(gameId, correct_tangram, round, correct, source)
@@ -212,7 +215,7 @@ original_length <- one_chat |>
 ```
 
 ```{r, eval=F}
-do_preds_tangram <- function(model) {
+do_preds_tangram_2 <- function(model) {
   mod <- here(mod_loc, model) |> read_rds()
   preds <- expand_grid(
     trial_order = 1:60, group_size = c("6_player", "2_player"),
@@ -220,10 +223,10 @@ do_preds_tangram <- function(model) {
     round = c("round_1", "round_6"),
     correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
   ) |>
-    add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size * thickness * round | correct_tangram)) |>
-    group_by(group_size, thickness, round, trial_order, .draw) |>
-    summarize(predicted = mean(predicted)) |>
-    group_by(group_size, thickness, round) |>
+    #add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size *thickness * round | correct_tangram)) |>
+    group_by(group_size, thickness, round, correct_tangram) |>
+    # group_by(group_size, round, correct_tangram) |>
     summarize(
       mean = mean(predicted),
       low = quantile(predicted, .025),
@@ -231,6 +234,56 @@ do_preds_tangram <- function(model) {
     )
   return(preds)
 }
+
+#pred_acc_2 <- do_preds_tangram_2("acc_2.rds") |> write_rds(here(mod_loc, "predicted", "acc_2.rds"))
+
+pred_acc_2 <- do_preds_tangram_2("acc_2.rds") |> write_rds(here(mod_loc, "predicted", "acc_2_tangram.rds"))
+
+do_preds_tangram_1 <- function(model) {
+  mod <- here(mod_loc, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    # thickness = c("thick", "thin"),
+    round = c("round_1", "round_6"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+     add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size * round | correct_tangram)) |>
+    #add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
+    # group_by(group_size, thickness, round, correct_tangram) |>
+    group_by(group_size, round, correct_tangram) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+
+#pred_acc_1 <- do_preds_tangram_1("acc_1.rds") |> write_rds(here(mod_loc, "predicted", "acc_1.rds"))
+
+pred_acc_1 <- do_preds_tangram_1("acc_1.rds") |> write_rds(here(mod_loc, "predicted", "acc_1_tangram.rds"))
+
+
+do_preds_tangram_yoked <- function(model) {
+  mod <- here(mod_loc, model) |> read_rds()
+  preds <- expand_grid(
+    matcher_trialNum = 1:72, 
+    orig_repNum= 0:5, 
+    condition=c("yoked", "shuffled"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+     add_linpred_draws(mod, value = "predicted", re_formula = ~ (1| correct_tangram)) |>
+    # group_by(group_size, thickness, round, correct_tangram) |>
+    group_by(orig_repNum, condition, correct_tangram) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+  pred_acc_1 <- do_preds_tangram_yoked("acc_4.rds") |> write_rds(here(mod_loc, "predicted", "acc_4_tangram.rds"))
+
 
 
 ```
@@ -260,7 +313,7 @@ save_summary <- function(model) {
 save_me <- function(model) {
   intervals <- gather_draws(model, `sd_.*`, regex = T) %>%
     mean_qi() |>
-    separate(.variable, into=c("group", "Term"), sep="__") |> 
+    separate(.variable, into = c("group", "Term"), sep = "__") |>
     mutate(
       lower = .lower,
       upper = .upper,
@@ -486,27 +539,45 @@ expt_2_relevant_games <- expt_1_data |>
   bind_rows(expt_2_data) |>
   select(gameId, group_size, thickness, round) |>
   unique()
+
 expt_2_fig_data <- expt_1_data |>
   bind_rows(expt_2_data) |>
   bind_rows(mlp_mod |> inner_join(expt_2_relevant_games)) |>
   bind_rows(original_results |> inner_join(expt_2_relevant_games)) |>
   mutate(thickness = factor(thickness, levels = c("thin", "medium", "thick")))
+
+
+predicted_expt_2_fig <- read_rds(here(mod_loc, "predicted/acc_1.rds")) |>
+  mutate(thickness = "medium") |>
+  bind_rows(read_rds(here(mod_loc, "predicted/acc_2.rds"))) |>
+  mutate(source = "naive") |> 
+  mutate(across(mean:high, inv_logit_scaled))
+
+tangram_predicted_expt_2_fig <- read_rds(here(mod_loc, "predicted/acc_1_tangram.rds")) |>
+  mutate(thickness = "medium") |>
+  bind_rows(read_rds(here(mod_loc, "predicted/acc_2_tangram.rds"))) |>
+  mutate(source = "naive") |> 
+  mutate(across(mean:high, inv_logit_scaled))
 ```
 
-```{r fig-1, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO We may want to add model predictions onto this as well ; may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO}" }
-expt_2_fig_data |> ggplot(aes(x = round, color = source, y = correct, group = source)) +
-  # geom_point(data = expt_2_fig_data |> group_by(source, group_size, round, correct_tangram, thickness, expt) |>
-  #  summarize(correct = mean(correct)), position = position_dodge(width = .3)) +
-  stat_summary(fun.data = "mean_cl_boot", geom = "line") +
-  stat_summary(fun.data = "mean_cl_boot") +
-  facet_grid(group_size ~ thickness) +
+```{r fig-1, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=5, fig.cap = "TODO make prettier \\label{TODO}" }
+expt_2_fig_data |> filter(source=="naive") |> ggplot(aes(x = round, color = source, y = correct, group = interaction(source, group_size), shape=group_size, lty=group_size)) +
+    # geom_jitter(data = expt_2_fig_data |> filter(source=="naive") |> group_by(source, group_size, round, correct_tangram, thickness, expt) |>    summarize(correct = mean(correct)), color="black", alpha=.2, width=.2) +
+
+  geom_pointrange(data = predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), position=position_dodge(.4)) +
+  geom_line(data = predicted_expt_2_fig, aes(y = mean), position=position_dodge(.4)) +
+
+  stat_summary(data= expt_2_fig_data |> filter(source!="naive"),  geom="point", position=position_dodge(.4))+
+    stat_summary(data= expt_2_fig_data |> filter(source!="naive"), geom="line", position=position_dodge(.4))+
+  facet_grid(. ~ thickness) +
   scale_y_continuous(lim = c(0, 1), expand = c(0, 0)) +
   geom_hline(yintercept = 1 / 12, lty = "dashed") +
-  labs(x = "Source block", y = "Accuracy")
+  labs(x = "Source block", y = "Accuracy")+
+  theme(legend.position="bottom", legend.box="vertical")
 ```
 
 
-```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO2}" }
+```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=5, fig.cap = "TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO2}" }
 library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
@@ -527,16 +598,18 @@ acc_by_type_target <- expt_2_fig_data |>
   summarize(acc = sum(correct) / n()) |>
   mutate(correct_tangram = factor(correct_tangram, levels = acc_by_target$correct_tangram))
 
-ggplot(acc_by_type_target, aes(x = correct_tangram, acc, y = acc, )) +
-  geom_point() +
-  stat_summary(aes(color = source)) +
+ggplot(acc_by_type_target, aes(x = correct_tangram, y = acc, color=source, shape=group_size, lty=group_size)) +
+   stat_summary(data = tangram_predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), fun.data="mean_cl_boot", position=position_dodge(width=.3)) +
+   #geom_pointrange(data = tangram_predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low)) +
+  stat_summary(data=acc_by_type_target |> filter(source!="naive"), aes(color = source), geom="point", position=position_dodge(width=.3)) +
   coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
   geom_hline(yintercept = 1 / 12, linetype = "dashed") +
   scale_x_discrete(name = NULL, labels = foo$labels) +
-  theme(axis.text.x = element_markdown(color = "black", size = 11))
+  theme(axis.text.x = element_markdown(color = "black", size = 11))+
+  theme(legend.position="bottom", legend.box="vertical")
 
 
-# acc_by_target
+# guide_legend()# acc_by_target
 ```
 
 
@@ -641,27 +714,67 @@ acc_mod_2_orig_length <- brm(
 )
 ```
 
-For Experiment 2a, we ran a mixed effects logistic model of naive matcher accuracy: TODO and TODO model results. There were not large fixed effects (FIGURE) TODO Much of the variation in accuracy was instead driven by the target images (TODO STATS), with some images recieving much more transparent descriptions than others (FIGURE). 
 
-For Experiment 2b we ran a similar mixed effects logistic model: TODO. Again, there was not a clear pattern of fixed effects TODO, and again some of the uncertainty in estimating the fixed effects was driven by the strong variation by target image (TODO STATS). 
+```{r}
 
-As additional measures, we also looked whether there was predictive value from the level of accuracy of the original matchers or the number of words used by the original describer TODO. 
-Expt 1 / 2: (?) model of relationship between original accuracy & new matcher accuracy 
-
-Expt 1 / 2: (?) adding transcript length as an additional predictor of human accuracy 
+acc_mod_1 <- read_rds(here(mod_results, "acc_1.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
 
- what are biggest predictors (conditions, round, target) 
+acc_mod_1_me <- read_rds(here(mod_me, "acc_1.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_1_form <- read_rds(here(mod_form, "acc_1.rds"))
 
-Large item level differences, but not a lot else. 
+acc_mod_2 <- read_rds(here(mod_results, "acc_2.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
-TODO will need to extract mixed effects from models into small format (see mpt for code)
+acc_2_form <- read_rds(here(mod_form, "acc_2.rds"))
+
+acc_mod_2_me <- read_rds(here(mod_me, "acc_2.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+acc_mod_1_orig_acc <- read_rds(here(mod_results, "acc_1_orig_acc.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+acc_mod_2_orig_acc <- read_rds(here(mod_results, "acc_2_orig_acc.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+acc_mod_1_orig_length <- read_rds(here(mod_results, "acc_1_orig_length.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+acc_mod_2_orig_length <- read_rds(here(mod_results, "acc_2_orig_length.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+acc_mod_mlp <- read_rds(here(mod_results, "acc_mlp_1_2.rds"))
+acc_mod_mlp_me <- read_rds(here(mod_me, "acc_mlp_1_2.rds"))
+
+acc_mod_mlp_orig_acc <- read_rds(here(mod_results, "acc_mlp_1_2_orig_acc.rds"))
+
+acc_mod_mlp_orig_length <- read_rds(here(mod_results, "acc_mlp_1_2_orig_length.rds"))
+
+
+```
+
+For Experiment 2a, we ran a mixed effects logistic model of naive matcher accuracy: `r form(acc_1_form)`. Overall, naive matchers were above chance (OR: `r stats_text(acc_mod_1, 1)`. There were not large fixed effects (FIGURE TODO)  Last round was slightly lower accuracy (OR of last round: `r stats_text(acc_mod_1, 4)`). There was not a clear effect of larger games (OR: `r stats_text(acc_mod_1, 2)`), but round and group size interacted (OR of 6 player games in round 6: `r stats_text(acc_mod_1, 3)`).  Much of the variation in accuracy was instead driven by the target images, where the Odds Ratio of the standard deviation of the target was `r stats_text(acc_mod_1_me, 3)` [I'm not sure what the clearest way to present a stat for this is at all...] with some images recieving much more transparent descriptions than others (FIGURE). 
+
+For Experiment 2b we ran a similar mixed effects logistic model: `r form(acc_2_form)`. Overall, naive matchers were above chance (OR: `r stats_text(acc_mod_2, 1)`. Again, there was not a clear pattern of fixed effects. Last round was slightly lower accuracy (OR of last round: `r stats_text(acc_mod_2, 6)`), but there was an interaction with thickness, where thin, last round were less opaque (OR: `r stats_text(acc_mod_2, 8)`). TODO do we want to describe some of the other predictors of this model? 
+
+and again some of the uncertainty in estimating the fixed effects was driven by the strong variation by target image (TODO STATS). `r stats_text(acc_mod_2_me, 5)`
+
+As additional measures, we also looked whether there was predictive value from the level of accuracy of the original matchers or the number of words used by the original describer TODO.
+
+EXPT 1 -- there is a large effect of original accuracy `r stats_text(acc_mod_1_orig_acc, 4)`
+EXPT 1 -- there is not a substnatial effect of original length `r stats_text(acc_mod_1_orig_length, 4)`
+
+EXPT 2 -- there is a large effect of original accuracy `r stats_text(acc_mod_2_orig_acc, 6)`
+EXPT 2 -- there is a slight benefit to longer descriptions `r stats_text(acc_mod_2_orig_length, 6)`
+
 
 ## Model results
 
 As a computational comparison, we looked at the CLIP-MLP model's performance on the same descriptions. We used the probability the model assigned as a measure of the model's accuracy. The CLIP-MLP model was far above chance, but had lower accuracy than the human participants. 
 
 TODO model results 
+
+Nothing is significant basically except that thick is better `r stats_text(acc_mod_mlp, 9)`. 
+
+There is substantial by-tangram variation `r stats_text(acc_mod_mlp_me, 7)`
+
+There is an effect of original correct `r stats_text(acc_mod_mlp_orig_acc, 8)`. 
+
+More words is bad for the model -- effect of log words `r stats_text(acc_mod_mlp_orig_length, 8)`
 
 ```{r, eval=F}
 acc_priors_mlp <- c(
@@ -741,6 +854,9 @@ This dataset was collected using a modified self-paced reading procedure, but fo
 
 
 ```{r fig-yoked, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO also TODO add model comparison ?? \\label{yoked}" }
+
+
+
 expt_4_acc_data <- expt_4_data |>
   filter(type == "selection") |>
   mutate(correct = as.numeric(correct)) |>
@@ -752,14 +868,15 @@ expt_3_relevant_games <- expt_4_acc_data |>
 expt_3_fig_data <- expt_4_acc_data |>
   bind_rows(mlp_mod |> inner_join(expt_3_relevant_games)) |>
   bind_rows(original_results |> inner_join(expt_3_relevant_games)) |>
-  mutate(condition = ifelse(!is.na(condition), condition, source))
+  mutate(condition = ifelse(!is.na(condition), condition, source)) 
 
+predicted_expt_3_fig <- read_rds(here(mod_loc, "predicted/acc_4_tangram.rds")) |> mutate(across(mean:high, inv_logit_scaled))|> mutate(round=str_c("round_", orig_repNum+1))
 
 expt_3_fig_data |> ggplot(aes(x = round, color = condition, y = correct, group = condition)) +
-  geom_point(data = expt_3_fig_data |> group_by(condition, round, correct_tangram) |>
-    summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6), geom = "line") +
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .6)) +
+  #geom_point(data = expt_3_fig_data |> group_by(condition, round, correct_tangram) |>
+  #  summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
+  stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width = .6), geom = "line") +
+  stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width = .6)) +
   scale_y_continuous(lim = c(0, 1), expand = c(0, 0)) +
   geom_hline(yintercept = 1 / 12, lty = "dashed") +
   labs(x = "Source block", y = "Accuracy")
@@ -816,7 +933,8 @@ acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gam
 ```{r, eval=F}
 acc_priors_mlp <- c(
   set_prior("normal(0,.2)", class = "b"),
-  set_prior("normal(0,.2)", class = "sd"))
+  set_prior("normal(0,.2)", class = "sd")
+)
 
 expt_3_relevant_games <- expt_4_acc_data |>
   select(gameId, round, orig_repNum) |>
@@ -825,27 +943,27 @@ expt_3_relevant_games <- expt_4_acc_data |>
 yoked_relevant_mlp <- mlp_mod |> inner_join(expt_3_relevant_games)
 
 
-acc_mod_yoked_mlp <- brm(correct ~ orig_repNum + (1 | gameId) + (1 | correct_tangram), 
-                         data = yoked_relevant_mlp, 
-                         prior = acc_priors_mlp,
-                         file = here(mod_loc, "acc_yoked_mlp"),
-                         control = list(adapt_delta = .95)
+acc_mod_yoked_mlp <- brm(correct ~ orig_repNum + (1 | gameId) + (1 | correct_tangram),
+  data = yoked_relevant_mlp,
+  prior = acc_priors_mlp,
+  file = here(mod_loc, "acc_yoked_mlp"),
+  control = list(adapt_delta = .95)
 )
 ```
 
 not sure how to work model in b/c different scale ... 
 
 ```{r, eval=F}
-
-original_subset <- original_results_raw |> inner_join(expt_3_relevant_games) |> 
-  mutate(order="yoked", setting = "original") |> 
-  select(workerid=playerId, correct, correct_tangram=tangram, orig_repNum=repNum, gameId, matcher_trialNum=trialNum, order, setting)
+original_subset <- original_results_raw |>
+  inner_join(expt_3_relevant_games) |>
+  mutate(order = "yoked", setting = "original") |>
+  select(workerid = playerId, correct, correct_tangram = tangram, orig_repNum = repNum, gameId, matcher_trialNum = trialNum, order, setting)
 
 yoked_shuffled_original <- expt_4_data |>
   filter(type == "selection") |>
   mutate(correct = as.numeric(correct)) |>
-  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram) |> 
-  mutate(order=condition, setting = "new") |> 
+  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram) |>
+  mutate(order = condition, setting = "new") |>
   bind_rows(original_subset)
 
 acc_priors <- c(
@@ -854,7 +972,7 @@ acc_priors <- c(
 )
 
 
-acc_mod_compare_orig <- brm(correct ~ orig_repNum * order + orig_repNum* setting + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = yoked_shuffled_original, prior = acc_priors, file = here(mod_loc, "yoked_shuffled_original.rds"))
+acc_mod_compare_orig <- brm(correct ~ orig_repNum * order + orig_repNum * setting + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = yoked_shuffled_original, prior = acc_priors, file = here(mod_loc, "yoked_shuffled_original.rds"))
 ```
 
 

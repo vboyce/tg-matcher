@@ -218,7 +218,7 @@ groups with thinner communication channels.
 
 }
 
-\caption[TODO We may want to add model predictions onto this as well ]{TODO We may want to add model predictions onto this as well ; may also want to use model predictions b/c error bars don't capture mixed effects \label{TODO}}\label{fig:fig-1}
+\caption[TODO make prettier \label{TODO}]{TODO make prettier \label{TODO}}\label{fig:fig-1}
 \end{figure}
 \end{CodeChunk}
 
@@ -234,30 +234,47 @@ groups with thinner communication channels.
 \end{CodeChunk}
 
 For Experiment 2a, we ran a mixed effects logistic model of naive
-matcher accuracy: TODO and TODO model results. There were not large
-fixed effects (FIGURE) TODO Much of the variation in accuracy was
-instead driven by the target images (TODO STATS), with some images
-recieving much more transparent descriptions than others (FIGURE).
+matcher accuracy: correct\(\sim\) group\_size \(\times\) round~+
+trial\_order~+ (group\_size \(\times\) round\textbar correct\_tangram)~+
+(group\_size \(\times\) round~+ trial\_order\textbar workerid). Overall,
+naive matchers were above chance (OR: 1.93 {[}1.05, 3.62{]}. There were
+not large fixed effects (FIGURE TODO) Last round was slightly lower
+accuracy (OR of last round: 0.77 {[}0.53, 1.1{]}). There was not a clear
+effect of larger games (OR: 1.15 {[}0.89, 1.47{]}), but round and group
+size interacted (OR of 6 player games in round 6: 1.49 {[}1.06, 2.1{]}).
+Much of the variation in accuracy was instead driven by the target
+images, where the Odds Ratio of the standard deviation of the target was
+2.66 {[}1.88, 4.52{]} {[}I'm not sure what the clearest way to present a
+stat for this is at all\ldots{]} with some images recieving much more
+transparent descriptions than others (FIGURE).
 
-For Experiment 2b we ran a similar mixed effects logistic model: TODO.
-Again, there was not a clear pattern of fixed effects TODO, and again
-some of the uncertainty in estimating the fixed effects was driven by
-the strong variation by target image (TODO STATS).
+For Experiment 2b we ran a similar mixed effects logistic model:
+correct\(\sim\) group\_size \(\times\) thickness \(\times\) round~+
+trial\_order~+ (group\_size \(\times\) thickness \(\times\)
+round\textbar correct\_tangram)~+ (group\_size \(\times\) thickness
+\(\times\) round~+ trial\_order\textbar workerid). Overall, naive
+matchers were above chance (OR: 1.81 {[}1.06, 3.08{]}. Again, there was
+not a clear pattern of fixed effects. Last round was slightly lower
+accuracy (OR of last round: 0.64 {[}0.47, 0.85{]}), but there was an
+interaction with thickness, where thin, last round were less opaque (OR:
+1.55 {[}1.02, 2.33{]}). TODO do we want to describe some of the other
+predictors of this model?
+
+and again some of the uncertainty in estimating the fixed effects was
+driven by the strong variation by target image (TODO STATS). 2.25
+{[}1.67, 3.59{]}
 
 As additional measures, we also looked whether there was predictive
 value from the level of accuracy of the original matchers or the number
-of words used by the original describer TODO. Expt 1 / 2: (?) model of
-relationship between original accuracy \& new matcher accuracy
+of words used by the original describer TODO.
 
-Expt 1 / 2: (?) adding transcript length as an additional predictor of
-human accuracy
+EXPT 1 -- there is a large effect of original accuracy 3.38 {[}2.46,
+4.7{]} EXPT 1 -- there is not a substnatial effect of original length
+1.05 {[}0.94, 1.17{]}
 
-what are biggest predictors (conditions, round, target)
-
-Large item level differences, but not a lot else.
-
-TODO will need to extract mixed effects from models into small format
-(see mpt for code)
+EXPT 2 -- there is a large effect of original accuracy 2.17 {[}1.7,
+2.77{]} EXPT 2 -- there is a slight benefit to longer descriptions 1.1
+{[}1.01, 1.2{]}
 
 \subsection{Model results}\label{model-results}
 
@@ -267,6 +284,16 @@ assigned as a measure of the model's accuracy. The CLIP-MLP model was
 far above chance, but had lower accuracy than the human participants.
 
 TODO model results
+
+Nothing is significant basically except that thick is better 0.05 {[}0,
+0.1{]}.
+
+There is substantial by-tangram variation 0.14 {[}0.09, 0.23{]}
+
+There is an effect of original correct 0.09 {[}0.06, 0.11{]}.
+
+More words is bad for the model -- effect of log words -0.04 {[}-0.05,
+-0.03{]}
 
 \section{Yoked v shuffled}\label{yoked-v-shuffled}
 
