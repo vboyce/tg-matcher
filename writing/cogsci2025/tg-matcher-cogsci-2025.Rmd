@@ -42,6 +42,7 @@ library(scales)
 library(viridis)
 library(ggridges)
 library(cowplot)
+library(tidybayes)
 
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
@@ -263,6 +264,49 @@ do_preds_tangram_1 <- function(model) {
 
 pred_acc_1 <- do_preds_tangram_1("acc_1.rds") |> write_rds(here(mod_loc, "predicted", "acc_1_tangram.rds"))
 
+do_preds_tangram_mlp <- function(model) {
+  mod <- here(mod_loc, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    thickness = c("thick", "thin", "medium"),
+    round = c("round_1", "round_6"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+    #add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size *thickness * round | correct_tangram)) |>
+    group_by(group_size, thickness, round, correct_tangram) |>
+    # group_by(group_size, round, correct_tangram) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+
+do_preds_mlp <- function(model) {
+  mod <- here(mod_loc, model) |> read_rds()
+  preds <- expand_grid(
+    trial_order = 1:60, group_size = c("6_player", "2_player"),
+    thickness = c("thick", "thin", "medium"),
+    round = c("round_1", "round_6"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+    add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
+    #add_linpred_draws(mod, value = "predicted", re_formula = ~ (group_size *thickness * round | correct_tangram)) |>
+    group_by(group_size, thickness, round, correct_tangram) |>
+    # group_by(group_size, round, correct_tangram) |>
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+
+ do_preds_tangram_mlp("acc_mlp_1_2_beta.rds") |> write_rds(here(mod_loc, "predicted", "acc_mlp_beta_tangram.rds"))
+ do_preds_mlp("acc_mlp_1_2_beta.rds") |> write_rds(here(mod_loc, "predicted", "acc_mlp_beta.rds"))
+
 
 do_preds_tangram_yoked <- function(model) {
   mod <- here(mod_loc, model) |> read_rds()
@@ -272,9 +316,9 @@ do_preds_tangram_yoked <- function(model) {
     condition=c("yoked", "shuffled"),
     correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
   ) |>
-     add_linpred_draws(mod, value = "predicted", re_formula = ~ (1| correct_tangram)) |>
+     add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
     # group_by(group_size, thickness, round, correct_tangram) |>
-    group_by(orig_repNum, condition, correct_tangram) |>
+    group_by(orig_repNum, condition) |>
     summarize(
       mean = mean(predicted),
       low = quantile(predicted, .025),
@@ -282,7 +326,29 @@ do_preds_tangram_yoked <- function(model) {
     )
   return(preds)
 }
-  pred_acc_1 <- do_preds_tangram_yoked("acc_4.rds") |> write_rds(here(mod_loc, "predicted", "acc_4_tangram.rds"))
+  do_preds_tangram_yoked("acc_4.rds") |> write_rds(here(mod_loc, "predicted", "acc_4.rds"))
+
+  do_preds_tangram_yoked_mlp <- function(model) {
+  mod <- here(mod_loc, model) |> read_rds()
+  preds <- expand_grid(
+    matcher_trialNum = 1:72, 
+    orig_repNum= 0:5, 
+    #condition=c("yoked", "shuffled"),
+    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+  ) |>
+     add_linpred_draws(mod, value = "predicted", re_formula =NA) |>
+    # group_by(group_size, thickness, round, correct_tangram) |>
+    #group_by(orig_repNum, condition, correct_tangram) |>
+        group_by(orig_repNum) |>
+
+    summarize(
+      mean = mean(predicted),
+      low = quantile(predicted, .025),
+      high = quantile(predicted, .975)
+    )
+  return(preds)
+}
+  do_preds_tangram_yoked_mlp("acc_yoked_mlp_beta.rds") |> write_rds(here(mod_loc, "predicted", "acc_yoked_mlp_beta.rds"))
 
 
 
@@ -438,6 +504,7 @@ TODO V doesn’t know how to write this
 QUESTION: do we focus on mlp pre- or post- calibration?
 
 
+# Calibration expt that Alvin gets to write
 ```{r}
 # this is all because I didn't keep the trial number source recorded, so we have a fun time rejoining
 ParseJSONColumn <- function(x) {
@@ -481,26 +548,31 @@ ready <- expt_3_data |>
 
 good <- ready |> left_join(labels)
 
-summ <- good |>
-  group_by(grouping) |>
-  summarize(human_acc = mean(correct), value = mean(value))
+
 
 for_corr <- good |>
   group_by(text, value, tangram, grouping) |>
-  summarize(human_acc = mean(correct), human_n = n())
+  summarize(human_acc = mean(correct), human_n = n()) |> ungroup() |> 
+  mutate(grouping=as.factor(grouping) |> reorder(value)) |> group_by(grouping)
 
-cor.test(for_corr$value, for_corr$human_acc)
+summ <- for_corr|>
+  group_by(grouping) |>
+  mutate(value = mean(value))
+
+#cor.test(for_corr$value, for_corr$human_acc)
 ```
 
-```{r fig-calibration, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO Make all pretty \\label{FOOBAR}" }
+```{r fig-calibration, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="70%", fig.width=3, fig.height=3, fig.cap = "Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy. Colored points are individual descriptions, black line is the boostrapped mean and 95% CI across descriptions for each decile. \\label{calibration}" }
 for_corr |> ggplot(aes(y = human_acc, x = value)) +
-  geom_point(aes(color = grouping)) +
-  geom_line(data = summ, color = "black") +
+  geom_point(aes(color = grouping), alpha=.7) +
+  #geom_line(data = summ, color = "black") +
+  stat_summary(data=summ)+
+    stat_summary(data=summ, fun.data="mean_cl_boot",geom="line")+
   theme(legend.position = "none") +
-  labs(x = "Model predicted probability", y = "Human accuracy")
+  scale_color_viridis(discrete=T)+
+  labs(x = "CLIP-MLP accuracy", y = "Human accuracy")+
+  coord_equal()
 ```
-
-# Calibration expt that Alvin gets to write
 
 TODO methods
 
@@ -544,40 +616,53 @@ expt_2_fig_data <- expt_1_data |>
   bind_rows(expt_2_data) |>
   bind_rows(mlp_mod |> inner_join(expt_2_relevant_games)) |>
   bind_rows(original_results |> inner_join(expt_2_relevant_games)) |>
-  mutate(thickness = factor(thickness, levels = c("thin", "medium", "thick")))
+  mutate(thickness = factor(thickness, levels = c("thin", "medium", "thick"))) |> 
+  mutate(source=factor(source, levels=c("original", "naive", "model"), labels=c("Original", "Naive human", "CLIP-MLP"))) |> 
+  mutate(round=str_sub(round, -1))
 
 
 predicted_expt_2_fig <- read_rds(here(mod_loc, "predicted/acc_1.rds")) |>
   mutate(thickness = "medium") |>
   bind_rows(read_rds(here(mod_loc, "predicted/acc_2.rds"))) |>
   mutate(source = "naive") |> 
-  mutate(across(mean:high, inv_logit_scaled))
+  bind_rows(read_rds(here(mod_loc, "predicted/acc_mlp_beta.rds")) |> mutate(source="model")) |> 
+    mutate(source=factor(source, levels=c("original", "naive", "model"), labels=c("Original", "Naive human", "CLIP-MLP"))) |> 
+  mutate(across(mean:high, inv_logit_scaled)) |> 
+    mutate(thickness = factor(thickness, levels = c("thin", "medium", "thick"))) |> 
+    mutate(round=str_sub(round, -1))
+
 
 tangram_predicted_expt_2_fig <- read_rds(here(mod_loc, "predicted/acc_1_tangram.rds")) |>
   mutate(thickness = "medium") |>
   bind_rows(read_rds(here(mod_loc, "predicted/acc_2_tangram.rds"))) |>
   mutate(source = "naive") |> 
-  mutate(across(mean:high, inv_logit_scaled))
+    bind_rows(read_rds(here(mod_loc, "predicted/acc_mlp_beta_tangram.rds")) |> mutate(source="model")) |> 
+    mutate(source=factor(source, levels=c("original", "naive", "model"), labels=c("Original", "Naive human", "CLIP-MLP"))) |> 
+  mutate(across(mean:high, inv_logit_scaled)) |>   mutate(thickness = factor(thickness, levels = c("thin", "medium", "thick"))) |> 
+    mutate(round=str_sub(round, -1))
+
+
 ```
 
-```{r fig-1, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=5, fig.cap = "TODO make prettier \\label{TODO}" }
-expt_2_fig_data |> filter(source=="naive") |> ggplot(aes(x = round, color = source, y = correct, group = interaction(source, group_size), shape=group_size, lty=group_size)) +
-    # geom_jitter(data = expt_2_fig_data |> filter(source=="naive") |> group_by(source, group_size, round, correct_tangram, thickness, expt) |>    summarize(correct = mean(correct)), color="black", alpha=.2, width=.2) +
-
+```{r fig-condition, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="90%", fig.width=4, fig.height=3, fig.cap = "Accuracies for naive humans and the CLIP-MLP model for Experiment 2. Point estimates and 95% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \\label{expt2-condition}" }
+expt_2_fig_data |> ggplot(aes(x = round, color = source, y = correct, group = interaction(source, group_size), shape=group_size, lty=group_size)) +
+    stat_summary(data= expt_2_fig_data |> filter(source=="Original"),  geom="point", fun.data="mean_cl_boot", position=position_dodge(.4))+
+    stat_summary(data= expt_2_fig_data |> filter(source=="Original"), geom="line", fun.data="mean_cl_boot", position=position_dodge(.4))+
   geom_pointrange(data = predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), position=position_dodge(.4)) +
   geom_line(data = predicted_expt_2_fig, aes(y = mean), position=position_dodge(.4)) +
-
-  stat_summary(data= expt_2_fig_data |> filter(source!="naive"),  geom="point", position=position_dodge(.4))+
-    stat_summary(data= expt_2_fig_data |> filter(source!="naive"), geom="line", position=position_dodge(.4))+
   facet_grid(. ~ thickness) +
   scale_y_continuous(lim = c(0, 1), expand = c(0, 0)) +
   geom_hline(yintercept = 1 / 12, lty = "dashed") +
-  labs(x = "Source block", y = "Accuracy")+
-  theme(legend.position="bottom", legend.box="vertical")
+  labs(x = "Round", y = "Accuracy")+
+  scale_color_manual(breaks=c("Original", "Naive human", "CLIP-MLP"), values=c( "#7570B3","#1B9E77", "#D95F02"))+
+  theme(legend.position="bottom", legend.box="vertical", 
+        strip.background=element_blank(),
+        legend.title=element_blank(),
+        legend.margin=margin(c(-10,1,0,1)))
 ```
 
 
-```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=5, fig.cap = "TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \\label{TODO2}" }
+```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="90%", fig.width=4, fig.height=3, fig.cap = "Accuracies for naive humans and the CLIP-MLP model for Experiment 2, split out by target image. Point estimates and 95% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \\label{TODO2}" }
 library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
@@ -599,14 +684,17 @@ acc_by_type_target <- expt_2_fig_data |>
   mutate(correct_tangram = factor(correct_tangram, levels = acc_by_target$correct_tangram))
 
 ggplot(acc_by_type_target, aes(x = correct_tangram, y = acc, color=source, shape=group_size, lty=group_size)) +
-   stat_summary(data = tangram_predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), fun.data="mean_cl_boot", position=position_dodge(width=.3)) +
-   #geom_pointrange(data = tangram_predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low)) +
-  stat_summary(data=acc_by_type_target |> filter(source!="naive"), aes(color = source), geom="point", position=position_dodge(width=.3)) +
+   stat_summary(data = tangram_predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), fun.data="mean_cl_boot", position=position_dodge(width=.6)) +
+  stat_summary(data=acc_by_type_target |> filter(source=="Original"), aes(color = source), geom="point", position=position_dodge(width=.6)) +
   coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
   geom_hline(yintercept = 1 / 12, linetype = "dashed") +
   scale_x_discrete(name = NULL, labels = foo$labels) +
-  theme(axis.text.x = element_markdown(color = "black", size = 11))+
-  theme(legend.position="bottom", legend.box="vertical")
+  scale_color_manual(breaks=c("Original", "Naive human", "CLIP-MLP"), values=c( "#7570B3","#1B9E77", "#D95F02"))+
+  theme(legend.position="bottom", legend.box="vertical", 
+        strip.background=element_blank(),
+        legend.title=element_blank(),
+        axis.text.x = element_markdown(color = "black", size = 11),
+        legend.margin=margin(c(-10,1,0,1)))
 
 
 # guide_legend()# acc_by_target
@@ -776,7 +864,7 @@ There is an effect of original correct `r stats_text(acc_mod_mlp_orig_acc, 8)`.
 
 More words is bad for the model -- effect of log words `r stats_text(acc_mod_mlp_orig_length, 8)`
 
-```{r, eval=T}
+```{r, eval=F}
 acc_priors_mlp <- c(
   set_prior("normal(0,.2)", class = "b"),
   set_prior("normal(0,.2)", class = "sd"),
@@ -887,19 +975,30 @@ expt_3_relevant_games <- expt_4_acc_data |>
 expt_3_fig_data <- expt_4_acc_data |>
   bind_rows(mlp_mod |> inner_join(expt_3_relevant_games)) |>
   bind_rows(original_results |> inner_join(expt_3_relevant_games)) |>
-  mutate(condition = ifelse(!is.na(condition), condition, source)) 
+  mutate(condition = ifelse(!is.na(condition), condition, source)) |> 
+  mutate(round=str_sub(round, -1)) |> 
+    mutate(condition=factor(condition, levels=c("original", "yoked", "shuffled", "model"), labels=c("Original", "Yoked", "Shuffled", "CLIP-MLP"))) 
 
-predicted_expt_3_fig <- read_rds(here(mod_loc, "predicted/acc_4_tangram.rds")) |> mutate(across(mean:high, inv_logit_scaled))|> mutate(round=str_c("round_", orig_repNum+1))
+
+predicted_expt_3_fig <- read_rds(here(mod_loc, "predicted/acc_4.rds")) |>
+  bind_rows(read_rds(here(mod_loc, "predicted/acc_yoked_mlp_beta.rds")) |> mutate(condition="model")) |> mutate(across(mean:high, inv_logit_scaled))|> mutate(round= orig_repNum+1) |> 
+      mutate(condition=factor(condition, levels=c("original", "yoked", "shuffled", "model"), labels=c("Original", "Yoked", "Shuffled", "CLIP-MLP"))) 
 
 expt_3_fig_data |> ggplot(aes(x = round, color = condition, y = correct, group = condition)) +
-  #geom_point(data = expt_3_fig_data |> group_by(condition, round, correct_tangram) |>
-  #  summarize(correct = mean(correct)), position = position_dodge(width = .3), color = "black") +
   stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width = .6), geom = "line") +
   stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width = .6)) +
+  #geom_pointrange(data = predicted_expt_3_fig, aes(y = mean, ymax = high, ymin = low), position=position_dodge(.6)) +
+  #geom_line(data = predicted_expt_3_fig, aes(y = mean), position=position_dodge(.6)) +
   scale_y_continuous(lim = c(0, 1), expand = c(0, 0)) +
   geom_hline(yintercept = 1 / 12, lty = "dashed") +
-  labs(x = "Source block", y = "Accuracy")
+  labs(x = "Round", y = "Accuracy")+
+  scale_color_manual(breaks=c("Original", "Yoked", "Shuffled", "CLIP-MLP"), values=c( "#7570B3","#E7298A","#1B9E77", "#D95F02"))+
+  theme(legend.position="bottom", legend.box="vertical", 
+        strip.background=element_blank(),
+        legend.title=element_blank(),
+        legend.margin=margin(c(-10,1,0,1)))
 ```
+TODO looks like the models may not have fit super well, especially given that we force block effects linear? 
 
 ```{r, eval=F}
 library(ggtext)
@@ -949,7 +1048,7 @@ acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gam
 ```
 
 
-```{r, eval=T}
+```{r, eval=F}
 acc_priors_mlp <- c(
   set_prior("normal(0,1)", class = "b"),
   set_prior("normal(0,1)", class = "sd")

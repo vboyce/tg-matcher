@@ -105,35 +105,19 @@ write}\label{computational-models-that-ben-gets-to-write}
 Computational methods TODO V doesn't know how to write this QUESTION: do
 we focus on mlp pre- or post- calibration?
 
-\begin{CodeChunk}
-\begin{CodeOutput}
-
-    Pearson's product-moment correlation
-
-data:  for_corr$value and for_corr$human_acc
-t = 5.2099, df = 215, p-value = 4.418e-07
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- 0.2110314 0.4480128
-sample estimates:
-      cor 
-0.3348057 
-\end{CodeOutput}
-\end{CodeChunk}
+\section{Calibration expt that Alvin gets to
+write}\label{calibration-expt-that-alvin-gets-to-write}
 
 \begin{CodeChunk}
 \begin{figure}[t]
 
-{\centering \includegraphics[width=1\linewidth]{figs/fig-calibration-1} 
+{\centering \includegraphics[width=0.7\linewidth]{figs/fig-calibration-1} 
 
 }
 
-\caption[TODO Make all pretty \label{FOOBAR}]{TODO Make all pretty \label{FOOBAR}}\label{fig:fig-calibration}
+\caption[Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy]{Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy. Colored points are individual descriptions, black line is the boostrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
 \end{figure}
 \end{CodeChunk}
-
-\section{Calibration expt that Alvin gets to
-write}\label{calibration-expt-that-alvin-gets-to-write}
 
 TODO methods
 
@@ -214,11 +198,11 @@ groups with thinner communication channels.
 \begin{CodeChunk}
 \begin{figure}[t]
 
-{\centering \includegraphics[width=1\linewidth]{figs/fig-1-1} 
+{\centering \includegraphics[width=1\linewidth]{figs/fig-condition-1} 
 
 }
 
-\caption[TODO make prettier \label{TODO}]{TODO make prettier \label{TODO}}\label{fig:fig-1}
+\caption[Accuracies for naive humans and the CLIP-MLP model for Experiment 2]{Accuracies for naive humans and the CLIP-MLP model for Experiment 2. Point estimates and 95\% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-condition}}\label{fig:fig-condition}
 \end{figure}
 \end{CodeChunk}
 
@@ -229,7 +213,7 @@ groups with thinner communication channels.
 
 }
 
-\caption[TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \label{TODO2}]{TODO We may want to add model predictions onto this as well may also want to use model predictions b/c error bars don't capture mixed effects \label{TODO2}}\label{fig:fig-2}
+\caption[Accuracies for naive humans and the CLIP-MLP model for Experiment 2, split out by target image]{Accuracies for naive humans and the CLIP-MLP model for Experiment 2, split out by target image. Point estimates and 95\% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{TODO2}}\label{fig:fig-2}
 \end{figure}
 \end{CodeChunk}
 
