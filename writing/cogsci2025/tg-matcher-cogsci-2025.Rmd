@@ -339,7 +339,7 @@ do_me <- function(path) {
 }
 
 mods_me <- c(
-  "acc_1.rds", "acc_2.rds", "acc_4.rds", "acc_mlp_1_2.rds", "acc_yoked_mlp.rds", "yoked_shuffled_original.rds"
+  "acc_1.rds", "acc_2.rds", "acc_4.rds", "acc_mlp_1_2_beta.rds", "acc_yoked_mlp_beta.rds", "yoked_shuffled_original.rds"
 ) |> walk(~ do_me(.))
 
 
@@ -776,10 +776,17 @@ There is an effect of original correct `r stats_text(acc_mod_mlp_orig_acc, 8)`.
 
 More words is bad for the model -- effect of log words `r stats_text(acc_mod_mlp_orig_length, 8)`
 
-```{r, eval=F}
+```{r, eval=T}
 acc_priors_mlp <- c(
   set_prior("normal(0,.2)", class = "b"),
   set_prior("normal(0,.2)", class = "sd"),
+  set_prior("lkj(1)", class = "cor")
+)
+
+
+acc_priors <- c(
+  set_prior("normal(0,1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd"),
   set_prior("lkj(1)", class = "cor")
 )
 
@@ -802,12 +809,23 @@ acc_mod_mlp <- brm(
   control = list(adapt_delta = .95)
 )
 
+acc_mod_mlp <- brm(
+  correct ~ group_size * thickness * round +
+    (group_size * thickness * round | correct_tangram),
+  data = expt_2_mlp,
+  family=Beta(link="logit"),
+  file = here(mod_loc, "acc_mlp_1_2_beta"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
 acc_mod_mlp_orig_acc <- brm(
   correct ~ original_correct + group_size * thickness * round +
     (group_size * thickness * round | correct_tangram),
   data = expt_2_mlp,
-  file = here(mod_loc, "acc_mlp_1_2_orig_acc"),
-  prior = acc_priors_mlp,
+    family=Beta(link="logit"),
+  file = here(mod_loc, "acc_mlp_1_2_orig_acc_beta"),
+  prior = acc_priors,
   control = list(adapt_delta = .95)
 )
 
@@ -815,8 +833,9 @@ acc_mod_mlp_orig_length <- brm(
   correct ~ log_words + group_size * thickness * round +
     (group_size * thickness * round | correct_tangram),
   data = expt_2_mlp,
-  file = here(mod_loc, "acc_mlp_1_2_orig_length"),
-  prior = acc_priors_mlp,
+    family=Beta(link="logit"),
+  file = here(mod_loc, "acc_mlp_1_2_orig_length_beta"),
+  prior = acc_priors,
   control = list(adapt_delta = .95)
 )
 ```
@@ -930,10 +949,10 @@ acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gam
 ```
 
 
-```{r, eval=F}
+```{r, eval=T}
 acc_priors_mlp <- c(
-  set_prior("normal(0,.2)", class = "b"),
-  set_prior("normal(0,.2)", class = "sd")
+  set_prior("normal(0,1)", class = "b"),
+  set_prior("normal(0,1)", class = "sd")
 )
 
 expt_3_relevant_games <- expt_4_acc_data |>
@@ -946,7 +965,8 @@ yoked_relevant_mlp <- mlp_mod |> inner_join(expt_3_relevant_games)
 acc_mod_yoked_mlp <- brm(correct ~ orig_repNum + (1 | gameId) + (1 | correct_tangram),
   data = yoked_relevant_mlp,
   prior = acc_priors_mlp,
-  file = here(mod_loc, "acc_yoked_mlp"),
+    family=Beta(link="logit"),
+  file = here(mod_loc, "acc_yoked_mlp_beta"),
   control = list(adapt_delta = .95)
 )
 ```
