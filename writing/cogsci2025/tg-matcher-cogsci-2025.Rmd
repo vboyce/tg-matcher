@@ -316,6 +316,8 @@ do_preds_tangram_yoked <- function(model) {
     condition=c("yoked", "shuffled"),
     correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
   ) |>
+    mutate(consistent = (matcher_trialNum-1)%/%12==orig_repNum) |> 
+    filter(consistent | condition=="shuffled") |> 
      add_linpred_draws(mod, value = "predicted", re_formula = NA) |>
     # group_by(group_size, thickness, round, correct_tangram) |>
     group_by(orig_repNum, condition) |>
@@ -485,16 +487,16 @@ We use both human experiments and models to assess when and why expressions are 
 
 ## Materials
 
-We draw on the corpus of reference game transcripts and results from @boyce2024. There were all 6 round iterated reference games using the same 12 target images, but varied in how large the groups were (2-6 participants per group) and how "thick" the communication channel between group members was. For our human experiments, we sample different subsets of this corpus in different experiments. We use the entire corpus for our computational modelling component. 
-TODO discussion of @boyce2024 and how this is useful 
+We draw on the corpus of reference game transcripts and results from @boyce2024. There were all 6 round iterated reference games using the same 12 target images, but varied in how large the groups were (2-6 participants per group) and how "thick" the communication channel between group members was. For our human experiments, we sample different subsets of this corpus in different experiments. Within the samples, we avoided showing participants descriptions that had swear words or crude or sexual language. We use the entire corpus for our computational modelling component. 
 
+ 
 ## Experimental procedure 
 We recruited participants from Prolific (TODO criteria). Participants were directed to the experiment, where it was explained that previously, other participants had described these shapes to one another. They would see a series of transcripts from the prior game, and their task was the guess what the intended target was.
-On each trial participants saw the full transcript from that trial, containing all the chat messages marked by whether they were from the speaker or a listener (TODO confirm the language used), except for lines that @boyce2024 had marked as not having any referential content. Participants selected the image they thought was the target from the tableau of 12. Participants recieved feedback on whether they were right or wrong on each trial. Except when the specific viewing order was part of the experimental manipulation, we randomized the order of trials, subject to the constraint that the same target could not repeat on adjacent trials.  
-The task was implemented in jsPsych. We paid participants $10 an hour plus a bonus of TODO look up per correct response. 
+On each trial participants saw the full transcript from that trial, containing all the chat messages marked by whether they were from the speaker or a listener (TODO confirm the language used), except for lines that @boyce2024 had marked as not having any referential content. Participants selected the image they thought was the target from the tableau of 12. Participants received feedback on whether they were right or wrong on each trial. Except when the specific viewing order was part of the experimental manipulation, we randomized the order of trials, subject to the constraint that the same target could not repeat on adjacent trials.  
+The task was implemented in jsPsych. We paid participants $10 an hour plus a bonus of 5 cents per correct response. 
 
-```{r interface, fig.env = "figure*", fig.pos = "t!", out.width="\\textwidth", fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Experimental Setup and Procedure.TODO \\label{game}", cache=FALSE}
-message("placeholder.png")
+```{r interface, fig.env = "figure", fig.pos = "t!", out.width="100%", fig.align = "center", fig.cap = "Experimental Setup and Procedure.TODO REPLACE \\label{game}", cache=FALSE}
+knitr::include_graphics("matcher_diagram.png")
 ```
 
 ## Computational models that Ben gets to write
@@ -587,24 +589,25 @@ tg-matcher 3 (calibration)
 
 # Experiment 2
 
-As a starting point for examining what makes referential expressions more or less opaque, we had people read the descriptions from the beginnings and ends and games.  Thus, we would be able to check whether early descriptions (before much partner- or group- specific history could accumulate, but also before a "good" description had been created) or late descriptions (after both history and practice) would be easier to understand. 
+As a starting point for examining what makes referential expressions more or less opaque, we had people read the descriptions from the beginnings and ends of games.
+The idea of reduction and partner-specificity would suggest that the conventionalized, later round utterances would rely on the history of the game that naive matchers were not privy to, and thus that late round utterances would be more opaque and difficult to understand. On the other hand, describers gained practice over repetitions, so later round utterances might be better at clearly communicating the most visually salient features.
+
+We included descriptions from games of different sizes and communication thicknesses. In terms of group conditions, based on the patterns of cross-game similarity in @boyce2024, we thought that smaller and thicker games were more likely to rapidly develop ideosyncratic conventions that would be more opaque than the less ideosyncratic conventions from larger groups with thinner communication channels. 
 
 ## Methods
 
 ### Experiment 2a
-To test our methods and establish a baseline of how well new matchers could do from reading random transcripts out of order, we ran a 2x2 within subjects design, where we drew the target transcripts from 2 and 6 player games from Experiment 1 of @boyce2024 and from the first and last (sixth) blocks of these games. These games had medium thick communication channels, in that the matchers could send textual messages to the shared chat interface, but the describer role rotated each round, and matchers recieved feedback only about whether their selection was correct or not.
-We recruited XX participants in May 2024 (check) who each saw 60 trials (15 in each condition). This experiment was pre-registered at https://osf.io/k45dr. 
+To establish a baseline of how well naive matchers could understand descriptions without context, we ran a 2x2 within subjects experiment. We drew the target transcripts from 2 and 6 player games from Experiment 1 of @boyce2024 and from the first and last (sixth) blocks of these games. These games had medium thick communication channels. <!-- in that the matchers could send textual messages to the shared chat interface, but the describer role rotated each round, and matchers recieved feedback only about whether their selection was correct or not.-->
+We recruited `r expt_1_data |> select(workerid) |> unique() |> nrow()` participants who each saw 60 trials (15 in each of the 4 conditions). Overall, participants saw `r expt_1_data |> select(gameId, round, correct_tangram) |> unique() |> nrow()` transcripts from `r expt_1_data |> select(gameId) |> unique() |> nrow()` games. This experiment was pre-registered at https://osf.io/k45dr. 
 
 ### Experiment 2b
-After observing small condition differences in experiment 2a, we ran a second study drawing from the more extreme conditions of Experiment 3 in @boyce2024. Here, we used a  2x2x2 within subjects design, drawing our transcripts from the "thick" and "thin", 2 and 6 person, 1st and last block utterances. The "thick" condition had a consistent describer throughout the entire game, let matchers send messages to the chat freely, and showed all participants feedback on everyone's selections, including what the correct answer was. In contrast, the "thin" condition, rotated the role of describer, gave feedback only on individual selections, and describers could not send text messages to the chat, but could only communicate via 4 emoji buttons (to indicate level of understanding). Emojis did not have referential content and so were not included in the transcripts be showed naive matchers. 
-For experiment 2b, we recruited XX participants in DATE who each saw 64 trials (8 in each condition). This expeirment was pre-registered at  https://osf.io/rdp5k. 
+After observing limited condition differences in experiment 2a, we ran a second study drawing from the more extreme communication channel thicknesses of Experiment 3 in @boyce2024. Here, we used a  2x2x2 within subjects design, drawing our transcripts from the thick and thin, 2 and 6 person, 1st and 6th block utterances. <!--The "thick" condition had a consistent describer throughout the entire game, let matchers send messages to the chat freely, and showed all participants feedback on everyone's selections, including what the correct answer was. In contrast, the "thin" condition, rotated the role of describer, gave feedback only on individual selections, and describers could not send text messages to the chat, but could only communicate via 4 emoji buttons (to indicate level of understanding). --> In the thin condition, original matchers could only contribute to the chat by sending one of 4 emojis; as the emojis did not have referential content, we did not include them in the transcripts shown to naive matchers. 
+For experiment 2b, we recruited `r expt_2_data |> select(workerid) |> unique() |> nrow()` participants who each saw 64 trials (8 in each of the 8conditions). Overall, participants saw `r expt_2_data |> select(gameId, round, correct_tangram) |> unique() |> nrow()` transcripts from `r expt_2_data |> select(gameId) |> unique() |> nrow()` games.  This experiment was pre-registered at  https://osf.io/rdp5k. 
 
 
-## Results
 
-Our primary question of interest was how accurate naive matchers would be at selecting the correct target, and how much this would vary depending on what game and what round the description came from. We did not have clear predictions, as we thought there could be countervailing pressures. On the one hand, the idea of reduction and partner-specificity would suggest that the conventionalized, later round utterances would rely on the history of the game that naive matchers were not privy to, and thus that late round utterances would be more opaque and difficult to understand. On the other hand, describers gained practice over repetitions, so later round utterances might better pick up on visually salient features and include less extraneous verbiage. 
 
-In terms of group conditions, based on the patterns of cross-game similarity in @boyce2024, we thought that smaller and thicker games were more likely to rapidly develop ideosyncratic conventions that would be more opaque than the less ideosyncratic conventions from larger groups with thinner communication channels. 
+
 
 ```{r}
 expt_2_relevant_games <- expt_1_data |>
@@ -662,7 +665,7 @@ expt_2_fig_data |> ggplot(aes(x = round, color = source, y = correct, group = in
 ```
 
 
-```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="90%", fig.width=4, fig.height=3, fig.cap = "Accuracies for naive humans and the CLIP-MLP model for Experiment 2, split out by target image. Point estimates and 95% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \\label{TODO2}" }
+```{r fig-2, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="90%", fig.width=4, fig.height=3, fig.cap = "Accuracies for naive humans and the CLIP-MLP model for Experiment 2, split out by target image. Point estimates and 95% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \\label{expt2-tangram}" }
 library(ggtext)
 correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
@@ -700,9 +703,6 @@ ggplot(acc_by_type_target, aes(x = correct_tangram, y = acc, color=source, shape
 # guide_legend()# acc_by_target
 ```
 
-
-
-
 ```{r, eval=F}
 acc_priors <- c(
   set_prior("normal(0,1)", class = "b"),
@@ -724,7 +724,6 @@ acc_mod_1 <- brm(
 
 # summary(acc_mod_1)
 ```
-
 
 ```{r, eval=F}
 acc_mod_2 <- brm(
@@ -802,7 +801,6 @@ acc_mod_2_orig_length <- brm(
 )
 ```
 
-
 ```{r}
 
 acc_mod_1 <- read_rds(here(mod_results, "acc_1.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
@@ -825,44 +823,43 @@ acc_mod_1_orig_length <- read_rds(here(mod_results, "acc_1_orig_length.rds")) |>
 
 acc_mod_2_orig_length <- read_rds(here(mod_results, "acc_2_orig_length.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
-acc_mod_mlp <- read_rds(here(mod_results, "acc_mlp_1_2.rds"))
-acc_mod_mlp_me <- read_rds(here(mod_me, "acc_mlp_1_2.rds"))
+acc_mod_mlp <- read_rds(here(mod_results, "acc_mlp_1_2_beta.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_mlp_form <- read_rds(here(mod_form, "acc_mlp_1_2_beta.rds"))
+acc_mod_mlp_me <- read_rds(here(mod_me, "acc_mlp_1_2_beta.rds")) |>  mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
-acc_mod_mlp_orig_acc <- read_rds(here(mod_results, "acc_mlp_1_2_orig_acc.rds"))
+acc_mod_mlp_orig_acc <- read_rds(here(mod_results, "acc_mlp_1_2_orig_acc_beta.rds")) |>  mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
-acc_mod_mlp_orig_length <- read_rds(here(mod_results, "acc_mlp_1_2_orig_length.rds"))
+acc_mod_mlp_orig_length <- read_rds(here(mod_results, "acc_mlp_1_2_orig_length_beta.rds")) |>  mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
 
 ```
 
-For Experiment 2a, we ran a mixed effects logistic model of naive matcher accuracy: `r form(acc_1_form)`. Overall, naive matchers were above chance (OR: `r stats_text(acc_mod_1, 1)`. There were not large fixed effects (FIGURE TODO)  Last round was slightly lower accuracy (OR of last round: `r stats_text(acc_mod_1, 4)`). There was not a clear effect of larger games (OR: `r stats_text(acc_mod_1, 2)`), but round and group size interacted (OR of 6 player games in round 6: `r stats_text(acc_mod_1, 3)`).  Much of the variation in accuracy was instead driven by the target images, where the Odds Ratio of the standard deviation of the target was `r stats_text(acc_mod_1_me, 3)` [I'm not sure what the clearest way to present a stat for this is at all...] with some images recieving much more transparent descriptions than others (FIGURE). 
+## Results
 
-For Experiment 2b we ran a similar mixed effects logistic model: `r form(acc_2_form)`. Overall, naive matchers were above chance (OR: `r stats_text(acc_mod_2, 1)`. Again, there was not a clear pattern of fixed effects. Last round was slightly lower accuracy (OR of last round: `r stats_text(acc_mod_2, 6)`), but there was an interaction with thickness, where thin, last round were less opaque (OR: `r stats_text(acc_mod_2, 8)`). TODO do we want to describe some of the other predictors of this model? 
+Our primary outcome was how accurate naive matchers would be at selecting the correct target, and how much this would vary depending on what game and what round the description came from. 
 
-and again some of the uncertainty in estimating the fixed effects was driven by the strong variation by target image (TODO STATS). `r stats_text(acc_mod_2_me, 5)`
+### Experiment 2a
+For Experiment 2a, we ran a mixed effects logistic model of naive matcher accuracy: `r form(acc_1_form)`. Overall, naive matchers were right more often than not, which was far above the 1/12 expected by random chance3 (OR: `r stats_text(acc_mod_1, 1)`.
+As seen in Figure \ref{expt2-condition} middle panel, there were not large effects of condition. Participants tended to be less accurate at descriptions from the last round (OR of last round: `r stats_text(acc_mod_1, 4)`). There was not a clear effect of transcripts from 6-player games (OR: `r stats_text(acc_mod_1, 2)`), but there was an interaction between round and group size (OR: `r stats_text(acc_mod_1, 3)`). Later transcripts from larger games were easier to understand, but later transcripts from smaller games were easier to understand.  Much of the variation in accuracy was instead driven by variation in the target images (OR of standard deviation of image distribution: `r stats_text(acc_mod_1_me, 3)`. Some images were much easier to identify as the target than others (Figure \ref{expt2-tangram}. 
 
-As additional measures, we also looked whether there was predictive value from the level of accuracy of the original matchers or the number of words used by the original describer TODO.
+### Experiment 2b
+For Experiment 2b we ran a similar mixed effects logistic model, consider the effects of group size, thickness, and round and their interactions. <!-- `r form(acc_2_form)` --> Overall, naive matchers were above 50% accuracy (OR: `r stats_text(acc_mod_2, 1)`). Similar to experiment 2a, there were not substantial effects of condition. Last round descriptions had slightly lower accuracy (OR of last round: `r stats_text(acc_mod_2, 6)`), but there was an interaction with thickness, where thin, last round were less opaque (OR: `r stats_text(acc_mod_2, 8)`). 
 
-EXPT 1 -- there is a large effect of original accuracy `r stats_text(acc_mod_1_orig_acc, 4)`
-EXPT 1 -- there is not a substnatial effect of original length `r stats_text(acc_mod_1_orig_length, 4)`
+Again some of the uncertainty in estimating the fixed effects was driven by the strong effects of target image (OR of SD of images: `r stats_text(acc_mod_2_me, 5)`). 
 
-EXPT 2 -- there is a large effect of original accuracy `r stats_text(acc_mod_2_orig_acc, 6)`
-EXPT 2 -- there is a slight benefit to longer descriptions `r stats_text(acc_mod_2_orig_length, 6)`
-
+### Additional Predictors
+As additional post-hoc predictors, we also examined the predictive value of the accuracy of the original matchers from @boyce2024 and the the length of the description from the original describer. In both experiments, original accuracy was predictive of naive matcher accuracy (Expt 2a OR: `r stats_text(acc_mod_1_orig_acc, 4)`, Expt 2b OR: `r stats_text(acc_mod_2_orig_acc, 6)`). The log number of words in the description was not predictive in Experiment 2a (OR: `r stats_text(acc_mod_1_orig_length, 4)`), but longer descriptions were slightly beneficial in Experiment 2b (OR: `r stats_text(acc_mod_2_orig_length, 6)`). 
 
 ## Model results
 
-As a computational comparison, we looked at the CLIP-MLP model's performance on the same descriptions. We used the probability the model assigned as a measure of the model's accuracy. The CLIP-MLP model was far above chance, but had lower accuracy than the human participants. 
+As a computational comparison, we looked at the CLIP-MLP model's performance on the same descriptions. We used the probability the model assigned as a measure of the model's accuracy, and fit a beta regression on the descriptions from Experiment 2: `r form(acc_mlp_form)`. The CLIP-MLP model was far above chance, but had lower accuracy than the human participants (OR: stats_text(acc_mod_mlp, 1) . 
 
-TODO model results 
+None of the fixed effects in the model were significant, and there was wide uncertainty for all of them. There is substantial by-tangram variation `r stats_text(acc_mod_mlp_me, 7)` and substantial by-tangram variation in the effect of later round `r stats_text(acc_mod_mlp_me, 8)`. 
 
-Nothing is significant basically except that thick is better `r stats_text(acc_mod_mlp, 9)`. 
+As additional predictors, we checked the effect of original matcher accuracy and the length of the description. MLP-CLIP had higher accuracy when original matcher accuracy was higher (OR: `r stats_text(acc_mod_mlp_orig_acc, 8)`), and the model did better on shorter descriptions (OR for log words: `r stats_text(acc_mod_mlp_orig_length, 8)`). Long descriptions may be further from the model's training distribution of image captions. 
 
-There is substantial by-tangram variation `r stats_text(acc_mod_mlp_me, 7)`
-
-There is an effect of original correct `r stats_text(acc_mod_mlp_orig_acc, 8)`. 
-
-More words is bad for the model -- effect of log words `r stats_text(acc_mod_mlp_orig_length, 8)`
+### Interim Summary
+Overall, naive human matchers were fairly accurate overall, but less accurate than matchers in the original game. Perhaps surprisingly, this level of accuracy was fairly consistent across descriptions from different times in the game and different game conditions. The largest source of variability was from the target images; while there was some variabiliity in accuracy by images for the original matchers, there was substantially more variability for naive matchers.
 
 ```{r, eval=F}
 acc_priors_mlp <- c(
@@ -929,38 +926,19 @@ acc_mod_mlp_orig_length <- brm(
 ```
 
 
-# Yoked v shuffled 
+# Experiment 3
 
-TODO methods 
-pre-reg at https://osf.io/zqwp5
+In Experiment 2, we saw that naive matchers could understand the descriptions fairly well, but had lower accuracy than the matchers in the original games. There are several differences between these two, including getting descriptions from a consistent group, getting descriptions in order, and being a present participant during the game. In Experiment 3, we focus on the role of context and group-specific interaction history to tease apart some of these differences.
 
-tg-matcher 4 (SPR + yoked/unyoked)
-196 participants (99 in yoked, 97 in shuffled), each saw all 72 trials from 1 of 10 games. 
-games not chosen at random
+## Methods
 
-## Human yoked v not yoked expt
+Following CITE ROBERT AND JUDY, we compared naive matchers in "yoked" and "shuffled" conditions. In the "yoked" condition, naive matchers saw all the descriptions from a single game in the order they originally occurred. In the "shuffled" condition, naive matchers saw all the descriptions from a single game in a randomized order. 
 
-Yoked v shuffled plot of accuracy (+ model?)
-Human accuracy on yoked v shuffled presentation (expt 4) 
-(?) no context model comparison on expt 4 dataset?
+Because some descriptions are already pretty understandable in isolation, we wanted to focus on the role of context in games that showed strong group-specificity. We hand-picked 10 games from @boyce2024 on the basis of high original matcher accuracy, strong reduction in the length of utterances, and the use of idiosyncratic or non-modal referring expressions. Thus, the referring expressions were very understandable to groups who created them, but likely to be opaque out of context. 
 
+We recruited 196 participants (99 in the yoked condition and 97 in shuffled) who each saw all 72 trials of 1 of the 10 games. This experiment was pre-registered at https://osf.io/zqwp5. Participants read the transcripts in a modified self-paced reading procedure where they uncovered the text word by word (revealed words stayed visible); only after uncovering the entire transcript could participants select an image. We do not analyse the word-by-word reading data here.  
 
-
-seeing things in the same order helps
-look at item level accuracy differences? 
-
-We will exclude individual word RTs that are greater than 2000 ms. 
-
-Condition differences: condition refers to yoked or shuffled.
-
-Logistic model of target selection accuracy: Accuracy ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
-
-
-This dataset was collected using a modified self-paced reading procedure, but for present purposes, we focus only on the selection results and not on the incremental reading time patterns.
-
-
-
-```{r fig-yoked, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "TODO also TODO add model comparison ?? \\label{yoked}" }
+```{r fig-yoked, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="90%", fig.width=5, fig.height=3, fig.cap = "Accuracies for Experiment 3. Error bars are bootstrapped 95% CIs. TODO not using predictions because those fuzz out round to round differences. \\label{yoked}" }
 
 
 
@@ -998,39 +976,6 @@ expt_3_fig_data |> ggplot(aes(x = round, color = condition, y = correct, group =
         legend.title=element_blank(),
         legend.margin=margin(c(-10,1,0,1)))
 ```
-TODO looks like the models may not have fit super well, especially given that we force block effects linear? 
-
-```{r, eval=F}
-library(ggtext)
-correct_tangram <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
-labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L") |> map(~ str_c("<img src=", here(images, str_c("tangram_", ., ".png")), " width='20'/>"))
-
-
-acc_by_target <- expt_4_acc_data |>
-  group_by(correct_tangram) |>
-  summarize(acc = sum(correct) / n()) |>
-  arrange(acc)
-
-foo <- tibble(correct_tangram, labels) |>
-  left_join(acc_by_target) |>
-  arrange(acc)
-
-acc_by_type_target <- expt_4_acc_data |>
-  group_by(correct_tangram, orig_repNum, condition) |>
-  summarize(acc = sum(correct) / n()) |>
-  arrange(acc)
-
-ggplot(acc_by_type_target, aes(x = reorder(correct_tangram, acc), y = acc, )) +
-  geom_point() +
-  stat_summary(color = "red") +
-  coord_cartesian(ylim = c(0, 1), xlim = c(.5, 12.5), expand = F) +
-  geom_hline(yintercept = 1 / 12, linetype = "dashed") +
-  scale_x_discrete(name = NULL, labels = foo$labels) +
-  theme(axis.text.x = element_markdown(color = "black", size = 11))
-
-
-# acc_by_target
-```
 
 ```{r, eval=F}
 for_acc_mod_4 <- expt_4_data |>
@@ -1045,6 +990,9 @@ acc_priors <- c(
 
 
 acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = here(mod_loc, "acc_4.rds"))
+
+
+acc_mod_4 <- brm(correct ~ orig_repNum * condition + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod_4, prior = acc_priors, file = here(mod_loc, "acc_4_no_trial.rds"))
 ```
 
 
@@ -1070,8 +1018,6 @@ acc_mod_yoked_mlp <- brm(correct ~ orig_repNum + (1 | gameId) + (1 | correct_tan
 )
 ```
 
-not sure how to work model in b/c different scale ... 
-
 ```{r, eval=F}
 original_subset <- original_results_raw |>
   inner_join(expt_3_relevant_games) |>
@@ -1093,6 +1039,37 @@ acc_priors <- c(
 
 acc_mod_compare_orig <- brm(correct ~ orig_repNum * order + orig_repNum * setting + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = yoked_shuffled_original, prior = acc_priors, file = here(mod_loc, "yoked_shuffled_original.rds"))
 ```
+
+```{r}
+
+acc_mod_4 <- read_rds(here(mod_results, "acc_4.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_mod_4_me <- read_rds(here(mod_me, "acc_4.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_4_form <- read_rds(here(mod_form, "acc_4.rds"))
+
+acc_mlp_4 <- read_rds(here(mod_results, "acc_yoked_mlp_beta.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_mlp_4_me <- read_rds(here(mod_me, "acc_yoked_mlp_beta.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_4_mlp_form <- read_rds(here(mod_form, "acc_yoked_mlp_beta.rds"))
+
+
+acc_compare<- read_rds(here(mod_results, "yoked_shuffled_original.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_compare_me <- read_rds(here(mod_me, "yoked_shuffled_original.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+acc_4_form_compare <- read_rds(here(mod_form, "yoked_shuffled_original.rds"))
+```
+
+## Results 
+
+Our primary question of interest was how much having the conversation history would help make later round descriptions more understandable to participants in the yoked condition. 
+
+We compared accuracy across the yoked and shuffled conditions with a logistic regression: `r form(acc_4_form)`. The descriptions were more transparent when they were presented in a yoked order (OR: `r stats_text(acc_mod_4, 2)`, Figure \ref{yoked}). In the shuffled condition, there was no main effect of round number (OR for one round later: `r stats_text(acc_mod_4, 4)`), but there was a marginal interaction where the benefit of the yoked condition decreased for later rounds (OR for one round later: `r stats_text(acc_mod_4, 5)`). This was offset by matchers in both conditions improving at the task over time (OR for one trial later in matcher viewing order: `r stats_text(acc_mod_4, 3)`). In the yoked condition round and trial number were aligned, so an improvement over time could be either from matcher practice or from descriptions being easier to understand. In the shuffled condition, matcher practice effects did not line up with position in the original game. 
+
+Comparing with the performance of the original matchers, we can separate out the benefits of seeing the descriptions in order versus being a live participant: `r form(acc_4_form_compare)`. There is a benefit to seeing the items in order (OR: `r stats_text(acc_compare, 3)`) and a larger benefit to being a participant during the game in real-time (OR: `r stats_text(acc_compare, 7)`). The benefit of seeing the items in order wanes in later blocks (OR: `r stats_text(acc_compare, 5)`), but the benefit of being in the real-time game does not (OR: `r stats_text(acc_compare, 6)`). In all cases, there is a baseline improvement over trials (OR: `r stats_text(acc_compare, 2)`). 
+
+The accuracy of the CLIP-MLP model is worse than the shuffled human results, and does not show change across rounds (OR for one round later: `r stats_text(acc_mlp_4, 2)`). The larger difference between naive human and CLIP-MLP accuracies in Experiment 3 than Experiment 2 could suggest that even the shuffled ordering still provides useful context that helps matchers understand the conventions. This history is not available to the CLIP-MLP model which sees every description as a one-shot task. 
+
+QUERY: we could run the model without matcher_trial_num which flips the direction of interactions because it centers later, and also you get to see the benefit of (matcher) experience purely in terms of the repNum. I think it's better the way it is, but raising it. 
+
+NOTE: not showing model estimates in Figure 5 b/c the fit isn't great, not sure why...
+
 
 
 # Discussion ? 
