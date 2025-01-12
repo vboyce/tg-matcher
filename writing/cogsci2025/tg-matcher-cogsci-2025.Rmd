@@ -5,8 +5,8 @@ csl: apa7.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf Ben (TODO email) } Department of Psychology, \\Stanford University
-    \AND {\large \bf Alvin (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
+    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} Department of Psychology \\ Stanford University
+    \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
     TODO abstract
@@ -506,7 +506,7 @@ TODO V doesn’t know how to write this
 QUESTION: do we focus on mlp pre- or post- calibration?
 
 
-# Calibration expt that Alvin gets to write
+# Experiment 1
 ```{r}
 # this is all because I didn't keep the trial number source recorded, so we have a fun time rejoining
 ParseJSONColumn <- function(x) {
@@ -535,57 +535,58 @@ ParseJSONColumn <- function(x) {
     str_replace_all('"but why"', "'but why'") |>
     fromJSON(flatten = T)
 }
+
 labels <- read_csv(here("expt_prep_code/labelled.csv")) |>
   mutate(text = str_replace_all(text, "'", "") |> str_replace_all('"', "")) |>
   group_by(tangram, gameId, trialNum, repNum, value, grouping) |>
   summarize(text = str_c(text, collapse = " "))
 
-ready <- expt_3_data |>
+expt_3_ready <- expt_3_data |>
   mutate(new = map(text, ParseJSONColumn)) |>
   select(-text) |>
   unnest(new) |>
   mutate(text = text |> str_replace_all("'", ""), tangram = correct_tangram) |>
   group_by(workerid, correct, tangram, gameId, trial_order) |>
-  summarize(text = str_c(text, collapse = " "))
+  summarize(text = str_c(text, collapse = " ")) |> 
+  left_join(labels)
 
-good <- ready |> left_join(labels)
-
-
-
-for_corr <- good |>
+expt_3_summary <- expt_3_ready |>
   group_by(text, value, tangram, grouping) |>
   summarize(human_acc = mean(correct), human_n = n()) |> ungroup() |> 
   mutate(grouping=as.factor(grouping) |> reorder(value)) |> group_by(grouping)
 
-summ <- for_corr|>
+expt_3_groups <- expt_3_summary |>
   group_by(grouping) |>
   mutate(value = mean(value))
 
-#cor.test(for_corr$value, for_corr$human_acc)
+expt_3_cor <- cor.test(expt_3_summary$value, expt_3_summary$human_acc)
 ```
 
 ```{r fig-calibration, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="70%", fig.width=3, fig.height=3, fig.cap = "Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy. Colored points are individual descriptions, black line is the boostrapped mean and 95% CI across descriptions for each decile. \\label{calibration}" }
-for_corr |> ggplot(aes(y = human_acc, x = value)) +
+expt_3_summary |> ggplot(aes(y = human_acc, x = value)) +
   geom_point(aes(color = grouping), alpha=.7) +
   #geom_line(data = summ, color = "black") +
-  stat_summary(data=summ)+
-    stat_summary(data=summ, fun.data="mean_cl_boot",geom="line")+
+  stat_summary(data=expt_3_groups)+
+    stat_summary(data=expt_3_groups, fun.data="mean_cl_boot",geom="line")+
   theme(legend.position = "none") +
   scale_color_viridis(discrete=T)+
   labs(x = "CLIP-MLP accuracy", y = "Human accuracy")+
   coord_equal()
 ```
 
-TODO methods
+Our CLIP-MLP computational model was optimized for task accuracy.
+To validate whether this objective also results in human-like response patterns, we conducted a calibration experiment to determine if, for any given utterance, the probability that the model assigns to the target image is aligned with the probability that a naïve human matcher would choose the target image.
+We hypothesized that there would be a significant correlation between the target choice probability of the model and the target choice probability of naïve human matchers. 
 
-pre-reg at https://osf.io/6pv5e
+## Methods
 
-modeling approach and selection 
+We first obtained target probabilities from our CLIP-MLP model for all utterances from @boyce2024. We then used stratified sampling to select 217 trials by dividing model-predicted probabilities into deciles and choosing approximately 22 utterances per decile, spanning the 12 different possible target images.
 
-how well can models proxy humans? are there differences? 
+We recruited `r expt_3_data |> select(workerid) |> n_distinct()` participants who each saw 64 trials randomly sampled from the 217 tested trials. On average, each trial was seen by `r expt_3_summary |> pull(human_n) |> mean() |> round()` participants. This experiment was pre-registered at https://osf.io/6pv5e.
 
-tg-matcher 3 (calibration)
-61 participants, 64 items each, from a pool of 217 transcripts spanning the models full accuracy range
+## Results
+
+We obtained human accuracies on each trial by dividing the number of participants who correctly selected the target image by the total number of participants who saw the trial, as shown in Figure \ref{fig:fig-calibration}. There was a small but significant positive correlation between model-predicted probabilities and human accuracies ($r$ = `r expt_3_cor$estimate`, $p$ < .001). This result suggests that model predictions were in fact calibrated to human response patterns, albeit not perfectly. It is theoretically possible to use these calibration results to project model predictions in order to better approximate human responses; we leave this approach for future work. Nonetheless, the observed positive correlation suggests that our computational model was a reasonable approximation of human accuracies, validating its use in subsequent experiments as a computational comparison.
 
 # Experiment 2
 
@@ -598,11 +599,11 @@ We included descriptions from games of different sizes and communication thickne
 
 ### Experiment 2a
 To establish a baseline of how well naive matchers could understand descriptions without context, we ran a 2x2 within subjects experiment. We drew the target transcripts from 2 and 6 player games from Experiment 1 of @boyce2024 and from the first and last (sixth) blocks of these games. These games had medium thick communication channels. <!-- in that the matchers could send textual messages to the shared chat interface, but the describer role rotated each round, and matchers recieved feedback only about whether their selection was correct or not.-->
-We recruited `r expt_1_data |> select(workerid) |> unique() |> nrow()` participants who each saw 60 trials (15 in each of the 4 conditions). Overall, participants saw `r expt_1_data |> select(gameId, round, correct_tangram) |> unique() |> nrow()` transcripts from `r expt_1_data |> select(gameId) |> unique() |> nrow()` games. This experiment was pre-registered at https://osf.io/k45dr. 
+We recruited `r expt_1_data |> select(workerid) |> n_distinct()` participants who each saw 60 trials (15 in each of the 4 conditions). Overall, participants saw `r expt_1_data |> select(gameId, round, correct_tangram) |> n_distinct()` transcripts from `r expt_1_data |> select(gameId) |> n_distinct()` games. This experiment was pre-registered at https://osf.io/k45dr. 
 
 ### Experiment 2b
 After observing limited condition differences in experiment 2a, we ran a second study drawing from the more extreme communication channel thicknesses of Experiment 3 in @boyce2024. Here, we used a  2x2x2 within subjects design, drawing our transcripts from the thick and thin, 2 and 6 person, 1st and 6th block utterances. <!--The "thick" condition had a consistent describer throughout the entire game, let matchers send messages to the chat freely, and showed all participants feedback on everyone's selections, including what the correct answer was. In contrast, the "thin" condition, rotated the role of describer, gave feedback only on individual selections, and describers could not send text messages to the chat, but could only communicate via 4 emoji buttons (to indicate level of understanding). --> In the thin condition, original matchers could only contribute to the chat by sending one of 4 emojis; as the emojis did not have referential content, we did not include them in the transcripts shown to naive matchers. 
-For experiment 2b, we recruited `r expt_2_data |> select(workerid) |> unique() |> nrow()` participants who each saw 64 trials (8 in each of the 8conditions). Overall, participants saw `r expt_2_data |> select(gameId, round, correct_tangram) |> unique() |> nrow()` transcripts from `r expt_2_data |> select(gameId) |> unique() |> nrow()` games.  This experiment was pre-registered at  https://osf.io/rdp5k. 
+For experiment 2b, we recruited `r expt_2_data |> select(workerid) |> n_distinct()` participants who each saw 64 trials (8 in each of the 8conditions). Overall, participants saw `r expt_2_data |> select(gameId, round, correct_tangram) |> n_distinct()` transcripts from `r expt_2_data |> select(gameId) |> n_distinct()` games.  This experiment was pre-registered at  https://osf.io/rdp5k. 
 
 
 
