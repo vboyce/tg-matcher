@@ -1,6 +1,6 @@
 ---
 title: "TODO"
-bibliography: library.bib
+bibliography: tg-matcher-cogsci.bib
 csl: apa7.csl
 document-params: "10pt, letterpaper"
 
@@ -492,7 +492,7 @@ The task was implemented in jsPsych. We paid participants $10 an hour plus a bon
 knitr::include_graphics("matcher_diagram.png")
 ```
 
-## Computational models that Ben gets to write
+<!-- ## Computational models that Ben gets to write -->
 
 Computational methods
 TODO V doesn’t know how to write this

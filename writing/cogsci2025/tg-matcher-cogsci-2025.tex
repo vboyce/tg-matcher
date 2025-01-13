@@ -9,7 +9,7 @@
 \title{TODO}
 
 
-\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology, \\Stanford University \And {\large \bf Ben (TODO email) } Department of Psychology, \\Stanford University \AND {\large \bf Alvin (TODO email)} \\ TODO affiliation, Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology, \\ Stanford University}
+\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} Department of Psychology \\ Stanford University \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 
 \begin{document}
@@ -36,11 +36,11 @@ on the process of pact formation
 
 An empirical test of partner - specificity
 
-Prior work to cover Summary of ref games \& claims around them
-(\textbf{hawkins2020b?}) (\textbf{clark1986?}) etc
+Prior work to cover Summary of ref games \& claims around them Hawkins
+et al. (2020) Clark \& Wilkes-Gibbs (1986) etc
 
-The side-participant / overhearer etc literature
-(\textbf{wilkes-gibbs1992?}), \& lit search for more
+The side-participant / overhearer etc literature Wilkes-Gibbs \& Clark
+(1992), \& lit search for more
 
 Judy's work Visual resemblance and interaction history jointly constrain
 pictorial meaning (\textbf{hawkinsb?})
@@ -72,7 +72,7 @@ expressions are opaque or understandable to outside observers.
 \subsection{Materials}\label{materials}
 
 We draw on the corpus of reference game transcripts and results from
-(\textbf{boyce2024?}). There were all 6 round iterated reference games
+Boyce et al. (2024). There were all 6 round iterated reference games
 using the same 12 target images, but varied in how large the groups were
 (2-6 participants per group) and how ``thick'' the communication channel
 between group members was. For our human experiments, we sample
@@ -90,13 +90,13 @@ see a series of transcripts from the prior game, and their task was the
 guess what the intended target was. On each trial participants saw the
 full transcript from that trial, containing all the chat messages marked
 by whether they were from the speaker or a listener (TODO confirm the
-language used), except for lines that (\textbf{boyce2024?}) had marked
-as not having any referential content. Participants selected the image
-they thought was the target from the tableau of 12. Participants
-received feedback on whether they were right or wrong on each trial.
-Except when the specific viewing order was part of the experimental
-manipulation, we randomized the order of trials, subject to the
-constraint that the same target could not repeat on adjacent trials.\\
+language used), except for lines that Boyce et al. (2024) had marked as
+not having any referential content. Participants selected the image they
+thought was the target from the tableau of 12. Participants received
+feedback on whether they were right or wrong on each trial. Except when
+the specific viewing order was part of the experimental manipulation, we
+randomized the order of trials, subject to the constraint that the same
+target could not repeat on adjacent trials.\\
 The task was implemented in jsPsych. We paid participants \$10 an hour
 plus a bonus of 5 cents per correct response.
 
@@ -111,14 +111,10 @@ plus a bonus of 5 cents per correct response.
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Computational models that Ben gets to
-write}\label{computational-models-that-ben-gets-to-write}
-
 Computational methods TODO V doesn't know how to write this QUESTION: do
 we focus on mlp pre- or post- calibration?
 
-\section{Calibration expt that Alvin gets to
-write}\label{calibration-expt-that-alvin-gets-to-write}
+\section{Experiment 1}\label{experiment-1}
 
 \begin{CodeChunk}
 \begin{figure}[t]
@@ -131,16 +127,44 @@ write}\label{calibration-expt-that-alvin-gets-to-write}
 \end{figure}
 \end{CodeChunk}
 
-TODO methods
+Our CLIP-MLP computational model was optimized for task accuracy. To
+validate whether this objective also results in human-like response
+patterns, we conducted a calibration experiment to determine if, for any
+given utterance, the probability that the model assigns to the target
+image is aligned with the probability that a naïve human matcher would
+choose the target image. We hypothesized that there would be a
+significant correlation between the target choice probability of the
+model and the target choice probability of naïve human matchers.
 
-pre-reg at \url{https://osf.io/6pv5e}
+\subsection{Methods}\label{methods}
 
-modeling approach and selection
+We first obtained target probabilities from our CLIP-MLP model for all
+utterances from Boyce et al. (2024). We then used stratified sampling to
+select 217 trials by dividing model-predicted probabilities into deciles
+and choosing approximately 22 utterances per decile, spanning the 12
+different possible target images.
 
-how well can models proxy humans? are there differences?
+We recruited 61 participants who each saw 64 trials randomly sampled
+from the 217 tested trials. On average, each trial was seen by 18
+participants. This experiment was pre-registered at
+\url{https://osf.io/6pv5e}.
 
-tg-matcher 3 (calibration) 61 participants, 64 items each, from a pool
-of 217 transcripts spanning the models full accuracy range
+\subsection{Results}\label{results}
+
+We obtained human accuracies on each trial by dividing the number of
+participants who correctly selected the target image by the total number
+of participants who saw the trial, as shown in Figure
+\ref{fig:fig-calibration}. There was a small but significant positive
+correlation between model-predicted probabilities and human accuracies
+(\(r\) = 0.3348057, \(p\) \textless{} .001). This result suggests that
+model predictions were in fact calibrated to human response patterns,
+albeit not perfectly. It is theoretically possible to use these
+calibration results to project model predictions in order to better
+approximate human responses; we leave this approach for future work.
+Nonetheless, the observed positive correlation suggests that our
+computational model was a reasonable approximation of human accuracies,
+validating its use in subsequent experiments as a computational
+comparison.
 
 \section{Experiment 2}\label{experiment-2}
 
@@ -156,19 +180,19 @@ clearly communicating the most visually salient features.
 
 We included descriptions from games of different sizes and communication
 thicknesses. In terms of group conditions, based on the patterns of
-cross-game similarity in (\textbf{boyce2024?}), we thought that smaller
+cross-game similarity in Boyce et al. (2024), we thought that smaller
 and thicker games were more likely to rapidly develop ideosyncratic
 conventions that would be more opaque than the less ideosyncratic
 conventions from larger groups with thinner communication channels.
 
-\subsection{Methods}\label{methods}
+\subsection{Methods}\label{methods-1}
 
 \subsubsection{Experiment 2a}\label{experiment-2a}
 
 To establish a baseline of how well naive matchers could understand
 descriptions without context, we ran a 2x2 within subjects experiment.
 We drew the target transcripts from 2 and 6 player games from Experiment
-1 of (\textbf{boyce2024?}) and from the first and last (sixth) blocks of
+1 of Boyce et al. (2024) and from the first and last (sixth) blocks of
 these games. These games had medium thick communication channels. We
 recruited 60 participants who each saw 60 trials (15 in each of the 4
 conditions). Overall, participants saw 774 transcripts from 40 games.
@@ -178,7 +202,7 @@ This experiment was pre-registered at \url{https://osf.io/k45dr}.
 
 After observing limited condition differences in experiment 2a, we ran a
 second study drawing from the more extreme communication channel
-thicknesses of Experiment 3 in (\textbf{boyce2024?}). Here, we used a
+thicknesses of Experiment 3 in Boyce et al. (2024). Here, we used a
 2x2x2 within subjects design, drawing our transcripts from the thick and
 thin, 2 and 6 person, 1st and 6th block utterances. In the thin
 condition, original matchers could only contribute to the chat by
@@ -211,7 +235,7 @@ from 163 games. This experiment was pre-registered at
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Results}\label{results}
+\subsection{Results}\label{results-1}
 
 Our primary outcome was how accurate naive matchers would be at
 selecting the correct target, and how much this would vary depending on
@@ -255,7 +279,7 @@ by the strong effects of target image (OR of SD of images: 2.25 {[}1.67,
 \subsubsection{Additional Predictors}\label{additional-predictors}
 
 As additional post-hoc predictors, we also examined the predictive value
-of the accuracy of the original matchers from (\textbf{boyce2024?}) and
+of the accuracy of the original matchers from Boyce et al. (2024) and
 the the length of the description from the original describer. In both
 experiments, original accuracy was predictive of naive matcher accuracy
 (Expt 2a OR: 3.38 {[}2.46, 4.7{]}, Expt 2b OR: 2.17 {[}1.7, 2.77{]}).
@@ -306,7 +330,7 @@ descriptions in order, and being a present participant during the game.
 In Experiment 3, we focus on the role of context and group-specific
 interaction history to tease apart some of these differences.
 
-\subsection{Methods}\label{methods-1}
+\subsection{Methods}\label{methods-2}
 
 Following CITE ROBERT AND JUDY, we compared naive matchers in ``yoked''
 and ``shuffled'' conditions. In the ``yoked'' condition, naive matchers
@@ -316,12 +340,12 @@ descriptions from a single game in a randomized order.
 
 Because some descriptions are already pretty understandable in
 isolation, we wanted to focus on the role of context in games that
-showed strong group-specificity. We hand-picked 10 games from
-(\textbf{boyce2024?}) on the basis of high original matcher accuracy,
-strong reduction in the length of utterances, and the use of
-idiosyncratic or non-modal referring expressions. Thus, the referring
-expressions were very understandable to groups who created them, but
-likely to be opaque out of context.
+showed strong group-specificity. We hand-picked 10 games from Boyce et
+al. (2024) on the basis of high original matcher accuracy, strong
+reduction in the length of utterances, and the use of idiosyncratic or
+non-modal referring expressions. Thus, the referring expressions were
+very understandable to groups who created them, but likely to be opaque
+out of context.
 
 We recruited 196 participants (99 in the yoked condition and 97 in
 shuffled) who each saw all 72 trials of 1 of the 10 games. This
@@ -343,7 +367,7 @@ data here.
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Results}\label{results-1}
+\subsection{Results}\label{results-2}
 
 Our primary question of interest was how much having the conversation
 history would help make later round descriptions more understandable to
@@ -423,6 +447,28 @@ might want to address language comprehension v inference
 \setlength{\leftskip}{0.125in}
 
 \noindent
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-boyce2024}
+Boyce, V., Hawkins, R., Goodman, N. D., \& Frank, M. C. (2024).
+\emph{Interaction structure constrains the emergence of conventions in
+group communication}.
+
+\bibitem[\citeproctext]{ref-clark1986}
+Clark, H. H., \& Wilkes-Gibbs, D. (1986). \emph{Referring as a
+collaborative process}.
+
+\bibitem[\citeproctext]{ref-hawkins2020b}
+Hawkins, R. D., Frank, M. C., \& Goodman, N. D. (2020). Characterizing
+the dynamics of learning in repeated reference games.
+\emph{arXiv:1912.07199 {[}Cs{]}}. \url{https://arxiv.org/abs/1912.07199}
+
+\bibitem[\citeproctext]{ref-wilkes-gibbs1992}
+Wilkes-Gibbs, D., \& Clark, H. (1992). Coordinating beliefs in
+conversation. \emph{Journal of Memory and Language}, 183--194.
+
+\end{CSLReferences}
 
 \bibliographystyle{apacite}
 
