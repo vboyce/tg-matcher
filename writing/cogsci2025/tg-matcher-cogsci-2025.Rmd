@@ -1,5 +1,5 @@
 ---
-title: "TODO"
+title: "Not so opaque after all: Conventions formed in reference games are mostly understandable to outsiders"
 bibliography: tg-matcher-cogsci.bib
 csl: apa7.csl
 document-params: "10pt, letterpaper"
@@ -9,7 +9,7 @@ author-information: >
     \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
-    TODO abstract
+    In-groups can create conventionalized language, but this jargon may be understandable to those outside the group. The formation of temporary linguistic conventions between individuals is often studied in iterated reference games, where over repeated reference to the same targets, a describer-matcher pair establishes conventional shorthand names for targets. One angle on convention formation is how understandable referring expressions from different stages are to outsiders. Here, we take an outside angle on understanding convention formation, using experiments with naive matchers and computational models to assess the opacity of descriptions from iterated reference games. Both human matchers and the computational model are well above chance accuracy, with variation in performance primarily driven by the target image rather than where or when the description came from. TODO wrap up sentence
     
 keywords: >
     TODO keywords
@@ -454,23 +454,23 @@ We can understand more than we produce; for instance, even if I would call the o
 
 While some different terms are conventionally set and shared among large groups of people as language, or regional dialect, or field specific jargon, temporary conventions can be formed with smaller groups of people as a matter of conversational necessity to have a term to refer to a thing with. 
 
-This formation of temporary linguistic conventions between individuals is often studied in iterated reference games. In these games, a describer tells their partner or partners how to sort or match a series of abstract images [@clark1986, @hawkins2020]. Over repeated rounds, the same set of images are referred to repeatedly and pairs usually develop agreed upon nicknames for the target images. These nicknames are often partner-specific, in that different pairs develop different nicknames for the same targets. The same describer may use different terms for the target image if their partner changes, for instance going back to more elaborated terms with a new partner, even if that partner was present in the room [TODO CITE yoon, @wilkes-gibbs1992].  
+This formation of temporary linguistic conventions between individuals is often studied in iterated reference games. In these games, a describer tells their partner or partners how to sort or match a series of abstract images [@clark1986; @hawkins2020b]. Over repeated rounds, the same set of images are referred to repeatedly and pairs usually develop agreed upon nicknames for the target images. These nicknames are often partner-specific, in that different pairs develop different nicknames for the same targets. Describers seem to expect that naive partners will need more elaborated descriptions. The same describer may use different terms for the target image if their partner changes, for instance going back to more elaborated terms with a new partner, even if that partner was present in the room [@yoon2018; @wilkes-gibbs1992].  [OTHER THINGS WE COULD CITE]
 
-This partner-specific tendency to create nicknames has led to the idea that these conventions are private and opaque to outsiders (TODO CITATIONS OF THIS). The partner-specifity of conversational pacts is often studied by looking at how the pacts are created, and under what circumstances utterances more shorter, more conventionalized, or more different from other groups (CITATION). Another angle on convention formation is to look at the degree of arbitrariness (CITATION) by seeing how understandable the conventions are to others who were not part of the interaction that originated the convention. A more arbitrary convention should be harder to understand. 
+How strongly partner-specific are the conventions created in iterated reference games? Are they merely created for in the context of the partnership, or are they also only or mostly interpretable to those who were part of the in-group?  The partner-specifity of conversational pacts is often studied by looking at how the pacts are created, and how utterances change over the course of games [@hawkins2020b; @boyce2024]. Another angle on convention formation is to look at the degree of arbitrariness by seeing how understandable the conventions are to others who were not part of the interaction that originated the convention. A more arbitrary convention should be harder to understand. 
 
 Asking naive matchers to interpret utterances produced during iterated reference games thus can provide an additional perspective by determining how the features of the utterances and the conditions they were produced under affect how opaque they are, and provide empirical tests of whether descriptions become more opaque over the course of the reference game. 
 
 Some prior work has investigated how well naive matchers can understand the descriptions produced in the course of an iterated reference game, with a focus on how the presence or absence of the shared history affects understanding. 
 
-@murfitt2001 had 8 participants describe tangram shapes in an iterated matching game with or without a partner, and then played the recorded descriptions to new listeners either in round order or in reverse round order. Naive listeners were more accurate when the heard descriptions in the order they were produced rather than the reverse order. @murfitt2001 also looked at various features of the descriptions such as utterance length and definiteness, but none of these features significantly predicted accuracy. TODO look up actual accuracy rates! 
+@murfitt2001 had 8 participants describe tangram shapes in an iterated matching game with or without a partner, and then played the recorded descriptions to new listeners either in round order or in reverse round order. Naive listeners were more accurate when the heard descriptions in the order they were produced rather than the reverse order. @murfitt2001 also looked at various features of the descriptions such as utterance length and definiteness, but none of these features significantly predicted accuracy. TODO look up actual accuracy rates? 
 
 @schober1989 had pairs of participants repeatedly arrange arrays of 12 tangram figures from an overall pool of 16 figures. The in-game matchers had mean accuracies above 90% and rising to close to 100% by the 6th repetition. Naive listeners who heard the entire game in order, either live, as it was played, or on recording, had accuracies that started around 75% and rose to 90%. Matchers who listened to recordings starting in the 3rd round of the round of the game did worse, with initial accuracies around 55% that rose slowly to 70%. TODO double check if they report numbers of if we're just eyeballing the plots
 
-In an iterated reference game using drawing (rather than text) as the communication modality, @hawkins2023 compared the accuracy of matchers who were part of the reference game to later naive matchers in yoked and shuffled conditions. The yoked matchers saw all the trials from one game in the same order as they occurred; the shuffled matchers saw trials sampled from 10 games but ordered based on when in the games they occurred. In-game matchers were more accurate overall (88% on 4-way choice) than yoked matchers (75%) who were in turn more accurate than shuffled matchers (TODO I don't think this number of reported...). Over the course of trials, both in-game and yoked matchers showed steeper improvement in accuracy than shuffled matchers. 
+In an iterated reference game using drawing (rather than text) as the communication modality, @hawkins2023a compared the accuracy of matchers who were part of the reference game to later naive matchers in yoked and shuffled conditions. The yoked matchers saw all the trials from one game in the same order as they occurred; the shuffled matchers saw trials sampled from 10 games but ordered based on when in the games they occurred. In-game matchers were more accurate overall (88% on 4-way choice) than yoked matchers (75%) who were in turn more accurate than shuffled matchers (TODO I don't think this number of reported...). Over the course of trials, both in-game and yoked matchers showed steeper improvement in accuracy than shuffled matchers. 
             
-While "overhearers" have worse accuracy than in-game matchers, their performance is still far above chance, suggesting that at least some of the content of referential pacts is accessible. In fact, even when pairs of participants try to obfuscate their meaning to match images with each other but not an overhearer, an overhearing participant can still do quite well. In @clark1989, the target matcher had an average accuracy of 80% rising to 95% over repetitions (on a set of 8 targets) while overhears had an average accuracy of 45%, despite the goal being to prevent the overhearers comprehension. TODO maybe don't include 
+While "overhearers" have worse accuracy than in-game matchers, their performance is still far above chance, suggesting that at least some of the content of referential pacts is accessible. In fact, even when pairs of participants try to obfuscate their meaning to match images with each other but not an overhearer, an overhearing participant can still do quite well. In @clark1987a, the target matcher had an average accuracy of 80% rising to 95% over repetitions (on a set of 8 targets) while overhears had an average accuracy of 45%, despite the goal being to prevent the overhearers comprehension. TODO maybe don't include 
 
-Across these studies, recieving more context from one interaction, and in particular, having that context be in order, is beneficial to matchers. Except for the shuffled condition of @hawkins2023, these studies do not address how well matchers do at isolated descriptions from different games and points in the game. 
+Across these studies, recieving more context from one interaction, and in particular, having that context be in order, is beneficial to matchers. Except for the shuffled condition of @hawkins2023a, these studies do not address how well matchers do at isolated descriptions from different games and points in the game. 
 
 The outside perspective on iterated reference games has also been used to disentangle comprehension and production abilities, by providing descriptions from the first and last rounds of a parent-child iterated reference game to adults and children serving as naive matchers [@leung2024]. They found no significant difference in how comprehensible early and late desciptions were to naive matchers. TODO look up actual accuracy rates relative to live!
 
@@ -478,13 +478,10 @@ The outside perspective on iterated reference games has also been used to disent
 ## ALvin gets to write computational intro here
 Do we also want to motivate this from a computational angle? (i.e. trying to add pragmatics to models) TODO not me
 
-## back to Veronica 
-Key question: What properties of conversational pacts and the process of their formation make them more or less easy for an outsider to understand? 
 
-We use both human experiments and models to assess when and why expressions are opaque or understandable to outside observers. 
+TODO some paragraph to transition back to the important questions 
 
-
-
+In the current work, we ask how does the process of convention formation determine how easy a referential expression is for an outsider to understand. Using reference expressions created in different games from @boyce2024, we use both human experiments and models to assess when and why expressions are opaque or understandable to outside observers. 
 
 # Task Setup
 
@@ -1080,6 +1077,14 @@ NOTE: not showing model estimates in Figure 5 b/c the fit isn't great, not sure 
 
 # Discussion ? 
 
+potentially worth saying that the level of descriptiveness that is given to an intended target is meant to enable a higher level of confidence and seem more supportive/cooperative than what a naive listener can understand 
+Levels of understanding do cast doubt on whether the utterances produced are efficient
+
+productions may be constrained by politeness/conversational norms and the describer's need to come up with a description more than what is minimally necessary to convey the information 
+
+questions about what is about some images that makes them much easier to identify -- is it iconicity or a narrower prior about how to describe? distance to competitors? 
+
+sampling across more images (a la @ji ) could address that. Also many sources of variation in how different groups described things so further analysis of differences within utterances at words and structure could help there, where models are useful b/c can run them in more conditions than people will put up with. 
 
 ## Part of discussion that Alvin gets to write??
 

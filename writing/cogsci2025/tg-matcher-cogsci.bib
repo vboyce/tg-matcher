@@ -33,6 +33,23 @@
   file = {/home/vboyce/Zotero/storage/HNKUI249/Clark and Schaefer - 1987 - Concealing one's meaning from overhearers.pdf}
 }
 
+@misc{gul2024,
+  title = {{{CoGen}}: {{Learning}} from {{Feedback}} with {{Coupled Comprehension}} and {{Generation}}},
+  shorttitle = {{{CoGen}}},
+  author = {Gul, Mustafa Omer and Artzi, Yoav},
+  year = {2024},
+  month = aug,
+  number = {arXiv:2408.15992},
+  eprint = {2408.15992},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2408.15992},
+  urldate = {2024-11-26},
+  abstract = {Systems with both language comprehension and generation capabilities can benefit from the tight connection between the two. This work studies coupling comprehension and generation with focus on continually learning from interaction with users. We propose techniques to tightly integrate the two capabilities for both learning and inference. We situate our studies in two-player reference games, and deploy various models for thousands of interactions with human users, while learning from interaction feedback signals. We show dramatic improvements in performance over time, with comprehension-generation coupling leading to performance improvements up to 26\% in absolute terms and up to 17\% higher accuracies compared to a non-coupled system. Our analysis also shows coupling has substantial qualitative impact on the system's language, making it significantly more human-like.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning},
+  file = {/home/vboyce/Zotero/storage/ERIB3RWD/Gul and Artzi - 2024 - CoGen Learning from Feedback with Coupled Comprehension and Generation.pdf;/home/vboyce/Zotero/storage/5KYLWGD5/2408.html}
+}
+
 @article{hawkins2020b,
   title = {Characterizing the Dynamics of Learning in Repeated Reference Games},
   author = {Hawkins, Robert D. and Frank, Michael C. and Goodman, Noah D.},
@@ -66,6 +83,53 @@
   langid = {english},
   keywords = {Human behaviour,Social behaviour},
   file = {/home/vboyce/Zotero/storage/2WYE2TPJ/Hawkins et al. - 2023 - Visual resemblance and interaction history jointly constrain pictorial meaning.pdf}
+}
+
+@inproceedings{ji2022,
+  title = {Abstract {{Visual Reasoning}} with {{Tangram Shapes}}},
+  booktitle = {Proceedings of the 2022 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}}},
+  author = {Ji, Anya and Kojima, Noriyuki and Rush, Noah and Suhr, Alane and Vong, Wai Keen and Hawkins, Robert and Artzi, Yoav},
+  editor = {Goldberg, Yoav and Kozareva, Zornitsa and Zhang, Yue},
+  year = {2022},
+  month = dec,
+  pages = {582--601},
+  publisher = {Association for Computational Linguistics},
+  address = {Abu Dhabi, United Arab Emirates},
+  doi = {10.18653/v1/2022.emnlp-main.38},
+  urldate = {2024-10-01},
+  abstract = {We introduce KiloGram, a resource for studying abstract visual reasoning in humans and machines. Drawing on the history of tangram puzzles as stimuli in cognitive science, we build a richly annotated dataset that, with {\textbackslash}textgreater1k distinct stimuli, is orders of magnitude larger and more diverse than prior resources. It is both visually and linguistically richer, moving beyond whole shape descriptions to include segmentation maps and part labels. We use this resource to evaluate the abstract visual reasoning capacities of recent multi-modal models. We observe that pre-trained weights demonstrate limited abstract reasoning, which dramatically improves with fine-tuning. We also observe that explicitly describing parts aids abstract reasoning for both humans and models, especially when jointly encoding the linguistic and visual inputs.},
+  file = {/home/vboyce/Zotero/storage/UNBU4Y2Z/Ji et al. - 2022 - Abstract Visual Reasoning with Tangram Shapes.pdf}
+}
+
+@inproceedings{kang2020,
+  title = {Incorporating {{Pragmatic Reasoning Communication}} into {{Emergent Language}}},
+  booktitle = {Advances in {{Neural Information Processing Systems}}},
+  author = {Kang, Yipeng and Wang, Tonghan and {de Melo}, Gerard},
+  year = {2020},
+  volume = {33},
+  pages = {10348--10359},
+  publisher = {Curran Associates, Inc.},
+  urldate = {2025-01-13},
+  abstract = {Emergentism and pragmatics are two research fields that study the dynamics of linguistic communication along quite different timescales and intelligence levels. From the perspective of multi-agent reinforcement learning, they correspond to stochastic games with reinforcement training and stage games with opponent awareness, respectively. Given that their combination has been explored in linguistics, in this work, we combine computational models of short-term mutual reasoning-based pragmatics with long-term language emergentism. We explore this for agent communication in two settings, referential games and Starcraft II, assessing the relative merits of different kinds of mutual reasoning pragmatics models both empirically and theoretically. Our results shed light on their importance for making inroads towards getting more natural, accurate, robust, fine-grained, and succinct utterances.},
+  file = {/home/vboyce/Zotero/storage/DJ3XFWKM/Kang et al. - 2020 - Incorporating Pragmatic Reasoning Communication into Emergent Language.pdf}
+}
+
+@misc{le2022,
+  title = {Referring {{Expressions}} with {{Rational Speech Act Framework}}: {{A Probabilistic Approach}}},
+  shorttitle = {Referring {{Expressions}} with {{Rational Speech Act Framework}}},
+  author = {Le, Hieu and Daryanto, Taufiq and Zhafransyah, Fabian and Wijaya, Derry and Coppock, Elizabeth and Chin, Sang},
+  year = {2022},
+  month = may,
+  number = {arXiv:2205.07795},
+  eprint = {2205.07795},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2205.07795},
+  urldate = {2025-01-13},
+  abstract = {This paper focuses on a referring expression generation (REG) task in which the aim is to pick out an object in a complex visual scene. One common theoretical approach to this problem is to model the task as a two-agent cooperative scheme in which a `speaker' agent would generate the expression that best describes a targeted area and a `listener' agent would identify the target. Several recent REG systems have used deep learning approaches to represent the speaker/listener agents. The Rational Speech Act framework (RSA), a Bayesian approach to pragmatics that can predict human linguistic behavior quite accurately, has been shown to generate high quality and explainable expressions on toy datasets involving simple visual scenes. Its application to large scale problems, however, remains largely unexplored. This paper applies a combination of the probabilistic RSA framework and deep learning approaches to larger datasets involving complex visual scenes in a multi-step process with the aim of generating better-explained expressions. We carry out experiments on the RefCOCO and RefCOCO+ datasets and compare our approach with other end-to-end deep learning approaches as well as a variation of RSA to highlight our key contribution. Experimental results show that while achieving lower accuracy than SOTA deep learning methods, our approach outperforms similar RSA approach in human comprehension and has an advantage over end-to-end deep learning under limited data scenario. Lastly, we provide a detailed analysis on the expression generation process with concrete examples, thus providing a systematic view on error types and deficiencies in the generation process and identifying possible areas for future improvements.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/vboyce/Zotero/storage/6EGZC2SY/Le et al. - 2022 - Referring Expressions with Rational Speech Act Framework A Probabilistic Approach.pdf;/home/vboyce/Zotero/storage/SPB4R5AD/2205.html}
 }
 
 @article{leung2024,
@@ -181,4 +245,23 @@
   abstract = {We show that participants in conversation develop beliefs about shared information that others do not. So-called directors talked with two partners in succession (A and B) to arrange unusual figures. Directors went from long, indefinite descriptions of the figures to short, definite references as common ground was built up with A. When B had been a silent side participant in the fast conversation, directors continued to use short references when they changed partners. References became less efftcient when B had not been a participant-even when B had heard the first conversation and seen the figures. When B had only heard the fast conversation, he or she was treated much the same as a completely naive partner. Apparently, conversation provides preferred evidence for coordinating beliefs about shared information. o 1992 ACZ\&{\textasciitilde}{\textasciitilde}C press, IN. In conversation, speakers collaborate with their partners in making references. In an earlier paper (Clark BL Wilkes-Gibbs, 1986), we proposed that when a speaker wants to refer to an object, it is not enough for her to utter a noun phrase such as the Allen wrench. She and her partner are also responsible for establishing that he has understood her as intended. What they do, therefore, is try to reach the mutual belief that he has understood her reference well enough for current purposes. They collaborate to reach this belief; she looks for reliable evidence of his understanding and he tries to provide it. In the process, he may offer alternative phrasing and ask for repeats or repairs (you mean the small metal thing shaped like an L?); she may offer more information and ask for confirmation. Predictions of the collaborative theory, as we will call it, have been confirmed for repeated references to objects (Clark \& Wilkes-Gibbs, 1986), for partners with disparate goals (Wilkes-Gibbs, 1986), and dis-Send correspondence and reprint requests to D.},
   keywords = {read},
   file = {/home/vboyce/Zotero/storage/DECDUNXC/Clark - 1992 - Coordinating beliefs in conversation.pdf}
+}
+
+@article{yoon2018,
+  title = {Aim {{Low}}: {{Mechanisms}} of {{Audience Design}} in {{Multiparty Conversation}}},
+  shorttitle = {Aim {{Low}}},
+  author = {Yoon, Si On and {Brown-Schmidt}, Sarah},
+  year = {2018},
+  month = oct,
+  journal = {Discourse Processes},
+  volume = {55},
+  number = {7},
+  pages = {566--592},
+  issn = {0163-853X, 1532-6950},
+  doi = {10.1080/0163853X.2017.1286225},
+  urldate = {2022-02-01},
+  abstract = {It is well established in studies of two-party conversation that conversational partners jointly establish brief labels for repeatedly mentioned entities. When speaking to a new partner who is unfamiliar with the labels, speakers use longer expressions to facilitate understanding. How this process of audience design scales up to multiparty conversation, where individuals differ in mutual knowledge, is unknown. Here we propose, and test, three potential hypotheses regarding how speakers design referring expressions in threeparty conversation. Participants completed a referential communication task in groups of three in which one participant, the Director, gave instructions to two Matchers who differed in their knowledge of referential labels. Directors flexibly alternated between partner-specific representations of common ground (CG), producing longer descriptions for low-CG than for high-CG partners. When addressing multiple parties at once, speakers tailored descriptions for the least knowledgeable person. These findings shed light on the mechanisms that support audience design in multiparty conversation: Audience design begins with access to distinct representations of common ground held with the intended addressee or addressees. These distinct representations support an audience design process in which utterances are tailored to accommodate the least knowledgeable addressee in a group.},
+  langid = {english},
+  keywords = {read},
+  file = {/home/vboyce/Zotero/storage/IVH2UEQF/Yoon and Brown-Schmidt - 2018 - Aim Low Mechanisms of Audience Design in Multipar.pdf}
 }
