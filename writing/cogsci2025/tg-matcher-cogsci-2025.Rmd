@@ -559,7 +559,7 @@ expt_3_groups <- expt_3_summary |>
 expt_3_cor <- cor.test(expt_3_summary$value, expt_3_summary$human_acc)
 ```
 
-```{r fig-calibration, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="70%", fig.width=3, fig.height=3, fig.cap = "Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy. Colored points are individual descriptions, black line is the boostrapped mean and 95% CI across descriptions for each decile. \\label{calibration}" }
+```{r fig-calibration, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="70%", fig.width=3, fig.height=3, fig.cap = "Correlation between human and CLIP-MLP probability of target across deciles of CLIP-MLP probability. Colored points are individual descriptions, black line is the boostrapped mean and 95% CI across descriptions for each decile. \\label{calibration}" }
 expt_3_summary |> ggplot(aes(y = human_acc, x = value)) +
   geom_point(aes(color = grouping), alpha = .7) +
   # geom_line(data = summ, color = "black") +
@@ -567,7 +567,7 @@ expt_3_summary |> ggplot(aes(y = human_acc, x = value)) +
   stat_summary(data = expt_3_groups, fun.data = "mean_cl_boot", geom = "line") +
   theme(legend.position = "none") +
   scale_color_viridis(discrete = T) +
-  labs(x = "CLIP-MLP accuracy", y = "Human accuracy") +
+  labs(x = "CLIP-MLP target probability", y = "Human accuracy") +
   coord_equal()
 ```
 
@@ -1068,32 +1068,17 @@ The accuracy of the CLIP-MLP model is worse than the shuffled human results, and
 
 
 
-# Discussion ? 
+# Discussion 
 
-potentially worth saying that the level of descriptiveness that is given to an intended target is meant to enable a higher level of confidence and seem more supportive/cooperative than what a naive listener can understand 
-Levels of understanding do cast doubt on whether the utterances produced are efficient
+Conventions are formed in reference games in a partner-specific way, where different groups follow different paths through semantic space as they form conventions. However, the referential descriptions used over the course of convention formation remain relatively understandable to outsiders. Across multiple experiments with human matchers, we found that naive human matchers were far above chance accuracy at identifying the targets, with variation explained more by the target image than the round or game condition the descriptions came from. Even for games selected for strong conventionalization, naive matchers had high accuracy that was aided if they saw the descriptions in order. 
 
-productions may be constrained by politeness/conversational norms and the describer's need to come up with a description more than what is minimally necessary to convey the information 
+We also tested a computational model built on CLIP with a multi-layer perceptron thingy as a way of quantifying the semantic distance descriptions of the image options. The CLIP-MLP model was far above chance in its assignment of probabilities to target images, and although its probabilities were lower than human matcher accuracies, the model mirrored the qualitative pattern of larger effects from target image than from description source. 
 
-questions about what is about some images that makes them much easier to identify -- is it iconicity or a narrower prior about how to describe? distance to competitors? 
+Our experimental and computational results were only on a specific set of iterated reference game transcripts targeting a specific set of 12 images and so numeric results may not generalize to other reference games with different array sizes and sets of images. There are potential non-measured differences between in-game matchers and naive matchers because naive matchers did not have to wait for descriptions to appear and thus had more choice about how closely to read descriptions or how long to spend looking at images. We also cannot know whether naive matchers (or for that matter, in-game matchers) fully "comprehended" the language in the descriptions, or were making inferences about the meaning on a more analytic level. 
 
-sampling across more images (a la @ji ) could address that. Also many sources of variation in how different groups described things so further analysis of differences within utterances at words and structure could help there, where models are useful b/c can run them in more conditions than people will put up with. 
+This work suggests that conventions formed within a small group may still be fairly comprehensible to those outside the group, who may produce different descriptions. This raises questions around how well-calibrated describers are to their matchers level of knowledge, and whether the process of convention formation is actually efficient. Even naive matchers can often understand the shorthand descriptions, but in reference games, describers choose elaborated descriptions with new matchers. In a game, norms of cooperation and conversation, may lead describers to start new matchers with elaborated descriptions designed to give them a high level of confidence in target selection. Describers are also constrained by their need to come of with a description in real time. However, the high level of understanding and the lack of substantial benefit from early round descriptions does raise empirical questions about how calibrated describers are to the level of information necessary. 
 
-## Part of discussion that Alvin gets to write??
-
-Discussion
-
-Understanding varies much more based on item than on anything else; potentially due to priors or iconicity of image (? that might be beyond scope – how well does this match up with say diversity of descriptions)
-
-Models do pretty well? IDK what our model take away is
-
-Especially when there is strong or idiosyncratic reduction, context helps
-
-role of context 
-
-limitations, incuding out of distribution for models 
-
-might want to address language comprehension v inference 
+We found large variation in how accurate the computation model and naive matchers were on different target images. This raises questions about what makes some images much easier to identify. They might be more iconic, with a narrower prior over different ways they could be conceptualized, or they may be further from competitors within this pool of images. We are limited by the 12 images we used, but future work sampling across larger sets of images [such as @ji2022] could probe image-level factors. Future work could also explore within-description sources of variation and how the structure and word choice of utterance correlates with naive matcher accuracy. Computational models could be especially beneficial because they could be run on subsets or ablations of descriptive text. 
 
 # References 
 
