@@ -495,8 +495,8 @@ We recruited participants from Prolific (TODO criteria). Participants were direc
 On each trial participants saw the full transcript from that trial, containing all the chat messages marked by whether they were from the speaker or a listener (TODO confirm the language used), except for lines that @boyce2024 had marked as not having any referential content. Participants selected the image they thought was the target from the tableau of 12. Participants received feedback on whether they were right or wrong on each trial. Except when the specific viewing order was part of the experimental manipulation, we randomized the order of trials, subject to the constraint that the same target could not repeat on adjacent trials.  
 The task was implemented in jsPsych. We paid participants $10 an hour plus a bonus of 5 cents per correct response. 
 
-```{r interface, fig.env = "figure", fig.pos = "t!", out.width="100%", fig.align = "center", fig.cap = "Experimental Setup and Procedure.TODO REPLACE \\label{game}", cache=FALSE}
-knitr::include_graphics("matcher_diagram.png")
+```{r interface, fig.env = "figure", fig.pos = "t!", out.width="100%", fig.align = "center", fig.cap = "Experimental Setup and Procedure. TODO \\label{game}", cache=FALSE}
+knitr::include_graphics("matcher-diagram.pdf")
 ```
 
 <!-- ## Computational models that Ben gets to write -->
