@@ -498,7 +498,31 @@ We recruited English-speaking participants from Prolific. Participants were dire
 
 ## Computational models that Ben gets to write
 
-This is where Ben gets to write! 
+<!-- We use clip as a model of this doman -->
+We used CLIP--in particular clip-vit-large-patch14--as a listener model for our domain @radford2021learning. CLIP is a natural choice for reference games, as the model is trained to estimate the correspondance between images and phrases in natural language. We run CLIP for a given string of text and all 12 tangram shapes, then compute probabilities for each tangram shape using CLIP's logits. The simplest way to do this is simply take the softmax of the logits. However, the tangram shapes are possibly out the distribution for the model, which leads it to favor some images over others regardless of the content of the text. To fix this, we train readout models that make more calibrated predictions using CLIP's logits.
+
+We show models the 12 tangrams images used in the experiment. For text, we concatenate all the mesasges sent by the speaker in a given round of the experiment.
+
+```{r}
+df_classifiers <- read_csv(here("data/classifier_comparison-openai--clip-vit-large-patch14.csv"))
+df_clf_comp <- df_classifiers |>
+  group_by(classifier, params) |>
+  summarize(mean_acc = mean(accuracy), sd_acc = sd(accuracy))
+
+df_best_clfs <- df_clf_comp |>
+  group_by(classifier) |>
+  filter(mean_acc == max(mean_acc)) |>
+  ungroup()
+
+knitr::kable(df_best_clfs, label="classifier-comparison", caption="Cross-validated accuracies and standard deviations for classifiers.")
+```
+
+We train different readout models to assign probabilities to features using CLIP's logits as features. Models are trained to maximize task task performance (i.e. to assign high probability to the true tangram given a concatenated speaker utterance). We compare four types of models: a random forest, a logistic regression model, a Multi-layer Perceptron, and a gradient-boosted tree. Classifiers were implemented in the scikit-learn and XGBoost libraries @pedregosa2011scikit @chen2016xgboost. Table $\ref{classifier-comparison}$ shows cross-validated accuracy of different readout models, as well as the performance of CLIP with no readout. The MLP with two hidden layers of size 100 performs best, so we use its predictions in subsequent analysis.
+
+<!-- table goes here -->
+
+We trained readouts from the logits to 
+
 
 
 # Experiment 1
