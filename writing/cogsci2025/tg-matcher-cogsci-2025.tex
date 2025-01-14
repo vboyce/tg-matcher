@@ -9,8 +9,9 @@
 \title{Not so opaque after all: Conventions formed in reference games
 are mostly understandable to outsiders}
 
+\cogscifinalcopy
 
-\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} Department of Psychology \\ Stanford University \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
+\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} \\Department of Psychology \\ Stanford University \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 
 \begin{document}
@@ -153,8 +154,45 @@ look up actual accuracy rates relative to live!
 \subsection{ALvin gets to write computational intro
 here}\label{alvin-gets-to-write-computational-intro-here}
 
-Do we also want to motivate this from a computational angle?
-(i.e.~trying to add pragmatics to models) TODO not me
+One way to conceptualize the opacity of a referring expression is by
+considering the semantic distance between the signifier and the
+referent. Under the assumption of a modality-independent global
+semantics (i.e., not conditioned by partner-specific meaning),
+expressions that are transparent have signifiers and referents that are
+semantically close, such that any member of the sociolinguistic
+community sharing the global semantics should be able to identify the
+appropriate referent given the signifier. In contrast, expressions that
+are opaque have signifiers and referents that are semantically distant,
+such that the relations between them are more arbitrary and inaccessible
+to the general community without the formation of additional conventions
+(which may be partner- or group-specific).
+
+Assessing opacity thus requires us to have a measure of
+modality-independent global semantics. Such semantics are difficult to
+directly obtain for humans, since we rarely have explicit semantic
+formulations of the stimuli we encounter, and much less formulations
+which are unifed across multiple modalities. However, the ability of a
+naïve comprehender to understand a referring expression that is
+presented without context provides a proxy measure, since the
+comprehender's judgements are not conditioned on any context-specific
+conventions. Thus, prior studies on naïve matchers provide one approach
+to estimating the opacity of the utterances produced in reference games.
+
+Another possible measure of modality-independent global semantics is
+computational in origin. Computational methods have enabled the
+projection of various stimuli (including image and text stimuli) into
+embeddings in high-dimensional spaces; these embeddings have
+demonstrated properties which suggest that they are reasonable
+approximations of humans' semantic spaces, including similarity in
+representational geometries (e.g., Grand et al., 2022; Muttenthaler \&
+Hebart, 2021). Indeed, embeddings from neural network models have been
+used as a form of semantics in a range of reference game scenarios
+(e.g., Gul \& Artzi, 2024; Ji et al., 2022; Kang et al., 2020; Le et
+al., 2022; Ohmer et al., 2022). In particular, such embeddings can be
+treated as context-independent semantic representations, since they are
+not updated to account for convention formation within an iterated
+reference game; hence, they can serve as a computational comparison to
+human performance on a naïve matching task.
 
 TODO some paragraph to transition back to the important questions
 
@@ -582,6 +620,18 @@ overhearers. \emph{Journal of Memory and Language}, \emph{26}(2),
 Clark, H. H., \& Wilkes-Gibbs, D. (1986). \emph{Referring as a
 collaborative process}.
 
+\bibitem[\citeproctext]{ref-grand2022}
+Grand, G., Blank, I. A., Pereira, F., \& Fedorenko, E. (2022). Semantic
+projection recovers rich human knowledge of multiple object features
+from word embeddings. \emph{Nature Human Behaviour}, \emph{6}(7),
+975--987. \url{https://doi.org/10.1038/s41562-022-01316-8}
+
+\bibitem[\citeproctext]{ref-gul2024}
+Gul, M. O., \& Artzi, Y. (2024). \emph{{CoGen}: {Learning} from
+{Feedback} with {Coupled Comprehension} and {Generation}}
+(arXiv:2408.15992). arXiv.
+\url{https://doi.org/10.48550/arXiv.2408.15992}
+
 \bibitem[\citeproctext]{ref-hawkins2020b}
 Hawkins, R. D., Frank, M. C., \& Goodman, N. D. (2020). Characterizing
 the dynamics of learning in repeated reference games.
@@ -592,6 +642,25 @@ Hawkins, R. D., Sano, M., Goodman, N. D., \& Fan, J. E. (2023). Visual
 resemblance and interaction history jointly constrain pictorial meaning.
 \emph{Nature Communications}, \emph{14}(1), 2199.
 \url{https://doi.org/10.1038/s41467-023-37737-w}
+
+\bibitem[\citeproctext]{ref-ji2022}
+Ji, A., Kojima, N., Rush, N., Suhr, A., Vong, W. K., Hawkins, R., \&
+Artzi, Y. (2022). Abstract {Visual Reasoning} with {Tangram Shapes}. In
+Y. Goldberg, Z. Kozareva, \& Y. Zhang (Eds.), \emph{Proceedings of the
+2022 {Conference} on {Empirical Methods} in {Natural Language
+Processing}} (pp. 582--601). Association for Computational Linguistics.
+\url{https://doi.org/10.18653/v1/2022.emnlp-main.38}
+
+\bibitem[\citeproctext]{ref-kang2020}
+Kang, Y., Wang, T., \& de Melo, G. (2020). Incorporating {Pragmatic
+Reasoning Communication} into {Emergent Language}. \emph{Advances in
+{Neural Information Processing Systems}}, \emph{33}, 10348--10359.
+
+\bibitem[\citeproctext]{ref-le2022}
+Le, H., Daryanto, T., Zhafransyah, F., Wijaya, D., Coppock, E., \& Chin,
+S. (2022). \emph{Referring {Expressions} with {Rational Speech Act
+Framework}: {A Probabilistic Approach}} (arXiv:2205.07795). arXiv.
+\url{https://doi.org/10.48550/arXiv.2205.07795}
 
 \bibitem[\citeproctext]{ref-leung2024}
 Leung, A., Yurovsky, D., \& Hawkins, R. D. (2024). Parents spontaneously
@@ -604,6 +673,17 @@ Murfitt, T., \& McAllister, J. (2001). The {Effect} of {Production
 Variables} in {Monolog} and {Dialog} on {Comprehension} by {Novel
 Listeners}. \emph{Language and Speech}, \emph{44}(3), 325--350.
 \url{https://doi.org/10.1177/00238309010440030201}
+
+\bibitem[\citeproctext]{ref-muttenthaler2021}
+Muttenthaler, L., \& Hebart, M. N. (2021). {THINGSvision}: {A Python
+Toolbox} for {Streamlining} the {Extraction} of {Activations From Deep
+Neural Networks}. \emph{Frontiers in Neuroinformatics}, \emph{15}.
+\url{https://doi.org/10.3389/fninf.2021.679838}
+
+\bibitem[\citeproctext]{ref-ohmer2022}
+Ohmer, X., Franke, M., \& König, P. (2022). Mutual {Exclusivity} in
+{Pragmatic Agents}. \emph{Cognitive Science}, \emph{46}(1), e13069.
+\url{https://doi.org/10.1111/cogs.13069}
 
 \bibitem[\citeproctext]{ref-schober1989}
 Schober, M. F., \& Clark, H. H. (1989). Understanding by addressees and

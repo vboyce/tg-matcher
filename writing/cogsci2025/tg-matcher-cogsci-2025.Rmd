@@ -5,7 +5,7 @@ csl: apa7.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} Department of Psychology \\ Stanford University
+    \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} \\Department of Psychology \\ Stanford University
     \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
@@ -15,7 +15,8 @@ keywords: >
     TODO keywords
     
 output: cogsci2024::cogsci_paper
-#final-submission: \cogscifinalcopy
+header-includes:
+- \cogscifinalcopy
 ---
 
 ```{r global_options, include=FALSE}
@@ -504,11 +505,9 @@ The task was implemented in jsPsych. We paid participants $10 an hour plus a bon
 knitr::include_graphics("matcher-diagram.pdf")
 ```
 
-<!-- ## Computational models that Ben gets to write -->
+## Computational models that Ben gets to write
 
-Computational methods
-TODO V doesn’t know how to write this
-QUESTION: do we focus on mlp pre- or post- calibration?
+This is where Ben gets to write! 
 
 
 # Experiment 1
@@ -702,6 +701,7 @@ ggplot(acc_by_type_target, aes(x = correct_tangram, y = acc, color = source, sha
   geom_hline(yintercept = 1 / 12, linetype = "dashed") +
   scale_x_discrete(name = NULL, labels = foo$labels) +
   scale_color_manual(breaks = c("Original", "Naive human", "CLIP-MLP"), values = c("#7570B3", "#1B9E77", "#D95F02")) +
+  labs(y="Accuracy")+
   theme(
     legend.position = "bottom", legend.box = "vertical",
     strip.background = element_blank(),
