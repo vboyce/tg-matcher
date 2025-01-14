@@ -476,7 +476,12 @@ The outside perspective on iterated reference games has also been used to disent
 
 
 ## ALvin gets to write computational intro here
-Do we also want to motivate this from a computational angle? (i.e. trying to add pragmatics to models) TODO not me
+
+One way to conceptualize the opacity of a referring expression is by considering the semantic distance between the signifier and the referent. Under the assumption of a modality-independent global semantics (i.e., not conditioned by partner-specific meaning), expressions that are transparent have signifiers and referents that are semantically close, such that any member of the sociolinguistic community sharing the global semantics should be able to identify the appropriate referent given the signifier. In contrast, expressions that are opaque have signifiers and referents that are semantically distant, such that the relations between them are more arbitrary and inaccessible to the general community without the formation of additional conventions (which may be partner- or group-specific).
+
+Assessing opacity thus requires us to have a measure of modality-independent global semantics. Such semantics are difficult to directly obtain for humans, since we rarely have explicit semantic formulations of the stimuli we encounter, and much less formulations which are unifed across multiple modalities. However, the ability of a naïve comprehender to understand a referring expression that is presented without context provides a proxy measure, since the comprehender's judgements are not conditioned on any context-specific conventions. Thus, prior studies on naïve matchers provide one approach to estimating the opacity of the utterances produced in reference games.
+
+Another possible measure of modality-independent global semantics is computational in origin. Computational methods have enabled the projection of various stimuli (including image and text stimuli) into embeddings in high-dimensional spaces; these embeddings have demonstrated properties which suggest that they are reasonable approximations of humans' semantic spaces, including similarity in representational geometries [e.g., @grand2022; @muttenthaler2021]. Indeed, embeddings from neural network models have been used as a form of semantics in a range of reference game scenarios [e.g., @gul2024; @ji2022; @kang2020; @le2022; @ohmer2022]. In particular, such embeddings can be treated as context-independent semantic representations, since they are not updated to account for convention formation within an iterated reference game; hence, they can serve as a computational comparison to human performance on a naïve matching task.
 
 
 TODO some paragraph to transition back to the important questions 
