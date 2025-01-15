@@ -220,10 +220,68 @@ task was implemented in jsPsych (Leeuw et al., 2023). We paid
 participants \$10 an hour plus a bonus of 5 cents per correct response.
 All our experimental code is at TODO LINK.
 
-\subsection{Computational models that Ben gets to
-write}\label{computational-models-that-ben-gets-to-write}
+\subsection{Computational models}\label{computational-models}
 
-This is where Ben gets to write!
+We used CLIP--in particular clip-vit-large-patch14--as a listener model
+for our domain (Radford et al., 2021). CLIP is a natural choice for
+reference games, as the model is trained to estimate the correspondence
+between images and phrases in natural language. We run CLIP for a given
+string of text and all 12 tangram shapes, then compute probabilities for
+each tangram shape using CLIP's logits. The simplest way to do this is
+simply take the softmax of the logits. However, the tangram shapes are
+possibly out the distribution for the model, which leads it to favor
+some images over others regardless of the content of the text. To fix
+this, we train readout models that make more calibrated predictions
+using CLIP's logits.
+
+We show models the 12 tangrams images used in the experiment. For text,
+we concatenate all the messages sent by the speaker in a given round of
+the experiment.
+
+\begin{table}
+\label{classifier-comparison}
+\caption{Cross-validated accuracies for classifiers. Standard deviations in accuracy across the 10 folds are sown in parentheses. Best performance within each model class is underlined, and best overall performance is bolded. }
+\centering
+
+    \begin{tabular}{p{1em}lr}
+        \hline
+        &Classifier & Accuracy \\ 
+        \hline
+            \multicolumn{2}{l}{Logistic Regression} & \\
+                    & No penalty & \underline{0.50 (0.01)} \\ 
+        & L2 penalty & 0.50  (0.01) \\ 
+        \multicolumn{2}{l}{Random Forest} & \\
+            & 10 estimators & 0.46 (0.02) \\
+                    & 50 estimators  & 0.51 (0.02)\\ 
+        & 100 estimators & 0.52 (0.02) \\ 
+        & 500 estimators & \underline{0.52 (0.02)} \\ 
+
+        \multicolumn{2}{l}{Gradient-Boosted Tree} & \\
+                & 10 estimators & 0.48 (0.02) \\ 
+        & 100 estimators & \underline{0.51 (0.02)} \\ 
+        \multicolumn{2}{l}{Multi-layer Perceptron} & \\
+    & 1 32-dim hidden layer & 0.50 (0.01) \\ 
+        & 1 100-dim hidden layer  & 0.52 (0.01) \\ 
+            & 1 512-dim hidden layer & 0.53 (0.02) \\ 
+    & 1 1028-dim hidden layer & 0.53 (0.02) \\ 
+        & 2 32-dim hidden layers  & 0.51 (0.02) \\ 
+        & 2 100-dim hidden layers & \textbf{0.55 (0.02)} \\ 
+    \hline
+    \end{tabular}
+\end{table}
+
+We train different readout models to assign probabilities to features
+using CLIP's logits as features. Models are trained to maximize task
+task performance (i.e.~to assign high probability to the true tangram
+given a concatenated speaker utterance). We compare four types of
+models: a random forest, a logistic regression model, a Multi-layer
+Perceptron, and a gradient-boosted tree. Classifiers were implemented in
+the scikit-learn and XGBoost libraries Pedregosa et al. (2011) Chen \&
+Guestrin (2016). Table \ref{tab:classifier-comparison} shows
+cross-validated accuracy of different readout models, as well as the
+performance of CLIP with no readout. The MLP with two hidden layers of
+size 100 performs best, so we use its predictions in subsequent
+analysis.
 
 \section{Experiment 1}\label{experiment-1}
 
@@ -234,7 +292,7 @@ This is where Ben gets to write!
 
 }
 
-\caption[Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy]{Correlation between human and CLIP-MLP accuracy across deciles of CLIP-MLP accuracy. Colored points are individual descriptions, black line is the boostrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
+\caption[Correlation between human and CLIP-MLP probability of target across deciles of CLIP-MLP probability]{Correlation between human and CLIP-MLP probability of target across deciles of CLIP-MLP probability. Colored points are individual descriptions, black line is the boostrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
 \end{figure}
 \end{CodeChunk}
 
@@ -596,6 +654,11 @@ Boyce, V., Hawkins, R., Goodman, N. D., \& Frank, M. C. (2024).
 \emph{Interaction structure constrains the emergence of conventions in
 group communication}.
 
+\bibitem[\citeproctext]{ref-chen2016xgboost}
+Chen, T., \& Guestrin, C. (2016). Xgboost: {A} scalable tree boosting
+system. \emph{Proceedings of the 22nd Acm Sigkdd International
+Conference on Knowledge Discovery and Data Mining}, 785--794.
+
 \bibitem[\citeproctext]{ref-clark1987a}
 Clark, H. H., \& Schaefer, E. F. (1987). Concealing one's meaning from
 overhearers. \emph{Journal of Memory and Language}, \emph{26}(2),
@@ -680,6 +743,19 @@ Neural Networks}. \emph{Frontiers in Neuroinformatics}, \emph{15}.
 Ohmer, X., Franke, M., \& König, P. (2022). Mutual {Exclusivity} in
 {Pragmatic Agents}. \emph{Cognitive Science}, \emph{46}(1), e13069.
 \url{https://doi.org/10.1111/cogs.13069}
+
+\bibitem[\citeproctext]{ref-pedregosa2011scikit}
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B.,
+Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., et
+al. (2011). Scikit-learn: {Machine} learning in python. \emph{The
+Journal of Machine Learning Research}, \emph{12}, 2825--2830.
+
+\bibitem[\citeproctext]{ref-radford2021}
+Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S.,
+Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., \&
+Sutskever, I. (2021). \emph{Learning {Transferable Visual Models From
+Natural Language Supervision}} (arXiv:2103.00020). arXiv.
+\url{https://doi.org/10.48550/arXiv.2103.00020}
 
 \bibitem[\citeproctext]{ref-schober1989}
 Schober, M. F., \& Clark, H. H. (1989). Understanding by addressees and
