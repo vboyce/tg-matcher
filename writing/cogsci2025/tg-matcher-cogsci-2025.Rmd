@@ -519,8 +519,7 @@ df_clf_comp |> arrange(desc(mean_acc))
     \toprule
     \multicolumn{2}{l}{Classifier} & Accuracy \\ 
     \midrule
-    \multicolumn{2}{l}{Base CLIP TODO} & \\
-    & No penalty & \underline{\smash{TODO BEN}} \\
+    \multicolumn{2}{l}{CLIP without readout} & \smash{0.31} \\
     \multicolumn{2}{l}{Logistic regression} & \\
     & No penalty & \underline{\smash{0.50 (0.01)}} \\ 
     & \vspace{1mm}L2 penalty & 0.50  (0.01) \\ 
