@@ -427,9 +427,9 @@ stats <- function(model, row, decimal = 2) {
 stats_text <- function(model, row, decimal = 2) {
   model <- model |>
     mutate(
-      Estimate = round(Estimate, digits = decimal),
-      Lower = round(lower, digits = decimal),
-      Upper = round(upper, digits = decimal),
+      Estimate = round(Estimate, digits = decimal) |> formatC(format='f', digits=decimal ),
+      Lower = round(lower, digits = decimal) |> formatC(format='f', digits=decimal ),
+      Upper = round(upper, digits = decimal) |> formatC(format='f', digits=decimal ),
       `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
     ) |>
     select(Term, Estimate, `Credible Interval`)

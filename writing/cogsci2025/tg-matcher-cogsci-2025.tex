@@ -396,12 +396,12 @@ were right more often than not, which was far above the 1/12 = 0.083
 expected by random chance (OR = 1.93 {[}1.05, 3.62{]}). There were not
 large effects of condition (Figure \ref{expt2-condition} middle panel).
 Participants tended to be less accurate at descriptions from the last
-round (OR of last round = 0.77 {[}0.53, 1.1{]}). There was not a clear
+round (OR of last round = 0.77 {[}0.53, 1.10{]}). There was not a clear
 effect of original group size (OR of 6-player game = 1.15 {[}0.89,
 1.47{]}), but there was an interaction between round and group size (OR
-= 1.49 {[}1.06, 2.1{]}). Later transcripts from larger games were easier
-to understand, but earlier transcripts from smaller games were easier to
-understand.
+= 1.49 {[}1.06, 2.10{]}). Later transcripts from larger games were
+easier to understand, but earlier transcripts from smaller games were
+easier to understand.
 
 Much of the variation in accuracy was driven not by condition, but by
 the target image (OR of standard deviation of image distribution = 2.66
@@ -427,11 +427,11 @@ the strong variation based on target image (OR of SD of images = 2.25
 As additional post-hoc predictors, we examined the accuracy of the
 in-game matchers from Boyce et al. (2024) and the length of the
 description. In both experiments, in-game accuracy was predictive of
-naïve matcher accuracy (Expt 2a OR = 3.38 {[}2.46, 4.7{]}, Expt 2b OR =
-2.17 {[}1.7, 2.77{]}). The log number of words in the description was
+naïve matcher accuracy (Expt 2a OR = 3.38 {[}2.46, 4.70{]}, Expt 2b OR =
+2.17 {[}1.70, 2.77{]}). The log number of words in the description was
 not predictive in Experiment 2a (OR = 1.05 {[}0.94, 1.17{]}), but longer
-descriptions were slightly beneficial in Experiment 2b (OR = 1.1
-{[}1.01, 1.2{]}).
+descriptions were slightly beneficial in Experiment 2b (OR = 1.10
+{[}1.01, 1.20{]}).
 
 \subsection{Model results}\label{model-results}
 
@@ -442,7 +442,7 @@ regression on the descriptions from Experiment 2: correct \({\sim}\)
 group\_size \({\times}\) thickness \({\times}\) round~\({+}\)
 (group\_size \({\times}\) thickness \({\times}\)
 round\textbar correct\_tangram). The CLIP-MLP model was far above
-chance, but had lower accuracy than the human participants (OR = 0.6
+chance, but had lower accuracy than the human participants (OR = 0.60
 {[}0.45, 0.82{]}).
 
 None of the fixed effects in the model were significant, and there was
@@ -452,9 +452,9 @@ the effect of later round (1.56 {[}1.29, 2.09{]}).
 
 As additional predictors, we checked the effect of in-game matcher
 accuracy and the length of the description. CLIP-MLP had higher accuracy
-when in-game matcher accuracy was higher (OR = 1.5 {[}1.33, 1.69{]}),
+when in-game matcher accuracy was higher (OR = 1.50 {[}1.33, 1.69{]}),
 and the model did better on shorter descriptions (OR for log words =
-0.85 {[}0.82, 0.9{]}). Long descriptions may be more difficult because
+0.85 {[}0.82, 0.90{]}). Long descriptions may be more difficult because
 they are further further from the model's training distribution of image
 captions.
 
@@ -528,16 +528,16 @@ logistic regression: correct \({\sim}\) orig\_repNum \({\times}\)
 condition~\({+}\) matcher\_trialNum~\({+}\) (1\textbar gameId)~\({+}\)
 (1\textbar correct\_tangram)~\({+}\) (1\textbar workerid). The
 descriptions were more transparent when they were presented in a yoked
-order (OR = 2.2 {[}1.63, 3{]}, Figure \ref{yoked}). In the shuffled
+order (OR = 2.20 {[}1.63, 3.00{]}, Figure \ref{yoked}). In the shuffled
 condition, there was no main effect of round number (OR for one round
 later = 0.99 {[}0.95, 1.02{]}), but there was a marginal interaction
 where the benefit of the yoked condition decreased for later rounds (OR
-for one round later = 0.94 {[}0.89, 1{]}). This was offset by matchers
-in both conditions improving at the task over time (OR for one trial
-later in matcher viewing order = 1.02 {[}1.02, 1.02{]}). In the yoked
-condition round and trial number were aligned, so an improvement over
-time could be either from matcher practice or from descriptions being
-easier to understand. In the shuffled condition, matcher practice
+for one round later = 0.94 {[}0.89, 1.00{]}). This was offset by
+matchers in both conditions improving at the task over time (OR for one
+trial later in matcher viewing order = 1.02 {[}1.02, 1.02{]}). In the
+yoked condition round and trial number were aligned, so an improvement
+over time could be either from matcher practice or from descriptions
+being easier to understand. In the shuffled condition, matcher practice
 effects did not correlate with position in the original game.
 
 Comparing to the performance of in-game matchers, we can separate out
@@ -549,8 +549,8 @@ matcher\_trialNum~\({+}\) (1\textbar gameId)~\({+}\)
 benefit to seeing the items in order (OR = 2.24 {[}1.63, 3.04{]}) and a
 larger benefit to being a participant during the game (OR = 4.35
 {[}2.77, 6.89{]}). The benefit of seeing the items in order wanes in
-later blocks (OR = 0.94 {[}0.89, 1{]}), but the benefit of being in the
-game does not (OR = 1.06 {[}0.95, 1.18{]}). In all cases, there is a
+later blocks (OR = 0.94 {[}0.89, 1.00{]}), but the benefit of being in
+the game does not (OR = 1.06 {[}0.95, 1.18{]}). In all cases, there is a
 baseline improvement over trials (OR = 1.02 {[}1.02, 1.02{]}).
 
 The accuracy of the CLIP-MLP model is worse than the shuffled human
