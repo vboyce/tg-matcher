@@ -18,9 +18,9 @@ import CallFunctionPlugin from "@jspsych/plugin-call-function";
 import SurveyTextPlugin from "@jspsych/plugin-survey-text";
 
 import { proliferate } from "./proliferate.js";
-import { do_yoked_stimuli } from "./helper.js";
+import { subset } from "./helper.js";
 
-import { stimuli } from "./yoked.js";
+import { stimuli } from "./stimuli.js";
 import {
   choices,
   all_images,
@@ -35,8 +35,6 @@ import {
   POST_SURVEY_TEXT,
   DEBRIEF,
   INSTRUCTIONS,
-  spr_instructions,
-  select_instructions,
 } from "./instructions.js";
 /**
  * This function will be executed by jsPsych Builder and is expected to run the jsPsych experiment
@@ -44,11 +42,10 @@ import {
  * @type {import("jspsych-builder").RunFunction}
  */
 
-const NUM_ITEMS = 72;
+const NUM_ITEMS = 60;
 const BONUS = 5;
 
-let yoked = Math.random() > 0.5 ? "yoked" : "shuffled";
-const select_stimuli = do_yoked_stimuli(stimuli, yoked);
+const select_stimuli = subset(stimuli, NUM_ITEMS);
 const trials = select_stimuli.length;
 export async function run({
   assetPaths,
@@ -59,8 +56,21 @@ export async function run({
 }) {
   const jsPsych = initJsPsych({
     on_close: function () {
+      console.log("start the thing");
       var data = jsPsych.data.get().values();
-      proliferate.submit({ trials: data });
+      console.log("middle");
+      console.log(data);
+      console.log(data[0]);
+      proliferate.submit(
+        { trials: data },
+        () => {
+          console.log("doing the thing");
+        },
+        (i) => {
+          console.log("waaaah");
+          console.log(JSON.stringify(i));
+        }
+      );
     },
   });
 
@@ -102,9 +112,7 @@ export async function run({
   let spr = {
     type: SprButtonPlugin,
     prompt: function () {
-      return (
-        spr_instructions + format_header(done, trials, countCorrect, BONUS)
-      );
+      return format_header(done, trials, countCorrect, BONUS);
     },
     style: "word",
     css_classes: ["tangram-display"],
@@ -123,30 +131,20 @@ export async function run({
 
       return html;
     }),
-    data: {
-      gameId: jsPsych.timelineVariable("gameId"),
-      correct_tangram: jsPsych.timelineVariable("tangram"),
-      text: jsPsych.timelineVariable("text"),
-      orig_repNum: jsPsych.timelineVariable("repNum"),
-      condition: yoked,
-      orig_trialNum: jsPsych.timelineVariable("trialNum"),
-      type: "reading",
-    },
-    button_enabled: false,
+    enable_button: false,
   };
 
   let trial = {
     type: SprButtonPlugin,
     prompt: function () {
-      return (
-        select_instructions + format_header(done, trials, countCorrect, BONUS)
-      );
+      return format_header(done, trials, countCorrect, BONUS);
     },
     style: "all",
     enable_keypress: false,
     feedback: "",
     css_classes: ["tangram-display"],
     stimulus: function () {
+      console.log(jsPsych.timelineVariable("tangram"));
       return format_spr(jsPsych.timelineVariable("text"));
     },
     button_choices: choices,
@@ -163,10 +161,8 @@ export async function run({
     data: {
       gameId: jsPsych.timelineVariable("gameId"),
       correct_tangram: jsPsych.timelineVariable("tangram"),
+      condition: jsPsych.timelineVariable("size_round"),
       text: jsPsych.timelineVariable("text"),
-      orig_repNum: jsPsych.timelineVariable("repNum"),
-      condition: yoked,
-      orig_trialNum: jsPsych.timelineVariable("trialNum"),
       type: "selection",
     },
     on_finish: function (data) {
@@ -194,21 +190,12 @@ export async function run({
       return give_feedback(last_trial_correct);
     },
     prompt: function () {
-      return "<p>&nbsp;</p>" + format_header(done, trials, countCorrect, BONUS);
+      return format_header(done, trials, countCorrect, BONUS);
     },
     style: "all",
     enable_keypress: false,
-    button_enabled: false,
     css_classes: ["tangram-display"],
-    data: {
-      gameId: jsPsych.timelineVariable("gameId"),
-      correct_tangram: jsPsych.timelineVariable("tangram"),
-      text: jsPsych.timelineVariable("text"),
-      orig_repNum: jsPsych.timelineVariable("repNum"),
-      condition: yoked,
-      orig_trialNum: jsPsych.timelineVariable("trialNum"),
-      type: "feedback",
-    },
+    data: { type: "feedback" },
     stimulus: function () {
       return format_spr(jsPsych.timelineVariable("text"));
     },
@@ -260,7 +247,7 @@ export async function run({
     timeline.push(consent);
     timeline.push(instructions);
     const test = {
-      timeline: [spr, trial, feedback],
+      timeline: [trial, feedback],
       timeline_variables: select_stimuli,
     };
     timeline.push(test);

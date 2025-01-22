@@ -104,7 +104,7 @@ We recruited English-speaking participants from Prolific. Participants were dire
 We used CLIP (`clip-vit-large-patch14`) as a listener model for our domain [@radford2021]. CLIP is a natural choice for reference games, as the model is trained to estimate the correspondence between images and phrases in natural language. We pre-processed the text by concatenating all the messages sent by the speaker for a given trial, and ran CLIP for the concatenated text and all 12 tangram shapes. We then computed probabilities for each tangram shape using CLIP's logits. The simplest way to do this is simply taking the softmax of the logits. However, the tangram shapes were possibly out the distribution for the model, which led it to favor some images over others regardless of the content of the text. To fix this, we trained readout models that made more calibrated predictions using CLIP's logits.
 
 ```{r, eval=F}
-df_classifiers <- read_csv(here("data/classifier_comparison-openai--clip-vit-large-patch14.csv"))
+df_classifiers <- read_csv(here("model-code/ classifier_comparison-openai--clip-vit-large-patch14.csv"))
 df_clf_comp <- df_classifiers |>
   group_by(classifier, params) |>
   summarize(mean_acc = mean(accuracy), sd_acc = sd(accuracy))

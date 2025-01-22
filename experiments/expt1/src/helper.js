@@ -48,23 +48,23 @@ export function no_repetitions(items) {
 }
 export function subset(items, total) {
   let select_items = [];
-  //let types = ["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"];
+  let types = ["2_rotate_1", "2_rotate_6", "6_rotate_1", "6_rotate_6"];
+  let per = total / types.length;
   shuffle(items);
-  select_items = items.slice(0, total);
-  return no_repetitions(select_items);
-}
-
-export function do_yoked_stimuli(stimuli, yoked) {
-  let conditions = [...new Set(stimuli.map((i) => i.gameId))];
-  shuffle(conditions);
-  let target_condition = conditions[0];
-  let target_items = stimuli.filter((i) => i.gameId == target_condition);
-  if (yoked == "yoked") {
-    return target_items;
-  } else {
-    shuffle(target_items);
-    return no_repetitions(target_items);
+  for (let i = 0; i < types.length; i++) {
+    let k = 0;
+    for (let j = 0; j < items.length; j++) {
+      let item = items[j];
+      if (types[i] == item.size_round) {
+        select_items.push(item);
+        k++;
+        if (k >= per) {
+          break;
+        }
+      }
+    }
   }
+  return no_repetitions(select_items);
 }
 export function counterbalance(item_types, items) {
   let select_items = [];
