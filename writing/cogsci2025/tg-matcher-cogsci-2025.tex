@@ -232,8 +232,7 @@ made more calibrated predictions using CLIP's logits.
     \toprule
     \multicolumn{2}{l}{Classifier} & Accuracy \\ 
     \midrule
-    \multicolumn{2}{l}{Base CLIP TODO} & \\
-    & No penalty & \underline{\smash{TODO BEN}} \\
+    \multicolumn{2}{l}{CLIP without readout} & \smash{0.31} \\
     \multicolumn{2}{l}{Logistic regression} & \\
     & No penalty & \underline{\smash{0.50 (0.01)}} \\ 
     & \vspace{1mm}L2 penalty & 0.50  (0.01) \\ 
@@ -387,21 +386,21 @@ saw 64 trials (8 in each of the 8 conditions). Overall, participants saw
 
 \subsubsection{Experiment 2a}\label{experiment-2a-1}
 
-For Experiment 2a, we ran a mixed effects logistic model of naïve
-matcher accuracy: correct \({\sim}\) group\_size \({\times}\)
-round~\({+}\) trial\_order~\({+}\) (group\_size \({\times}\)
-round\textbar correct\_tangram)~\({+}\) (group\_size \({\times}\)
-round~\({+}\) trial\_order\textbar workerid). Overall, naïve matchers
-were right more often than not, which was far above the 1/12 = 0.083
-expected by random chance (OR = 1.93 {[}1.05, 3.62{]}). There were not
-large effects of condition (Figure \ref{expt2-condition} middle panel).
-Participants tended to be less accurate at descriptions from the last
-round (OR of last round = 0.77 {[}0.53, 1.10{]}). There was not a clear
-effect of original group size (OR of 6-player game = 1.15 {[}0.89,
-1.47{]}), but there was an interaction between round and group size (OR
-= 1.49 {[}1.06, 2.10{]}). Later transcripts from larger games were
-easier to understand, but earlier transcripts from smaller games were
-easier to understand.
+For Experiment 2a, we ran a Bayesian mixed effects logistic model of
+naïve matcher accuracy in brms (Bürkner, 2018).\footnote{correct
+  \({\sim}\) group\_size \({\times}\) round~\({+}\) trial\_order~\({+}\)
+  (group\_size \({\times}\) round\textbar correct\_tangram)~\({+}\)
+  (group\_size \({\times}\) round~\({+}\) trial\_order\textbar workerid)}
+Overall, naïve matchers were right 62\% of the time, which was far above
+the 1/12 = 8.3\% expected by random chance (OR = 1.93 {[}1.05, 3.62{]}).
+There were not large effects of condition (Figure \ref{expt2-condition}
+middle panel). Participants tended to be less accurate at descriptions
+from the last round (OR of last round = 0.77 {[}0.53, 1.10{]}). There
+was not a clear effect of original group size (OR of 6-player game =
+1.15 {[}0.89, 1.47{]}), but there was an interaction between round and
+group size (OR = 1.49 {[}1.06, 2.10{]}). Later transcripts from larger
+games were easier to understand, but earlier transcripts from smaller
+games were easier to understand.
 
 Much of the variation in accuracy was driven not by condition, but by
 the target image (OR of standard deviation of image distribution = 2.66
@@ -410,16 +409,20 @@ target than others (Figure \ref{expt2-tangram}).
 
 \subsubsection{Experiment 2b}\label{experiment-2b-1}
 
-For Experiment 2b we ran a similar mixed effects logistic model to
-consider the effects of group size, thickness, round, and their
-interactions. Naïve matchers were above chance (OR = 1.81 {[}1.06,
-3.08{]}, Figure \ref{expt2-condition} ). Similar to experiment 2a, there
-were not substantial effects of condition. Last round descriptions had
-slightly lower accuracy (OR of last round = 0.64 {[}0.47, 0.85{]}), but
-there was an interaction with thickness, where for thin games, last
-round descriptions were less opaque (OR = 1.55 {[}1.02, 2.33{]}). Again
-some of the uncertainty in estimating the fixed effects was driven by
-the strong variation based on target image (OR of SD of images = 2.25
+For Experiment 2b we ran a similar Bayesian mixed effects logistic
+model.\footnote{correct \({\sim}\) group\_size \({\times}\) thickness
+  \({\times}\) round~\({+}\) trial\_order~\({+}\) (group\_size
+  \({\times}\) thickness \({\times}\)
+  round\textbar correct\_tangram)~\({+}\) (group\_size \({\times}\)
+  thickness \({\times}\) round~\({+}\) trial\_order\textbar workerid)}
+Naïve matchers were above chance (OR = 1.81 {[}1.06, 3.08{]}, Figure
+\ref{expt2-condition} ). Similar to experiment 2a, there were not
+substantial effects of condition. Last round descriptions had slightly
+lower accuracy (OR of last round = 0.64 {[}0.47, 0.85{]}), but there was
+an interaction with thickness, where for thin games, last round
+descriptions were less opaque (OR = 1.55 {[}1.02, 2.33{]}). Again some
+of the uncertainty in estimating the fixed effects was driven by the
+strong variation based on target image (OR of SD of images = 2.25
 {[}1.67, 3.59{]}, Figure \ref{expt2-tangram}).
 
 \subsubsection{Additional predictors}\label{additional-predictors}
@@ -437,13 +440,13 @@ descriptions were slightly beneficial in Experiment 2b (OR = 1.10
 
 As a computational comparison, we looked at the CLIP-MLP model's
 performance on the same descriptions. We used the probability the model
-assigned to the correct target as our dependent measure and fit a beta
-regression on the descriptions from Experiment 2: correct \({\sim}\)
-group\_size \({\times}\) thickness \({\times}\) round~\({+}\)
-(group\_size \({\times}\) thickness \({\times}\)
-round\textbar correct\_tangram). The CLIP-MLP model was far above
-chance, but had lower accuracy than the human participants (OR = 0.60
-{[}0.45, 0.82{]}).
+assigned to the correct target as our dependent measure and fit a
+Bayesian mixed effects beta regression on the descriptions from
+Experiment 2.\footnote{correct \({\sim}\) group\_size \({\times}\)
+  thickness \({\times}\) round~\({+}\) (group\_size \({\times}\)
+  thickness \({\times}\) round\textbar correct\_tangram)} The CLIP-MLP
+model was far above chance, but had lower accuracy than the human
+participants (OR = 0.60 {[}0.45, 0.82{]}).
 
 None of the fixed effects in the model were significant, and there was
 wide uncertainty for all of them. There was substantial by-target image
@@ -524,28 +527,29 @@ history would help make later round descriptions more understandable to
 participants in the yoked condition.
 
 We compared accuracy across the yoked and shuffled conditions with a
-logistic regression: correct \({\sim}\) orig\_repNum \({\times}\)
-condition~\({+}\) matcher\_trialNum~\({+}\) (1\textbar gameId)~\({+}\)
-(1\textbar correct\_tangram)~\({+}\) (1\textbar workerid). The
-descriptions were more transparent when they were presented in a yoked
-order (OR = 2.20 {[}1.63, 3.00{]}, Figure \ref{yoked}). In the shuffled
-condition, there was no main effect of round number (OR for one round
-later = 0.99 {[}0.95, 1.02{]}), but there was a marginal interaction
-where the benefit of the yoked condition decreased for later rounds (OR
-for one round later = 0.94 {[}0.89, 1.00{]}). This was offset by
-matchers in both conditions improving at the task over time (OR for one
-trial later in matcher viewing order = 1.02 {[}1.02, 1.02{]}). In the
-yoked condition round and trial number were aligned, so an improvement
-over time could be either from matcher practice or from descriptions
-being easier to understand. In the shuffled condition, matcher practice
-effects did not correlate with position in the original game.
+Bayesian mixed effects logistic regression.\footnote{correct \({\sim}\)
+  orig\_repNum \({\times}\) condition~\({+}\) matcher\_trialNum~\({+}\)
+  (1\textbar gameId)~\({+}\) (1\textbar correct\_tangram)~\({+}\)
+  (1\textbar workerid)}. The descriptions were more transparent when
+they were presented in a yoked order (OR = 2.20 {[}1.63, 3.00{]}, Figure
+\ref{yoked}). In the shuffled condition, there was no main effect of
+round number (OR for one round later = 0.99 {[}0.95, 1.02{]}), but there
+was a marginal interaction where the benefit of the yoked condition
+decreased for later rounds (OR for one round later = 0.94 {[}0.89,
+1.00{]}). This was offset by matchers in both conditions improving at
+the task over time (OR for one trial later in matcher viewing order =
+1.02 {[}1.02, 1.02{]}). In the yoked condition round and trial number
+were aligned, so an improvement over time could be either from matcher
+practice or from descriptions being easier to understand. In the
+shuffled condition, matcher practice effects did not correlate with
+position in the original game.
 
 Comparing to the performance of in-game matchers, we can separate out
 the benefits of seeing the descriptions in order versus being a
-participant in the group: correct \({\sim}\) orig\_repNum \({\times}\)
-order~\({+}\) orig\_repNum \({\times}\) setting~\({+}\)
-matcher\_trialNum~\({+}\) (1\textbar gameId)~\({+}\)
-(1\textbar correct\_tangram)~\({+}\) (1\textbar workerid). There is a
+participant in the group.\footnote{correct \({\sim}\) orig\_repNum
+  \({\times}\) order~\({+}\) orig\_repNum \({\times}\) setting~\({+}\)
+  matcher\_trialNum~\({+}\) (1\textbar gameId)~\({+}\)
+  (1\textbar correct\_tangram)~\({+}\) (1\textbar workerid)} There is a
 benefit to seeing the items in order (OR = 2.24 {[}1.63, 3.04{]}) and a
 larger benefit to being a participant during the game (OR = 4.35
 {[}2.77, 6.89{]}). The benefit of seeing the items in order wanes in
@@ -637,6 +641,10 @@ be run on subsets or ablations of descriptive text.
 Boyce, V., Hawkins, R., Goodman, N. D., \& Frank, M. C. (2024).
 \emph{Interaction structure constrains the emergence of conventions in
 group communication}.
+
+\bibitem[\citeproctext]{ref-burkner2018}
+Bürkner, P.-C. (2018). Advanced bayesian multilevel modeling with the r
+package brms. \emph{The R Journal}, \emph{10}(1), 395--411.
 
 \bibitem[\citeproctext]{ref-chen2016xgboost}
 Chen, T., \& Guestrin, C. (2016). Xgboost: {A} scalable tree boosting

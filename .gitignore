@@ -1,3 +1,5 @@
+analysis-code/models/*.rds
+
 analysis-code/*.html
 *.aux
 *.out

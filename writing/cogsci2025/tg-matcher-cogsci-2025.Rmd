@@ -57,396 +57,12 @@ prediction_loc <- "model-code/model_predictions"
 mod_results <- "analysis-code/models/summary"
 mod_form <- "analysis-code/models/formulae"
 mod_me <- "analysis-code/models/mixed_fx"
-```
 
-```{r data_loading, include=FALSE}
-expt_1_data <- read_csv(here(data_loc, "expt1_full_data.csv")) |>
-  select(-proliferate.condition) |>
-  filter(!is.na(response)) |>
-  filter(!is.na(correct_tangram)) |>
-  select(
-    workerid, button_rt, condition, correct, correct_tangram,
-    gameId, selected, text, trial_index
-  ) |>
-  mutate(workerid = as.factor(workerid)) |>
-  mutate(rt_sec = button_rt / 1000) |>
-  separate(condition, c("group_size", NA, "round")) |>
-  mutate(
-    group_size = str_c(group_size, "_player"),
-    round = str_c("round_", round),
-    correct = as.numeric(correct)
-  ) |>
-  group_by(workerid) |>
-  mutate(trial_order = row_number()) |>
-  ungroup() |>
-  mutate(source = "naïve", expt = "Expt 2", thickness = "medium")
-
-expt_2_data <- read_csv(here(data_loc, "expt2_full_data.csv")) |>
-  select(-proliferate.condition) |>
-  filter(!is.na(response)) |>
-  filter(!is.na(correct_tangram)) |>
-  select(
-    workerid, button_rt, condition, correct, correct_tangram,
-    gameId, selected, text, trial_index
-  ) |>
-  mutate(workerid = as.factor(workerid)) |>
-  mutate(rt_sec = button_rt / 1000) |>
-  separate(condition, c("group_size", "thickness", "round")) |>
-  mutate(
-    condition = str_c(group_size, "_", thickness),
-    group_size = str_c(group_size, "_player"),
-    round = str_c("round_", round),
-    correct = as.numeric(correct)
-  ) |>
-  group_by(workerid) |>
-  mutate(trial_order = row_number()) |>
-  ungroup() |>
-  mutate(source = "naïve", expt = "Expt 2")
-
-expt_3_data <- read_csv(here(data_loc, "tgmatchercalibration-trials.csv")) |>
-  select(-proliferate.condition) |>
-  filter(!is.na(response)) |>
-  filter(!is.na(correct_tangram)) |>
-  select(
-    workerid, button_rt, correct, correct_tangram,
-    gameId, selected, text, trial_index
-  ) |>
-  mutate(workerid = as.factor(workerid)) |>
-  mutate(
-    rt_sec = button_rt / 1000,
-    correct = as.numeric(correct)
-  ) |>
-  group_by(workerid) |>
-  mutate(trial_order = row_number()) |>
-  ungroup() |>
-  mutate(source = "naïve")
-
-expt_4_data <- read_csv(here(data_loc, "tgmatcheryoked-trials.csv")) |>
-  select(-proliferate.condition) |>
-  filter(!is.na(correct_tangram)) |>
-  select(
-    workerid, button_rt, correct, correct_tangram, condition,
-    gameId, selected, text, trial_index, type, rt, orig_trialNum, orig_repNum
-  ) |>
-  mutate(workerid = as.factor(workerid)) |>
-  mutate(
-    matcher_trialNum = (trial_index - 3) %/% 3,
-    matcher_repNum = matcher_trialNum %/% 12
-  ) |>
-  mutate(workerid = ifelse(workerid == "3157" & condition == "yoked", "3157a", workerid)) |> # somehow two participants were assigned to 3157 -- but each set looks complete?
-  filter(workerid != "141") |>
-  filter(workerid != "35") |> # exclude two participants who didn't finish
-  mutate(source = "naïve", round = str_c("round_", orig_repNum + 1))
-
-mlp_mod <- read_csv(here(prediction_loc, "mlp_best.csv")) |>
-  pivot_longer(p_A:p_L) |>
-  mutate(name = str_sub(name, -1)) |>
-  filter(tangram == name) |>
-  mutate(
-    round = str_c("round_", repNum + 1),
-    correct = value,
-    source = "model"
-  ) |>
-  select(correct_tangram = tangram, gameId, round, correct, source)
-
-
-# Original study accuracies
-url <- "https://raw.githubusercontent.com/vboyce/multiparty-tangrams/main/"
-
-one_round_results <- read_rds(str_c(url, "data/study1/round_results.rds")) %>% mutate(rotate = "rotate")
-two_a_round_results <- read_rds(str_c(url, "data/study2a/round_results.rds")) %>% mutate(rotate = "no_rotate")
-two_b_round_results <- read_rds(str_c(url, "data/study2b/round_results.rds")) %>% mutate(rotate = "full_feedback")
-two_c_round_results <- read_rds(str_c(url, "data/study2c/round_results.rds")) |> mutate(rotate = "emoji")
-three_round_results <- read_rds(str_c(url, "data/study3/round_results.rds")) |> rename(`_id` = "X_id", condition = name)
-
-one_chat <- read_csv(str_c(url, "data/study1/filtered_chat.csv")) |> mutate(rotate = str_c(as.character(numPlayers), "_rotate"))
-two_a_chat <- read_csv(str_c(url, "data/study2a/filtered_chat.csv")) |> mutate(rotate = "no_rotate")
-two_b_chat <- read_csv(str_c(url, "data/study2b/filtered_chat.csv")) |>
-  mutate(rotate = "full_feedback") |>
-  select(-`row num`)
-two_c_chat <- read_csv(str_c(url, "data/study2c/filtered_chat.csv")) |>
-  mutate(rotate = "emoji") |>
-  select(-type)
-three_chat <- read_csv(str_c(url, "data/study3/filtered_chat.csv")) |>
-  inner_join(read_rds(str_c(url, "data/study3/round_results.rds")) |> select(gameId, trialNum, condition = name) |> unique()) |>
-  select(-rowid, -type)
-
-original_results_raw <- one_round_results |>
-  rbind(two_a_round_results) |>
-  rbind(two_b_round_results) |>
-  rbind(two_c_round_results) |>
-  mutate(activePlayerCount = NA) |>
-  rename(condition = rotate) |>
-  rbind(three_round_results) |>
-  mutate(
-    round = str_c("round_", repNum + 1),
-    correct_tangram = tangram,
-    correct = ifelse(correct, 1, 0),
-    source = "original"
-  )
-
-original_results <- original_results_raw |>
-  group_by(gameId, correct_tangram, round, source) |>
-  summarize(correct = mean(correct)) |>
-  select(gameId, correct_tangram, round, correct, source)
-
-original_length <- one_chat |>
-  rbind(two_a_chat) |>
-  rbind(two_b_chat) |>
-  rbind(two_c_chat) |>
-  mutate(activePlayerCount = NA) |>
-  rename(condition = rotate) |>
-  rbind(three_chat) |>
-  filter(!is.chitchat) |>
-  filter(role == "speaker") |>
-  mutate(correct_tangram = str_sub(target, -5, -5)) |>
-  group_by(repNum, gameId, correct_tangram, condition, numPlayers) |>
-  mutate(utt_length_words = str_count(spellchecked, "\\W+") + 1) %>%
-  summarize(
-    text = paste0(text, collapse = ", "),
-    total_num_words = sum(utt_length_words, na.rm = T) %>% as.numeric(),
-    log_words = log(total_num_words)
-  ) |>
-  mutate(round = str_c("round_", repNum + 1)) |>
-  select(gameId, correct_tangram, round, total_num_words, log_words)
+source(here("analysis-code/helper_cogsci.R"))
 ```
 
 
-```{r, eval=F}
-# model predicctions (expt 3)
 
-mod_3 <- here(mod_loc, "acc_4.rds") |> read_rds()
-
-preds_3 <- expand_grid(
-  matcher_trialNum = 0:71,
-  condition = c("yoked", "shuffled"),
-  orig_repNum= 0:5, 
-    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"))|>
-  mutate(matching = matcher_trialNum %/% 12 == orig_repNum) |> 
-  filter(matching | condition=="shuffled") |> 
-   add_linpred_draws(mod_3, value = "predicted", re_formula = ~ (1 | correct_tangram)) |> 
-  group_by(condition, orig_repNum, .draw) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(condition, orig_repNum) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |> write_rds(here(mod_loc, "predicted", "acc_3.rds"))
-
-mod_3_no_trial <- here(mod_loc, "acc_4_no_trial.rds") |> read_rds()
-
-preds_3_no_trial <- expand_grid(
-  matcher_trialNum = 0:71,
-  condition = c("yoked", "shuffled"),
-  orig_repNum= 0:5, 
-    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"))|>
-  mutate(matching = matcher_trialNum %/% 12 == orig_repNum) |> 
-  filter(matching | condition=="shuffled") |> 
-   add_linpred_draws(mod_3_no_trial, value = "predicted", re_formula = ~ (1 | correct_tangram)) |> 
-  group_by(condition, orig_repNum, .draw) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(condition, orig_repNum) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |> write_rds(here(mod_loc, "predicted", "acc_3_no_trial.rds"))
-
-mod_3_mlp <- here(mod_loc, "acc_yoked_mlp_beta.rds") |> read_rds()
-
-preds_3_mlp <- expand_grid(
-  orig_repNum= 0:5, 
-    correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"))|>
-   add_linpred_draws(mod_3_mlp, value = "predicted", re_formula = ~ (1 | correct_tangram)) |> 
-  group_by(orig_repNum, .draw) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(orig_repNum) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |> write_rds(here(mod_loc, "predicted", "acc_3_mlp.rds"))
-
-```
-
-```{r, eval=F}
-# model predictions  (expt 2)
-
-mod_2a <- here(mod_loc, "acc_1.rds") |> read_rds()
-mod_2b <- here(mod_loc, "acc_2.rds") |> read_rds()
-
-preds_2a <- expand_grid(
-  trial_order = 1:60, group_size = c("6_player", "2_player"),
-  thickness = c("medium"),
-  round = c("round_1", "round_6"),
-  correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
-) |>
-  add_linpred_draws(mod_2a, value = "predicted", re_formula = ~ (group_size * round | correct_tangram))
-
-
-preds_2b <- expand_grid(
-  trial_order = 1:60, group_size = c("6_player", "2_player"),
-  thickness = c("thin", "thick"),
-  round = c("round_1", "round_6"),
-  correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
-) |>
-  add_linpred_draws(mod_2b, value = "predicted", re_formula = ~ (group_size * thickness * round | correct_tangram))
-
-preds_2 <- preds_2a |> bind_rows(preds_2b)
-
-preds_2_by_cond <- preds_2 |>
-  group_by(group_size, round, thickness, .draw) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(group_size, round, thickness) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |>
-  write_rds(here(mod_loc, "predicted", "acc_2_cond.rds"))
-
-preds_2_by_tangram <- preds_2 |>
-    group_by(group_size, round, thickness, .draw, correct_tangram) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(group_size, correct_tangram) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |>
-  write_rds(here(mod_loc, "predicted", "acc_2_tangram.rds"))
-
-
-# model predictions mlp expt 2
-
-mod_2_mlp <- here(mod_loc, "acc_mlp_1_2_beta.rds") |> read_rds()
-
-preds_2_mlp <- expand_grid(
-  group_size = c("6_player", "2_player"),
-  thickness = c("thick", "thin", "medium"),
-  round = c("round_1", "round_6"),
-  correct_tangram = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
-) |>
-  add_linpred_draws(mod_2_mlp, value = "predicted", re_formula = ~ (group_size * thickness * round | correct_tangram))
-
-preds_2_mlp_condition <- preds_2_mlp |>
-  group_by(group_size, round, thickness, .draw) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(group_size, round, thickness) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |>
-  write_rds(here(mod_loc, "predicted", "acc_2_mlp_cond.rds"))
-
-preds_2_mlp_tangram <- preds_2_mlp |>
-  group_by(group_size, round, thickness, .draw, correct_tangram) |>
-  summarize(predicted = mean(predicted)) |>
-  group_by(group_size, correct_tangram) |>
-  summarize(
-    mean = mean(predicted),
-    low = quantile(predicted, .025),
-    high = quantile(predicted, .975)
-  ) |>
-  write_rds(here(mod_loc, "predicted", "acc_2_mlp_tangram.rds"))
-```
-
-```{r, eval=F}
-library(tidybayes)
-
-save_summary <- function(model) {
-  intervals <- gather_draws(model, `b_.*`, regex = T) %>% mean_qi()
-
-  stats <- gather_draws(model, `b_.*`, regex = T) %>%
-    mutate(above_0 = ifelse(.value > 0, 1, 0)) %>%
-    group_by(.variable) %>%
-    summarize(pct_above_0 = mean(above_0)) %>%
-    left_join(intervals, by = ".variable") %>%
-    mutate(
-      lower = .lower,
-      upper = .upper,
-      Term = str_sub(.variable, 3, -1),
-      Estimate = .value
-    ) %>%
-    select(Term, Estimate, lower, upper)
-
-  stats
-}
-
-save_me <- function(model) {
-  intervals <- gather_draws(model, `sd_.*`, regex = T) %>%
-    mean_qi() |>
-    separate(.variable, into = c("group", "Term"), sep = "__") |>
-    mutate(
-      lower = .lower,
-      upper = .upper,
-      group = str_sub(group, 4, -1),
-      Estimate = .value
-    ) %>%
-    select(group, Term, Estimate, lower, upper)
-
-  intervals
-}
-
-do_model <- function(path) {
-  model <- read_rds(here(mod_loc, path))
-  save_summary(model) |> write_rds(here(mod_loc, "summary", path))
-  model$formula |> write_rds(here(mod_loc, "formulae", path))
-  print(summary(model))
-}
-
-do_me <- function(path) {
-  model <- read_rds(here(mod_loc, path))
-  message(path)
-  save_me(model) |> write_rds(here(mod_loc, "mixed_fx", path))
-}
-
-mods_me <- c(
-  "acc_1.rds", "acc_2.rds", "acc_4.rds", "acc_mlp_1_2_beta.rds", "acc_yoked_mlp_beta.rds", "yoked_shuffled_original.rds"
-) |> walk(~ do_me(.))
-
-
-mods <- list.files(path = here(mod_loc), pattern = ".*rds") |> walk(~ do_model(.))
-```
-
-```{r}
-stats <- function(model, row, decimal = 2) {
-  model <- model |>
-    mutate(
-      Estimate = round(Estimate, digits = decimal),
-      Lower = round(lower, digits = decimal),
-      Upper = round(upper, digits = decimal),
-      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
-    ) |>
-    select(Term, Estimate, `Credible Interval`)
-  str_c(model[row, 1], ": ", model[row, 2], " ", model[row, 3])
-}
-
-stats_text <- function(model, row, decimal = 2) {
-  model <- model |>
-    mutate(
-      Estimate = round(Estimate, digits = decimal) |> formatC(format='f', digits=decimal ),
-      Lower = round(lower, digits = decimal) |> formatC(format='f', digits=decimal ),
-      Upper = round(upper, digits = decimal) |> formatC(format='f', digits=decimal ),
-      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
-    ) |>
-    select(Term, Estimate, `Credible Interval`)
-  str_c(model[row, 2], "  ", model[row, 3])
-}
-
-form <- function(model_form) {
-  dep <- as.character(model_form$formula[2])
-  ind <- as.character(model_form$formula[3])
-
-  str_c(dep, " ~ ", ind) |>
-    str_replace_all(" ", "") |>
-    str_replace_all("\\*", " ${\\\\times}$ ") |>
-    str_replace_all("\\+", "&nbsp;${+}$ ") |>
-    str_replace_all("~", " ${\\\\sim}$ ")
-}
-```
 
 
 # Introduction
@@ -506,7 +122,6 @@ xtable(df_best_clfs)
 
 df_clf_comp |> arrange(desc(mean_acc))
 
-# TODO: add base CLIP results
 ```
 
 ```{=latex}
@@ -547,59 +162,6 @@ We trained different readout models to assign probabilities to features using CL
 
 # Experiment 1
 ```{r}
-# this is all because I didn't keep the trial number source recorded, so we have a fun time rejoining
-ParseJSONColumn <- function(x) {
-  str_replace_all(x, "'", '"') %>%
-    str_replace_all('Don"t know', "Don't know") %>%
-    str_replace_all('don"t', "don't") |>
-    str_replace_all("None", '"NA"') |>
-    str_replace_all('"SAFE"', "'SAFE'") |>
-    str_replace_all('he"s', "he's") |>
-    str_replace_all('doesn"t', "doesn't") |>
-    str_replace_all('hasn"t', "hasn't") |>
-    str_replace_all('it"s', "it's") |>
-    str_replace_all('It"s', "It's") |>
-    str_replace_all('X" shaped', "'X' shaped") |>
-    str_replace_all('"missing', "missing") |>
-    str_replace_all('"flying"', "flying") |>
-    str_replace_all('"skating"', "skating") |>
-    str_replace_all('"partially sitting"', "partially sitting") |>
-    str_replace_all('"kneeling" and ', "kneeling and ") |>
-    str_replace_all('"partially kneeling"', "partially kneeling") |>
-    str_replace_all('and "bunny"', "and bunny") |>
-    str_replace_all('"square"', "square") |>
-    str_replace_all('heads"', "heads") |>
-    str_replace_all('"italy"', "italy") |>
-    str_replace_all('they"re', "they're") |>
-    str_replace_all('"but why"', "'but why'") |>
-    fromJSON(flatten = T)
-}
-
-labels <- read_csv(here("expt_prep_code/labelled.csv")) |>
-  mutate(text = str_replace_all(text, "'", "") |> str_replace_all('"', "")) |>
-  group_by(tangram, gameId, trialNum, repNum, value, grouping) |>
-  summarize(text = str_c(text, collapse = " "))
-
-expt_3_ready <- expt_3_data |>
-  mutate(new = map(text, ParseJSONColumn)) |>
-  select(-text) |>
-  unnest(new) |>
-  mutate(text = text |> str_replace_all("'", ""), tangram = correct_tangram) |>
-  group_by(workerid, correct, tangram, gameId, trial_order) |>
-  summarize(text = str_c(text, collapse = " ")) |>
-  left_join(labels)
-
-expt_3_summary <- expt_3_ready |>
-  group_by(text, value, tangram, grouping) |>
-  summarize(human_acc = mean(correct), human_n = n()) |>
-  ungroup() |>
-  mutate(grouping = as.factor(grouping) |> reorder(value)) |>
-  group_by(grouping)
-
-expt_3_groups <- expt_3_summary |>
-  group_by(grouping) |>
-  mutate(value = mean(value))
-
 expt_3_cor <- cor.test(expt_3_summary$value, expt_3_summary$human_acc)
 ```
 
@@ -666,7 +228,6 @@ tangram_predicted_expt_2_fig <- read_rds(here(mod_loc, "predicted/acc_2_tangram.
 expt_2_fig_data |> ggplot(aes(x = round, color = source, y = correct, group = interaction(source, group_size), shape = group_size, lty = group_size)) +
   stat_summary(data = expt_2_fig_data |> filter(source == "Original"), geom = "point", fun.data = "mean_cl_boot", position = position_dodge(.4)) +
   stat_summary(data = expt_2_fig_data |> filter(source == "Original"), geom = "line", fun.data = "mean_cl_boot", position = position_dodge(.4)) +
-  
 #stat_summary(data = expt_2_fig_data , geom = "point", fun.data = "mean_cl_boot", position = position_dodge(.4)) +
  # stat_summary(data = expt_2_fig_data , geom = "line", fun.data = "mean_cl_boot", position = position_dodge(.4)) +
   geom_pointrange(data = predicted_expt_2_fig, aes(y = mean, ymax = high, ymin = low), position = position_dodge(.4)) +
@@ -742,103 +303,6 @@ We recruited `r expt_1_data |> select(workerid) |> n_distinct()` participants wh
 After observing limited condition differences in Experiment 2a, we ran a follow-up experiment on descriptions from Experiment 3 of @boyce2024, where the communication channel thicknesses were more extreme. Here, we used a 2x2x2 within subjects design, drawing our transcripts from the first and last rounds of thick and thin, 2- and 6- person games. <!--The "thick" condition had a consistent describer throughout the entire game, let matchers send messages to the chat freely, and showed all participants feedback on everyone's selections, including what the correct answer was. In contrast, the "thin" condition, rotated the role of describer, gave feedback only on individual selections, and describers could not send text messages to the chat, but could only communicate via 4 emoji buttons (to indicate level of understanding). --> In the thin condition, original matchers could only contribute to the chat by sending one of 4 emojis; as the emojis did not have referential content, we did not include them in the transcripts shown to naïve matchers. 
 For experiment 2b, we recruited `r expt_2_data |> select(workerid) |> n_distinct()` participants who each saw 64 trials (8 in each of the 8 conditions). Overall, participants saw `r expt_2_data |> select(gameId, round, correct_tangram) |> n_distinct()` transcripts from `r expt_2_data |> select(gameId) |> n_distinct()` games.  This experiment was pre-registered at  https://osf.io/rdp5k. 
 
-```{r, eval=F}
-acc_priors <- c(
-  set_prior("normal(0,1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd"),
-  set_prior("lkj(1)", class = "cor")
-)
-
-
-acc_mod_1 <- brm(
-  correct ~ group_size * round + trial_order +
-    (group_size * round | correct_tangram) +
-    (group_size * round + trial_order | workerid),
-  data = expt_1_data,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_1"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-# summary(acc_mod_1)
-```
-
-```{r, eval=F}
-acc_mod_2 <- brm(
-  correct ~ group_size * thickness * round + trial_order +
-    (group_size * thickness * round | correct_tangram) +
-    (group_size * thickness * round + trial_order | workerid),
-  data = expt_2_data,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_2"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-
-# summary(acc_mod_2)
-```
-
-```{r}
-original_acc <- original_results |>
-  rename(original_correct = correct) |>
-  ungroup() |>
-  select(round, correct_tangram, gameId, original_correct)
-
-expt_1_data_augment <- expt_1_data |>
-  left_join(original_length) |>
-  left_join(original_acc)
-expt_2_data_augment <- expt_2_data |>
-  left_join(original_length) |>
-  left_join(original_acc)
-```
-
-```{r, eval=F}
-acc_mod_1_orig_acc <- brm(
-  correct ~ original_correct + group_size * round + trial_order +
-    (group_size * round | correct_tangram) +
-    (group_size * round + trial_order | workerid),
-  data = expt_1_data_augment,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_1_orig_acc"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_1_orig_length <- brm(
-  correct ~ log_words + group_size * round + trial_order +
-    (group_size * round | correct_tangram) +
-    (group_size * round + trial_order | workerid),
-  data = expt_1_data_augment,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_1_orig_length"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_2_orig_acc <- brm(
-  correct ~ original_correct + group_size * thickness * round + trial_order +
-    (group_size * thickness * round | correct_tangram) +
-    (group_size * thickness * round + trial_order | workerid),
-  data = expt_2_data_augment,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_2_orig_acc"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_2_orig_length <- brm(
-  correct ~ log_words + group_size * thickness * round + trial_order +
-    (group_size * thickness * round | correct_tangram) +
-    (group_size * thickness * round + trial_order | workerid),
-  data = expt_2_data_augment,
-  family = bernoulli(),
-  file = here(mod_loc, "acc_2_orig_length"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-```
 
 ```{r}
 acc_mod_1 <- read_rds(here(mod_results, "acc_1.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
@@ -868,19 +332,22 @@ acc_mod_mlp_me <- read_rds(here(mod_me, "acc_mlp_1_2_beta.rds")) |> mutate(acros
 acc_mod_mlp_orig_acc <- read_rds(here(mod_results, "acc_mlp_1_2_orig_acc_beta.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
 
 acc_mod_mlp_orig_length <- read_rds(here(mod_results, "acc_mlp_1_2_orig_length_beta.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
+
+#expt_1_data |> summarize(m=mean(correct)) |> mutate(m=round(m*100))
+
 ```
 
 ## Results
 
 ### Experiment 2a
-For Experiment 2a, we ran a mixed effects logistic model of naïve matcher accuracy: `r form(acc_1_form)`. Overall, naïve matchers were right more often than not, which was far above the 1/12 = 0.083 expected by random chance (OR = `r stats_text(acc_mod_1, 1)`).
+For Experiment 2a, we ran a Bayesian mixed effects logistic model of naïve matcher accuracy in brms [@burkner2018].^[`r form(acc_1_form)`] Overall, naïve matchers were right 62% of the time, which was far above the 1/12 = 8.3% expected by random chance (OR = `r stats_text(acc_mod_1, 1)`).
 There were not large effects of condition (Figure \ref{expt2-condition} middle panel). Participants tended to be less accurate at descriptions from the last round (OR of last round = `r stats_text(acc_mod_1, 4)`). There was not a clear effect of original group size (OR of 6-player game = `r stats_text(acc_mod_1, 2)`), but there was an interaction between round and group size (OR = `r stats_text(acc_mod_1, 3)`). Later transcripts from larger games were easier to understand, but earlier transcripts from smaller games were easier to understand.
 
 Much of the variation in accuracy was driven not by condition, but by the target image (OR of standard deviation of image distribution = `r stats_text(acc_mod_1_me, 3)`). Some images were much easier to identify as the target than others (Figure \ref{expt2-tangram}). 
 
 ### Experiment 2b
 
-For Experiment 2b we ran a similar mixed effects logistic model to consider the effects of group size, thickness, round, and their interactions. <!-- `r form(acc_2_form)` --> Naïve matchers were above chance (OR = `r stats_text(acc_mod_2, 1)`, Figure \ref{expt2-condition} ). Similar to experiment 2a, there were not substantial effects of condition. Last round descriptions had slightly lower accuracy (OR of last round = `r stats_text(acc_mod_2, 6)`), but there was an interaction with thickness, where for thin games, last round descriptions were less opaque (OR  = `r stats_text(acc_mod_2, 8)`). Again some of the uncertainty in estimating the fixed effects was driven by the strong variation based on target image (OR of SD of images = `r stats_text(acc_mod_2_me, 5)`, Figure \ref{expt2-tangram}). 
+For Experiment 2b we ran a similar Bayesian mixed effects logistic model.^[`r form(acc_2_form)`] Naïve matchers were above chance (OR = `r stats_text(acc_mod_2, 1)`, Figure \ref{expt2-condition} ). Similar to experiment 2a, there were not substantial effects of condition. Last round descriptions had slightly lower accuracy (OR of last round = `r stats_text(acc_mod_2, 6)`), but there was an interaction with thickness, where for thin games, last round descriptions were less opaque (OR  = `r stats_text(acc_mod_2, 8)`). Again some of the uncertainty in estimating the fixed effects was driven by the strong variation based on target image (OR of SD of images = `r stats_text(acc_mod_2_me, 5)`, Figure \ref{expt2-tangram}). 
 
 ### Additional predictors
 
@@ -888,7 +355,7 @@ As additional post-hoc predictors, we examined the accuracy of the in-game match
 
 ## Model results
 
-As a computational comparison, we looked at the CLIP-MLP model's performance on the same descriptions. We used the probability the model assigned to the correct target as our dependent measure and fit a beta regression on the descriptions from Experiment 2: `r form(acc_mlp_form)`. The CLIP-MLP model was far above chance, but had lower accuracy than the human participants (OR = `r stats_text(acc_mod_mlp, 1)`). 
+As a computational comparison, we looked at the CLIP-MLP model's performance on the same descriptions. We used the probability the model assigned to the correct target as our dependent measure and fit a Bayesian mixed effects beta regression on the descriptions from Experiment 2.^[`r form(acc_mlp_form)`] The CLIP-MLP model was far above chance, but had lower accuracy than the human participants (OR = `r stats_text(acc_mod_mlp, 1)`). 
 
 None of the fixed effects in the model were significant, and there was wide uncertainty for all of them. There was substantial by-target image variation (`r stats_text(acc_mod_mlp_me, 7)`) and substantial by-target variation in the effect of later round (`r stats_text(acc_mod_mlp_me, 8)`). 
 
@@ -897,71 +364,6 @@ As additional predictors, we checked the effect of in-game matcher accuracy and 
 ## Interim summary
 
 Overall, naïve human matchers were fairly accurate overall, but less accurate than matchers in the original game. Perhaps surprisingly, this level of accuracy was fairly consistent across descriptions from different times in the game and different game conditions. The largest source of variability in accuracy was from the target images; while there was some variabiliity in accuracy by images for the original matchers, there was substantially more variability for naïve matchers. The computational model showed a similar pattern of large effects of image, but had overall lower accuracy than naïve human matchers.
-
-```{r, eval=F}
-acc_priors_mlp <- c(
-  set_prior("normal(0,.2)", class = "b"),
-  set_prior("normal(0,.2)", class = "sd"),
-  set_prior("lkj(1)", class = "cor")
-)
-
-
-acc_priors <- c(
-  set_prior("normal(0,1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd"),
-  set_prior("lkj(1)", class = "cor")
-)
-
-expt_2_relevant_games <- expt_1_data |>
-  bind_rows(expt_2_data) |>
-  select(gameId, group_size, thickness, round) |>
-  unique()
-
-expt_2_mlp <- mlp_mod |>
-  inner_join(expt_2_relevant_games) |>
-  left_join(original_length) |>
-  left_join(original_acc)
-
-acc_mod_mlp <- brm(
-  correct ~ group_size * thickness * round +
-    (group_size * thickness * round | correct_tangram),
-  data = expt_2_mlp,
-  file = here(mod_loc, "acc_mlp_1_2"),
-  prior = acc_priors_mlp,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_mlp <- brm(
-  correct ~ group_size * thickness * round +
-    (group_size * thickness * round | correct_tangram),
-  data = expt_2_mlp,
-  family = Beta(link = "logit"),
-  file = here(mod_loc, "acc_mlp_1_2_beta"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_mlp_orig_acc <- brm(
-  correct ~ original_correct + group_size * thickness * round +
-    (group_size * thickness * round | correct_tangram),
-  data = expt_2_mlp,
-  family = Beta(link = "logit"),
-  file = here(mod_loc, "acc_mlp_1_2_orig_acc_beta"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-
-acc_mod_mlp_orig_length <- brm(
-  correct ~ log_words + group_size * thickness * round +
-    (group_size * thickness * round | correct_tangram),
-  data = expt_2_mlp,
-  family = Beta(link = "logit"),
-  file = here(mod_loc, "acc_mlp_1_2_orig_length_beta"),
-  prior = acc_priors,
-  control = list(adapt_delta = .95)
-)
-```
-
 
 # Experiment 3
 
@@ -1023,68 +425,6 @@ expt_3_fig_data |> ggplot(aes(x = round, color = condition, y = correct, group =
   )
 ```
 
-```{r, eval=F}
-for_acc_mod_4 <- expt_4_data |>
-  filter(type == "selection") |>
-  mutate(correct = as.numeric(correct)) |>
-  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
-
-acc_priors <- c(
-  set_prior("normal(0, 1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd")
-)
-
-
-acc_mod_4 <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = here(mod_loc, "acc_4.rds"))
-
-
-acc_mod_4 <- brm(correct ~ orig_repNum * condition + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod_4, prior = acc_priors, file = here(mod_loc, "acc_4_no_trial.rds"))
-```
-
-
-```{r, eval=F}
-acc_priors_mlp <- c(
-  set_prior("normal(0,1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd")
-)
-
-expt_3_relevant_games <- expt_4_acc_data |>
-  select(gameId, round, orig_repNum) |>
-  unique()
-
-yoked_relevant_mlp <- mlp_mod |> inner_join(expt_3_relevant_games)
-
-
-acc_mod_yoked_mlp <- brm(correct ~ orig_repNum + (1 | gameId) + (1 | correct_tangram),
-  data = yoked_relevant_mlp,
-  prior = acc_priors_mlp,
-  family = Beta(link = "logit"),
-  file = here(mod_loc, "acc_yoked_mlp_beta"),
-  control = list(adapt_delta = .95)
-)
-```
-
-```{r, eval=F}
-original_subset <- original_results_raw |>
-  inner_join(expt_3_relevant_games) |>
-  mutate(order = "yoked", setting = "original") |>
-  select(workerid = playerId, correct, correct_tangram = tangram, orig_repNum = repNum, gameId, matcher_trialNum = trialNum, order, setting)
-
-yoked_shuffled_original <- expt_4_data |>
-  filter(type == "selection") |>
-  mutate(correct = as.numeric(correct)) |>
-  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram) |>
-  mutate(order = condition, setting = "new") |>
-  bind_rows(original_subset)
-
-acc_priors <- c(
-  set_prior("normal(0, 1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd")
-)
-
-
-acc_mod_compare_orig <- brm(correct ~ orig_repNum * order + orig_repNum * setting + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = yoked_shuffled_original, prior = acc_priors, file = here(mod_loc, "yoked_shuffled_original.rds"))
-```
 
 ```{r}
 acc_mod_4 <- read_rds(here(mod_results, "acc_4.rds")) |> mutate(across(c(`Estimate`, `lower`, `upper`), ~ exp(.)))
@@ -1105,9 +445,9 @@ acc_4_form_compare <- read_rds(here(mod_form, "yoked_shuffled_original.rds"))
 
 Our primary question of interest was how much having the conversation history would help make later round descriptions more understandable to participants in the yoked condition. 
 
-We compared accuracy across the yoked and shuffled conditions with a logistic regression: `r form(acc_4_form)`. The descriptions were more transparent when they were presented in a yoked order (OR = `r stats_text(acc_mod_4, 2)`, Figure \ref{yoked}). In the shuffled condition, there was no main effect of round number (OR for one round later = `r stats_text(acc_mod_4, 4)`), but there was a marginal interaction where the benefit of the yoked condition decreased for later rounds (OR for one round later = `r stats_text(acc_mod_4, 5)`). This was offset by matchers in both conditions improving at the task over time (OR for one trial later in matcher viewing order = `r stats_text(acc_mod_4, 3)`). In the yoked condition round and trial number were aligned, so an improvement over time could be either from matcher practice or from descriptions being easier to understand. In the shuffled condition, matcher practice effects did not correlate with position in the original game. 
+We compared accuracy across the yoked and shuffled conditions with a Bayesian mixed effects logistic regression.^[`r form(acc_4_form)`]. The descriptions were more transparent when they were presented in a yoked order (OR = `r stats_text(acc_mod_4, 2)`, Figure \ref{yoked}). In the shuffled condition, there was no main effect of round number (OR for one round later = `r stats_text(acc_mod_4, 4)`), but there was a marginal interaction where the benefit of the yoked condition decreased for later rounds (OR for one round later = `r stats_text(acc_mod_4, 5)`). This was offset by matchers in both conditions improving at the task over time (OR for one trial later in matcher viewing order = `r stats_text(acc_mod_4, 3)`). In the yoked condition round and trial number were aligned, so an improvement over time could be either from matcher practice or from descriptions being easier to understand. In the shuffled condition, matcher practice effects did not correlate with position in the original game. 
 
-Comparing to the performance of in-game matchers, we can separate out the benefits of seeing the descriptions in order versus being a participant in the group: `r form(acc_4_form_compare)`. There is a benefit to seeing the items in order (OR = `r stats_text(acc_compare, 3)`) and a larger benefit to being a participant during the game (OR = `r stats_text(acc_compare, 7)`). The benefit of seeing the items in order wanes in later blocks (OR = `r stats_text(acc_compare, 5)`), but the benefit of being in the game does not (OR = `r stats_text(acc_compare, 6)`). In all cases, there is a baseline improvement over trials (OR = `r stats_text(acc_compare, 2)`). 
+Comparing to the performance of in-game matchers, we can separate out the benefits of seeing the descriptions in order versus being a participant in the group.^[`r form(acc_4_form_compare)`] There is a benefit to seeing the items in order (OR = `r stats_text(acc_compare, 3)`) and a larger benefit to being a participant during the game (OR = `r stats_text(acc_compare, 7)`). The benefit of seeing the items in order wanes in later blocks (OR = `r stats_text(acc_compare, 5)`), but the benefit of being in the game does not (OR = `r stats_text(acc_compare, 6)`). In all cases, there is a baseline improvement over trials (OR = `r stats_text(acc_compare, 2)`). 
 
 The accuracy of the CLIP-MLP model is worse than the shuffled human results, and does not show change across rounds (OR for one round later = `r stats_text(acc_mlp_4, 2)`). The larger difference between naïve human and CLIP-MLP accuracies in Experiment 3 than Experiment 2 could suggest that even the shuffled ordering still provides useful context (e.g., the consistent set of images) that helps matchers understand the conventions. This history is not available to the CLIP-MLP model which sees every description as a one-shot task. 
 
