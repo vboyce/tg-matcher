@@ -32,5 +32,5 @@ The human experiments were run in a different chronological order than the order
 
 * Experiment 1 (called 2a in cogsci paper) is a 2x2 design testing block 1 and 6 descriptions from 2 and 6 players games (from experiment 1 of Boyce et al 2024)
 * Experiment 2 (called 2b in cogsci paper) is a 2x2x2 design testing block 1 and 6 descriptions from 2 and 6 players games in thin and thick conditions (from experiment 3 of Boyce et al 2024)
-* Experiment 3 (called 1 in the paper) is the calibration experiment
-* Experiment 4 (called 3 in the paper) is the yoked v shuffled experiment 
+* Experiment 3 (called 1 in cogsci paper) is the calibration experiment
+* Experiment 4 (called 3 in cogsci paper) is the yoked v shuffled experiment 
