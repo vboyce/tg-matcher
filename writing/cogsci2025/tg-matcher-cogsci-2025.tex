@@ -171,7 +171,7 @@ opaque or understandable to outside observers.
 
 }
 
-\caption[Experimental Setup and Procedure]{Experimental Setup and Procedure. TODO \label{game}}\label{fig:interface}
+\caption[Experimental Setup]{Experimental Setup. Naive matchers read transcripts from trials in reference games from Boyce et al. (2024) and selected which image they thought was being described. Matchers recieved bonus payments for correct selections. \label{game}}\label{fig:interface}
 \end{figure}
 \end{CodeChunk}
 
@@ -232,6 +232,7 @@ made more calibrated predictions using CLIP's logits.
     \toprule
     \multicolumn{2}{l}{Classifier} & Accuracy \\ 
     \midrule
+        \multicolumn{2}{l}{Random baseline} & \smash{0.08} \\
     \multicolumn{2}{l}{CLIP without readout} & \smash{0.31} \\
     \multicolumn{2}{l}{Logistic regression} & \\
     & No penalty & \underline{\smash{0.50 (0.01)}} \\ 
@@ -277,7 +278,7 @@ so we use its predictions in subsequent analysis.
 
 }
 
-\caption[Correlation between human and CLIP-MLP probability of target across deciles of CLIP-MLP probability]{Correlation between human and CLIP-MLP probability of target across deciles of CLIP-MLP probability. Colored points are individual descriptions, black line is the bootstrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
+\caption[Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1]{Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1.  Points are individual descriptions, colored by decile of CLIP-MLP probability, black line is the bootstrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
 \end{figure}
 \end{CodeChunk}
 
@@ -301,20 +302,20 @@ from the 217 tested trials. On average, each trial was seen by 18
 participants. This experiment was pre-registered at
 \url{https://osf.io/6pv5e}.
 
-\subsection{Results}\label{results}
+\subsection{Results and discussion}\label{results-and-discussion}
 
 We obtained human accuracies on each trial by dividing the number of
 participants who selected the target by the total number of participants
-who saw the trial (Figure \ref{fig:fig-calibration}). There was a small
+who saw the trial (Figure \ref{fig:fig-calibration}). There was a modest
 but significant positive correlation between model-predicted
 probabilities and human accuracies (\(r\) = 0.33 {[}0.21, 0.45{]}). This
 result suggests that model predictions were calibrated to human response
 patterns, albeit not perfectly. It is possible to use these calibration
 results to tune model predictions to better approximate human responses;
 we leave this approach for future work. Nonetheless, the observed
-positive correlation suggests that our computational model is a
-reasonable approximation of human accuracies, validating its use in
-subsequent experiments as a computational comparison.
+positive correlation suggests that our computational model carries some
+signal about human accuracies, validating its use in subsequent
+experiments as a computational comparison.
 
 \begin{CodeChunk}
 \begin{figure}[t]
@@ -323,7 +324,7 @@ subsequent experiments as a computational comparison.
 
 }
 
-\caption[Accuracies for naïve humans and the CLIP-MLP model for Experiment 2]{Accuracies for naïve humans and the CLIP-MLP model for Experiment 2. Point estimates and 95\% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-condition}}\label{fig:fig-condition}
+\caption[Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description]{Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description. Facets are the communication thickness of the original game and x-axis is when in the game the transcript caome form. Point estimates and 95\% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-condition}}\label{fig:fig-condition}
 \end{figure}
 \end{CodeChunk}
 
@@ -334,7 +335,7 @@ subsequent experiments as a computational comparison.
 
 }
 
-\caption[Accuracies for naïve humans and the CLIP-MLP model for Experiment 2, split out by target image]{Accuracies for naïve humans and the CLIP-MLP model for Experiment 2, split out by target image. Point estimates and 95\% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-tangram}}\label{fig:fig-2}
+\caption[Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, split out by target image]{Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, split out by target image. Point estimates and 95\% CI are predictions from the fixed effects and by-tangram random effects of logistic and beta regressions, bootstrapped across conditions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-tangram}}\label{fig:fig-2}
 \end{figure}
 \end{CodeChunk}
 
@@ -347,12 +348,13 @@ people's behavior when switching to a new partner suggest that
 later-round utterances are more opaque and thus harder to understand.
 One counterargument is that later rounds are the result of describers'
 accumulated practice refining descriptions to be maximally communicative
-and to pick out the most visually salient features. We included
-descriptions from games of different sizes and communication
-thicknesses. Based on the patterns of cross-game similarity in Boyce et
-al. (2024), we expected that smaller and thicker games, whose
-descriptions diverged fastest, would have more idiosyncratic and opaque
-conventions than larger groups with thinner communication channels.
+and to pick out the most visually salient features. To distinguish these
+hypotheses, we ran a recognition experiment including descriptions from
+games of different sizes and communication thicknesses. Based on the
+patterns of cross-game similarity in Boyce et al. (2024), we expected
+that smaller and thicker games, whose descriptions diverged fastest,
+would have more idiosyncratic and opaque conventions than larger groups
+with thinner communication channels.
 
 \subsection{Methods}\label{methods-1}
 
@@ -362,10 +364,13 @@ To establish a baseline of how well naïve matchers could understand
 descriptions without context, we ran a 2x2 within subjects experiment.
 We drew the target transcripts from 2- and 6-player games from
 Experiment 1 of Boyce et al. (2024) and from the first and last blocks
-of these games. These games had medium-thick communication channels. We
-recruited 60 participants who each saw 60 trials (15 in each of the 4
-conditions). Overall, participants saw 774 transcripts from 40 games.
-This experiment was pre-registered at \url{https://osf.io/k45dr}.
+of these games. These games had medium-thick communication channels,
+where matchers could send text messages to the shared chat interface,
+but the describer role rotated each round, and matchers received limited
+feedback. We recruited 60 participants who each saw 60 trials (15 in
+each of the 4 conditions). Overall, participants saw 774 transcripts
+from 40 games. This experiment was pre-registered at
+\url{https://osf.io/k45dr}.
 
 \subsubsection{Experiment 2b}\label{experiment-2b}
 
@@ -374,15 +379,19 @@ follow-up experiment on descriptions from Experiment 3 of Boyce et al.
 (2024), where the communication channel thicknesses were more extreme.
 Here, we used a 2x2x2 within subjects design, drawing our transcripts
 from the first and last rounds of thick and thin, 2- and 6- person
-games. In the thin condition, original matchers could only contribute to
-the chat by sending one of 4 emojis; as the emojis did not have
-referential content, we did not include them in the transcripts shown to
-naïve matchers. For experiment 2b, we recruited 60 participants who each
-saw 64 trials (8 in each of the 8 conditions). Overall, participants saw
-2392 transcripts from 163 games. This experiment was pre-registered at
-\url{https://osf.io/rdp5k}.
+games. In the ``thick'' condition, matchers could send text messages to
+the shared chat interface, one person was the the describer role the
+whole game, and matchers recived feedback on everyone's selections. In
+contrast, in the ``thin'' condition, original matchers could only
+contribute to the chat by sending one of 4 emojis, the describer role
+rotated, and matchers recieved limited feedback. As the emojis did not
+have referential content, we did not include them in the transcripts
+shown to naïve matchers. For experiment 2b, we recruited 60 participants
+who each saw 64 trials (8 in each of the 8 conditions). Overall,
+participants saw 2392 transcripts from 163 games. This experiment was
+pre-registered at \url{https://osf.io/rdp5k}.
 
-\subsection{Results}\label{results-1}
+\subsection{Results}\label{results}
 
 \subsubsection{Experiment 2a}\label{experiment-2a-1}
 
@@ -400,12 +409,11 @@ was not a clear effect of original group size (OR of 6-player game =
 1.15 {[}0.89, 1.47{]}), but there was an interaction between round and
 group size (OR = 1.49 {[}1.06, 2.10{]}). Later transcripts from larger
 games were easier to understand, but earlier transcripts from smaller
-games were easier to understand.
-
-Much of the variation in accuracy was driven not by condition, but by
-the target image (OR of standard deviation of image distribution = 2.66
-{[}1.88, 4.52{]}). Some images were much easier to identify as the
-target than others (Figure \ref{expt2-tangram}).
+games were easier to understand. Much of the variation in accuracy was
+driven not by condition, but by the target image (OR of standard
+deviation of image distribution = 2.66 {[}1.88, 4.52{]}). Some images
+were much easier to identify as the target than others (Figure
+\ref{expt2-tangram}).
 
 \subsubsection{Experiment 2b}\label{experiment-2b-1}
 
@@ -430,8 +438,8 @@ strong variation based on target image (OR of SD of images = 2.25
 As additional post-hoc predictors, we examined the accuracy of the
 in-game matchers from Boyce et al. (2024) and the length of the
 description. In both experiments, in-game accuracy was predictive of
-naïve matcher accuracy (Expt 2a OR = 3.38 {[}2.46, 4.70{]}, Expt 2b OR =
-2.17 {[}1.70, 2.77{]}). The log number of words in the description was
+naïve matcher accuracy (Expt 2a OR = 3.33 {[}2.45, 4.53{]}, Expt 2b OR =
+2.39 {[}1.88, 3.03{]}). The log number of words in the description was
 not predictive in Experiment 2a (OR = 1.05 {[}0.94, 1.17{]}), but longer
 descriptions were slightly beneficial in Experiment 2b (OR = 1.10
 {[}1.01, 1.20{]}).
@@ -455,23 +463,28 @@ the effect of later round (1.56 {[}1.29, 2.09{]}).
 
 As additional predictors, we checked the effect of in-game matcher
 accuracy and the length of the description. CLIP-MLP had higher accuracy
-when in-game matcher accuracy was higher (OR = 1.50 {[}1.33, 1.69{]}),
+when in-game matcher accuracy was higher (OR = 1.52 {[}1.35, 1.71{]}),
 and the model did better on shorter descriptions (OR for log words =
 0.85 {[}0.82, 0.90{]}). Long descriptions may be more difficult because
 they are further further from the model's training distribution of image
 captions.
 
-\subsection{Interim summary}\label{interim-summary}
+\subsection{Discussion}\label{discussion}
 
 Overall, naïve human matchers were fairly accurate overall, but less
 accurate than matchers in the original game. Perhaps surprisingly, this
 level of accuracy was fairly consistent across descriptions from
-different times in the game and different game conditions. The largest
-source of variability in accuracy was from the target images; while
-there was some variabiliity in accuracy by images for the original
-matchers, there was substantially more variability for naïve matchers.
-The computational model showed a similar pattern of large effects of
-image, but had overall lower accuracy than naïve human matchers.
+different times in the game and different game conditions. Accuracy rose
+from earlier to later rounds for human matchers in the 6-player medium
+condition. The reverse was true for human matchers reading descriptions
+from 2-player medium games and both thick conditions, and human matchers
+showed minimal difference across time-points for descriptions from the
+thin condition. The largest source of variability in accuracy was from
+the target images; while there was some variabiliity in accuracy by
+images for the original matchers, there was substantially more
+variability for naïve matchers. The computational model showed a similar
+pattern of large effects of image, but had overall lower accuracy than
+naïve human matchers.
 
 \section{Experiment 3}\label{experiment-3}
 
@@ -520,7 +533,7 @@ here.
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Results}\label{results-2}
+\subsection{Results and discussion}\label{results-and-discussion-1}
 
 Our primary question of interest was how much having the conversation
 history would help make later round descriptions more understandable to
@@ -566,7 +579,7 @@ consistent set of images) that helps matchers understand the
 conventions. This history is not available to the CLIP-MLP model which
 sees every description as a one-shot task.
 
-\section{Discussion}\label{discussion}
+\section{General discussion}\label{general-discussion}
 
 Conventions are formed in reference games in a partner-specific way,
 where different groups follow different paths through semantic space as

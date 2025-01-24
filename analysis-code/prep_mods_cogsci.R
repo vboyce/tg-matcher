@@ -94,6 +94,44 @@ acc_mod_2_orig_length <- brm(
   control = list(adapt_delta = .95)
 )
 
+
+## sbert diversion 
+acc_mod_1_sbert <- brm(
+  correct ~ mean_sim * round + group_size * round + trial_order +
+    (group_size * round | correct_tangram) +
+    (group_size * round + trial_order | workerid),
+  data = sbert_2a,
+  family = bernoulli(),
+  file = here(mod_loc, "acc_1_sbert"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+acc_mod_2_sbert <- brm(
+  correct ~ mean_sim * round + group_size * round *thickness + trial_order +
+    (group_size * round *thickness| correct_tangram) +
+    (group_size * round *thickness+ trial_order | workerid),
+  data = sbert_2b,
+  family = bernoulli(),
+  file = here(mod_loc, "acc_2_sbert"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+mlp_sbert <- sbert_2a |> bind_rows(sbert_2b) |> select(round, correct_tangram, gameId, mean_sim, group_size, thickness) |> unique() |> 
+  left_join(mlp_mod)
+
+acc_mod_mlp_sbert <- brm(
+  correct ~ mean_sim *round + group_size * thickness * round +
+    (group_size * thickness * round | correct_tangram),
+  data = mlp_sbert,
+  family = Beta(link = "logit"),
+  file = here(mod_loc, "acc_mlp_1_2_sbert_beta"),
+  prior = acc_priors,
+  control = list(adapt_delta = .95)
+)
+
+
 acc_priors_mlp <- c(
   set_prior("normal(0,.2)", class = "b"),
   set_prior("normal(0,.2)", class = "sd"),
@@ -155,6 +193,10 @@ acc_mod_mlp_orig_length <- brm(
   prior = acc_priors,
   control = list(adapt_delta = .95)
 )
+
+
+### use sbert- divergence as predictor
+
 
 
 ### yoked shuffled mods

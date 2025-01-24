@@ -120,6 +120,8 @@ original_results_raw <- one_round_results |>
   mutate(activePlayerCount = NA) |>
   rename(condition = rotate) |>
   rbind(three_round_results) |>
+  filter(response!="FALSE") |> 
+  filter(response!="false") |> 
   mutate(
     round = str_c("round_", repNum + 1),
     correct_tangram = tangram,
@@ -164,6 +166,34 @@ expt_1_data_augment <- expt_1_data |>
 expt_2_data_augment <- expt_2_data |>
   left_join(original_length) |>
   left_join(original_acc)
+
+
+# sbert-read in
+sbert_raw_2a <- read_rds(str_c(url, "code/models/one_two_diverge.rds")) |> filter(condition %in% c("2", "6")) |> 
+  filter(repNum %in% c(0,5))
+
+#need to de-upper-triangle this
+sbert_2a <- sbert_raw_2a |> rename(gameId=gameId_1, other_game=gameId_2) |> 
+  bind_rows(sbert_raw_2a |> rename(gameId=gameId_2, other_game=gameId_1)) |> 
+  group_by(tangram, repNum, condition, gameId) |> 
+  summarize(mean_sim=mean(sim)) |> 
+  rename(correct_tangram=tangram) |> 
+  ungroup() |> 
+  mutate(round = str_c("round_", repNum + 1)) |> 
+  select(round, correct_tangram, gameId, mean_sim) |> 
+  right_join(expt_1_data)
+
+sbert_raw_2b <- read_rds(str_c(url, "code/models/three_diverge.rds")) |>  filter(repNum %in% c(0,5))
+
+sbert_2b <- sbert_raw_2b |> rename(gameId=gameId_1, other_game=gameId_2) |> 
+  bind_rows(sbert_raw_2b |> rename(gameId=gameId_2, other_game=gameId_1)) |> 
+  group_by(tangram, repNum, condition, gameId) |> 
+  summarize(mean_sim=mean(sim)) |> 
+  rename(correct_tangram=tangram) |> 
+  ungroup() |> 
+  mutate(round = str_c("round_", repNum + 1)) |> 
+  select(round, correct_tangram, gameId, mean_sim) |> 
+  right_join(expt_2_data)
 
 ### adventures with aligning calibration data
 
