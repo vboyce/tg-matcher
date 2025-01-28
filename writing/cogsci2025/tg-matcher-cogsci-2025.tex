@@ -6,8 +6,8 @@
 \usepackage{cogsci}
 
 
-\title{Not so opaque after all: Conventions formed in reference games
-are mostly understandable to outsiders}
+\title{Idiosyncratic but not opaque: Conventions formed in reference
+games are interpretable by naïve humans and vision--language models}
 
 \usepackage{booktabs}
 
@@ -19,37 +19,44 @@ are mostly understandable to outsiders}
 \maketitle
 
 \begin{abstract}
-In-groups can create conventionalized language, but this jargon may in
-fact be understandable to those outside the group. The formation of
-temporary linguistic conventions between individuals is often studied in
-iterated reference games, where over repeated reference to the same
-targets, a describer--matcher pair establishes partner-specific
-shorthand names for targets. One open question is how understandable
-these referring expressions are to others who were not part of the
-convention formation process. We take an outside angle on understanding
-convention formation, using experiments with naïve matchers and
-computational models to assess the opacity of descriptions from iterated
-reference games. Both human matchers and the computational model are
-well above chance accuracy, with variation in performance primarily
-driven by the target image rather than where or when the description
-came from. This additional perspective can inform work on how
-conventions are formed and how efficient such conventions actually are.
+In-group linguistic conventions vary in whether they are opaque to
+outsiders (teen slang like ``rizz'') or understandable to outsiders
+(regionalisms like ``roundabout''). The formation of temporary
+linguistic conventions between individuals is often studied in iterated
+reference games, where over repeated reference to the same targets, a
+describer--matcher pair establishes partner-specific shorthand names for
+targets. One open question is how understandable these referring
+expressions are to others who were not part of the convention formation
+process. We use computational models and experiments with naïve matchers
+to assess the opacity of descriptions from iterated reference games.
+Both human matchers and the computational model are well above chance
+accuracy, suggesting that the conventions substantially reflect aspects
+of shared semantic associations. This additional perspective provides
+insights into how convention formation relates to models of lexical
+uncertainty and efficiency. {[}TODO THIS LAST SENTENCE STILL SUCKS,
+please someone fix; 137/150 words atm{]}
 
 \textbf{Keywords:}
-reference games; convention formation; computational modeling; opacity
+reference games; convention formation; computational modeling; opacity;
+pragmatics
 \end{abstract}
+
+TODO SLIM DOWN INTRO -- target 1.5 pages
+
+TODO should we just drop the efficiency angle? (for space reasons?)
 
 \section{Introduction}\label{introduction}
 
-Groups of people often have terms that are used within a group, such as
-regional dialects, field-specific jargon, or terms of art related to
-specific theoretic orientations. Those who are not part of the group may
-use different terms for the same targets, but may nonetheless be able to
-understand or guess at the meanings of in-group terms. While these terms
-can represent stable conventions shared by sizable communities,
-temporary naming conventions can also develop rapidly among small groups
-of people when there is a need to refer to something without a canonical
-name that distinguishes it in context.
+``He's got rizz.'' The idea that teen slang is arbitrary and opaque to
+outsiders (i.e.~older generations) is enough of a cultural touchstone
+that late night comedy shows have segments about it. Teens are far from
+the only groups that form naming conventions that are specific to the
+in-group. Many groups form temporally stable conventions shared by
+communities, including professional jargon, regionalisms, and of course
+slang. In-group language can be temporally stable conventions shared by
+sizable communities, but temporary naming conventions can arise in
+smaller groups to refer to a particular entity that doesn't have a label
+or even to refer back to group in-jokes.
 
 This formation of temporary linguistic conventions between individuals
 is often studied in iterated reference games. In these games, a
@@ -62,20 +69,64 @@ nicknames for the same targets. When describing the shapes for people
 who were not part of the group, people return to more elaborated
 descriptions, indicating an expectation that others may be unable to
 understand the convention, and need a longer or different referential
-description (Hawkins et al., 2021; Wilkes-Gibbs \& Clark, 1992; Yoon \&
-Brown-Schmidt, 2018). Participants treat later-stage conventions as more
-opaque to outsiders than earlier-stage descriptions, and the
-differentiation of labels across groups over time is a signal of
-arbitrariness in the conventions (Boyce et al., 2024; Hawkins et al.,
-2020).
+description (Hawkins, Liu, et al., 2021; Wilkes-Gibbs \& Clark, 1992;
+Yoon \& Brown-Schmidt, 2018).
 
-How arbitrary and opaque are these conventions, really? One way to
-conceptualize the opacity of a referring expression is by considering
-the semantic distance between the signifier and the referent. Under the
-assumption of a modality-independent global semantics (i.e., not
-conditioned by partner-specific meaning), expressions that are
-transparent have signifiers and referents that are semantically close,
-such that any member of the sociolinguistic community sharing the global
+In one-shot interactions, the choice of how to map a referring
+expression to a target can be modeled using Bayesian pragmatics models
+such as Rational Speech Acts model {[}cite{]} that assume speakers and
+listeners reasoning about each other. {[}? cite examples of where this
+has been used in oneshot ref games{]} Building on these models for
+one-shot interactions, the Continual Hierarchical Adaptation through
+Inference model (CHAI) introduces partner-specific update rules to allow
+for updates to the lexicon after each interaction, which can account for
+the shortening of referring expressions observed in games {[}cite{]}.
+Initially, speakers have uncertainty about the listeners word-meaning
+mappings (lexicon) and so may use multiple words to triangulate a
+meaning, but when that succeeds, the updating then leads the agent to be
+able to successfully use individual words for the same meaning as the
+word-meaning association has been strengthened.
+
+In models like CHAI, both speaker and listener agents are jointly
+reasoning about each other, but the same types of models can be used
+when the interaction is one-sided. How can listeners understand speakers
+when they don't know the semantic lexicon of the speaker? Following
+Bayesian approaches to pragmatics and communication, one approach is to
+model listeners as Bayesian agents who jointly infer the meaning of a
+speaker's utterance and their model of the speaker's lexicon. This
+Bayesian joint updating has been used to model word learning, but also
+to model person-to-person or group-to-group differences in lexicon
+{[}citations TODO{]}. Notably, lexical uncertainty models can account
+for times when a listener infers non-shared aspects of the speaker's
+lexicon. Often this doesn't mean learning totally arbitrary meaning to
+word mappings for each possible interlocutor, but more like learning a
+hierarchical set of modifications to a lexicon where some words have
+slightly different extensions for different speakers and different
+circumstances (Hawkins, Franke, et al., 2021; Schuster \& Degen, 2020).
+However, in some experimental settings, people can even learn
+contronymic mappings, where the same symbol has context-dependent
+opposite meanings (Misyak et al., 2016).
+
+When groups of people form conventions, are they generally opaque to
+outsiders (like ``rizz'') or are they generally inferable using some
+lexical uncertainty (like ``roundabout'')? {[}is ``rotary'' more
+obscure? maybe switch?{]} Iterated reference games provide a controlled
+test environment for studying convention formation where the pressures
+driving convention formation are purely communicative. Thus, they
+provide a test case for studying to what extent opacity is an inherent
+consequence of convention formation, or whether it is a separate
+sociolinguistic effect for marking in-groupness. Conventions in iterated
+reference games are formed between people without a (known) shared group
+identity prior to the interaction, but, as seen in partner-switch
+experiments, people do not use the conventions with new partners. Do
+temporary conventions formed out of communicative need reflect overall
+semantic properties, or are they arbitrary in a way that requires one to
+``have been there''? One way to operationalize whether term -- meaning
+alignments are random or reflective of small deviations from the shared
+lexicon is to look at the semantic distance between the signifier and
+the referent in semantic space. Expressions that are more transparent
+are those where signifiers and referents that are semantically close,
+such that any member of the language community sharing the global
 semantics should be able to identify the appropriate referent given the
 signifier. In contrast, expressions that are opaque have signifiers and
 referents that are semantically distant, such that the relations between
@@ -83,53 +134,42 @@ them are more arbitrary and inaccessible to the general community
 without the formation of additional conventions (which may be partner-
 or group-specific).
 
-Assessing opacity thus requires us to have a measure of
-modality-independent global semantics. Such semantics are difficult to
-directly obtain for humans, since we rarely have explicit semantic
-formulations of stimuli, much less formulations that are unified across
-multiple modalities. However, another approach is to look at how
-understandable conventions are to others who were not part of the
-interaction that originated the convention. The ability of a naïve
-comprehender to understand a referring expression presented without
-context provides a proxy measure, since the comprehender's judgements
-are not conditioned on any context-specific conventions. Conventions
-that are more arbitrary and opaque should thus be harder for naïve
-matchers to understand, and we can determine how the features of the
-utterances and the conditions they were produced under affect their
-opacity, providing empirical tests of whether descriptions become more
-opaque over the course of the reference game.
+How can we measure the semantic distances between a conventionalized
+referring expression and its target referent? One computational option
+is to use vision-language models as a way to operationalize a shared
+semantic space for both language and target image. Computational methods
+have enabled the embedding of various stimuli (including images and
+text) into high-dimensional feature spaces; these embeddings have
+properties which suggest that they are reasonable approximations of
+humans' semantic spaces, including similarity in representational
+geometries (e.g., Grand et al., 2022; Muttenthaler \& Hebart, 2021).
+Indeed, embeddings from neural network models have been used as a form
+of semantics in a range of reference game scenarios (e.g., Gul \& Artzi,
+2024; Ji et al., 2022; Kang et al., 2020; Le et al., 2022; Ohmer et al.,
+2022). In particular, such embeddings can be treated as the default
+context- and speaker-independent lexicon, since they are not updated to
+account for convention formation within an iterated reference game.
 
-Some prior work has investigated how well naïve matchers can understand
-the descriptions produced in the course of an iterated reference game,
-with a focus on the role of conversational shared history. Murfitt \&
-McAllister (2001) recorded descriptions from 8 participants who
-described shapes either solo or in a matching game with a partner and
-played the descriptions to new matchers, either in order or in reverse
-order. Naïve listeners were more accurate when the heard descriptions in
-order. Schober \& Clark (1989) found that matchers in an iterated
-reference game achieved higher accuracies than overhearers who listened
-to the entire game in order, and overhearers who listened to recordings
-starting in the third round did even worse. Nonetheless, all matchers
-were far above chance, and their accuracies rose over rounds. Leung et
-al. (2024) had adults and children serve as naïve matchers, listening to
-descriptions from the the first and last rounds of a parent--child
-iterated reference game. They found no significant difference in how
-comprehensible early and late descriptions were to naïve matchers, and
-while naïve matchers had high accuracy, they were slightly less accurate
-than in-game matchers overall.
-
-In an iterated reference game using drawing (rather than text) as the
-communication modality, Hawkins et al. (2023) compared the accuracy of
-in-game matchers to naïve matchers in yoked and shuffled conditions. The
-yoked matchers saw all the trials from one game in order, while the
-shuffled matchers saw trials sampled from 10 games but in trial order.
-In-game matchers were more accurate overall than yoked matchers who were
-in turn more accurate than shuffled matchers. Over the course of trials,
-both in-game and yoked matchers showed steeper improvement in accuracy
-than shuffled matchers.
+An alternative way of measuring the transparency of conventionalized
+referring expressions is to directly measure how often naive humans, who
+were not part of the group who formed the convention, can correctly
+select the target referent given the referring expression. Prior work
+with naive matchers has focused on the role of conversational shared
+history as an aid to understanding later, more conventionalized
+descriptions. Overall, naive matchers tend to do better the more their
+observation history resembles that of the original conversation. Naive
+listeners in Murfitt \& McAllister (2001) did better when they heard
+descriptions in order instead of in reverse order. Schober \& Clark
+(1989) found that matchers in an iterated reference game achieved higher
+accuracies than overhearers who listened to the entire game in order,
+and overhearers who listened to recordings starting in the third round
+did even worse. In an iterated reference game using drawing as the
+communication modality, Hawkins et al. (2023) found that yoked matchers
+who saw all the trials from one game in order outperformed shuffled
+matchers who saw trials sampled from 10 games but in trial order.
 
 Across the prior literature, while naïve matchers have worse accuracy
-than in-game matchers, their performance is still far above chance,
+than in-game matchers, their performance was still far above chance,
 suggesting that the convention--target relationship is not purely
 arbitrary. In fact, even when pairs of participants try to obfuscate
 their meaning to match images with each other but not an overhearer, an
@@ -140,29 +180,33 @@ Except for the shuffled condition of Hawkins et al. (2023), these
 studies do not address how opaque descriptions from different points in
 the game are without prior context. Such an approach would be important
 to have truly naïve matchers that lack even the context of trial order,
-providing a clearer understanding of opacity.
-
-Another possible measure of modality-independent global semantics is
-computational in origin. Computational methods have enabled the
-embedding of various stimuli (including images and text) into
-high-dimensional feature spaces; these embeddings have properties which
-suggest that they are reasonable approximations of humans' semantic
-spaces, including similarity in representational geometries (e.g., Grand
-et al., 2022; Muttenthaler \& Hebart, 2021). Indeed, embeddings from
-neural network models have been used as a form of semantics in a range
-of reference game scenarios (e.g., Gul \& Artzi, 2024; Ji et al., 2022;
-Kang et al., 2020; Le et al., 2022; Ohmer et al., 2022). In particular,
-such embeddings can be treated as context-independent semantic
-representations, since they are not updated to account for convention
-formation within an iterated reference game; hence, they can serve as a
-computational comparison to human performance on a naïve matching task.
+providing a clearer understanding of when these expressions are opaque
+and when they are merely idiosyncratic.
 
 In the current work, we address how the process of convention formation
 shapes the levels of opacity of the referring expressions created at
-different time points in an iterated reference game. Using reference
-expressions created in different games from Boyce et al. (2024), we use
-both human experiments and models to assess when and why expressions are
-opaque or understandable to outside observers.
+different time points in an iterated reference game. We draw our
+reference game expressions from Boyce et al. (2024), which has a large
+corpus of iterated reference games played by groups of different sizes,
+all playing online and communicating via a chat box. This corpus is made
+up of 6-round iterated reference games using the same 12 target images.
+Games were played in conditions varying in how large the
+describer--matcher groups were (2--6 participants) and how ``thick'' the
+communication channels were. The varied conditions within a consistent
+framework allow us to test how opacity of referring expressions vary
+depending on the conditions they were produced under.
+
+Using reference expressions created in different games from Boyce et al.
+(2024), we use both human experiments and models to assess when and why
+expressions are opaque or understandable to outside observers. We first
+present a computational approach using a vision-language model with a
+read-out head to determine the semantic similarities between referring
+expressions and their targets and validate against naive human matchers
+(Experiment 1). We compare the opacity referring expressions across
+different game conditions and time points using both naive human
+matchers and the model (Experiment 2). Finally, we address the role of
+conversation history by comparing human matcher performance on shuffled
+versus ordered game transcripts (Experiment 3).
 
 \begin{CodeChunk}
 \begin{figure}[t!]
@@ -179,15 +223,10 @@ opaque or understandable to outside observers.
 
 \subsection{Materials}\label{materials}
 
-We drew on the corpus of reference game transcripts and results from
-Boyce et al. (2024). This corpus is made up of 6-round iterated
-reference games using the same 12 target images. Games were played in
-conditions varying in how large the describer--matcher groups were (2--6
-participants) and how ``thick'' the communication channels were. For our
+We drew our referential expressions from Boyce et al. (2024). For our
 naïve matcher experiments, we sampled different subsets of this corpus.
 In presenting the transcripts, we excluded utterances that were marked
-by Boyce et al. (2024) as not containing any referential content
-(i.e.~purely greetings, meta-commentary, or off-topic chitchat). Within
+by Boyce et al. (2024) as not containing any referential content. Within
 the samples, we also did not show transcripts that contained swear words
 or crude or sexual language. We used the entire corpus for our
 computational modeling component.
@@ -206,22 +245,23 @@ manipulation, we randomized the order of trials, subject to the
 constraint that the same target could not repeat on adjacent trials. The
 task was implemented in jsPsych (Leeuw et al., 2023). We paid
 participants \$10 an hour plus a bonus of 5 cents per correct response.
-All our experimental code is at TODO LINK.
+All our experimental code is at TODO OSF LINK GOES HERE.
 
 \subsection{Computational models}\label{computational-models}
 
 We used CLIP (\texttt{clip-vit-large-patch14}) as a listener model for
-our domain (Radford et al., 2021). CLIP is a natural choice for
-reference games, as the model is trained to estimate the correspondence
-between images and phrases in natural language. We pre-processed the
-text by concatenating all the messages sent by the speaker for a given
-trial, and ran CLIP for the concatenated text and all 12 tangram shapes.
-We then computed probabilities for each tangram shape using CLIP's
-logits. The simplest way to do this is simply taking the softmax of the
-logits. However, the tangram shapes were possibly out the distribution
-for the model, which led it to favor some images over others regardless
-of the content of the text. To fix this, we trained readout models that
-made more calibrated predictions using CLIP's logits.
+our domain (Radford et al., 2021) TODO BEN say model architecture/type.
+CLIP is a natural choice for reference games, as the model is trained to
+estimate the correspondence between images and phrases in natural
+language. We pre-processed the text by concatenating all the messages
+sent by the speaker for a given trial, and ran CLIP for the concatenated
+text and all 12 tangram shapes. We then computed probabilities for each
+tangram shape using CLIP's logits. The simplest way to do this is simply
+taking the softmax of the logits. However, the tangram shapes were
+possibly out the distribution for the model, which led it to favor some
+images over others regardless of the content of the text. To fix this,
+we trained readout models that made more calibrated predictions using
+CLIP's logits.
 
 \begin{table}
 \caption{Cross-validated accuracies for classifiers. Standard deviations in accuracy across the 10 folds are shown in parentheses. Best performance within each model class is underlined, and best overall performance is bolded.}
@@ -267,7 +307,8 @@ implemented in the \texttt{scikit-learn} and \texttt{XGBoost} libraries
 \ref{tab:classifier_comparison} shows the cross-validated accuracy of
 different readout models, as well as the performance of CLIP with no
 readout. The MLP with two hidden layers of size 100 performed the best,
-so we use its predictions in subsequent analysis.
+so we use its predictions in subsequent analysis. TODO BEN clarify when
+things are held out v not!
 
 \section{Experiment 1}\label{experiment-1}
 
@@ -295,12 +336,10 @@ We first obtained target probabilities from our CLIP-MLP model for all
 utterances from Boyce et al. (2024). We then used stratified sampling to
 select 217 trials by dividing model-predicted probabilities into deciles
 and choosing approximately 22 utterances per decile, spanning the 12
-different possible target images.
-
-We recruited 61 participants who each saw 64 trials randomly sampled
-from the 217 tested trials. On average, each trial was seen by 18
-participants. This experiment was pre-registered at
-\url{https://osf.io/6pv5e}.
+different possible target images. We recruited 61 participants who each
+saw 64 trials randomly sampled from the 217 tested trials. On average,
+each trial was seen by 18 participants. This experiment was
+pre-registered at \url{https://osf.io/6pv5e}.
 
 \subsection{Results and discussion}\label{results-and-discussion}
 
@@ -410,10 +449,11 @@ was not a clear effect of original group size (OR of 6-player game =
 group size (OR = 1.49 {[}1.06, 2.10{]}). Later transcripts from larger
 games were easier to understand, but earlier transcripts from smaller
 games were easier to understand. Much of the variation in accuracy was
-driven not by condition, but by the target image (OR of standard
-deviation of image distribution = 2.66 {[}1.88, 4.52{]}). Some images
-were much easier to identify as the target than others (Figure
-\ref{expt2-tangram}).
+driven by the target image, which accounted for more variation than
+participant differences (standard deviation of image distribution = 0.98
+{[}0.63, 1.51{]}; SD of participant distribution = 0.64 {[}0.42,
+0.88{]}). Some images were much easier to identify as the target than
+others (Figure \ref{expt2-tangram}).
 
 \subsubsection{Experiment 2b}\label{experiment-2b-1}
 
@@ -430,8 +470,8 @@ lower accuracy (OR of last round = 0.64 {[}0.47, 0.85{]}), but there was
 an interaction with thickness, where for thin games, last round
 descriptions were less opaque (OR = 1.55 {[}1.02, 2.33{]}). Again some
 of the uncertainty in estimating the fixed effects was driven by the
-strong variation based on target image (OR of SD of images = 2.25
-{[}1.67, 3.59{]}, Figure \ref{expt2-tangram}).
+strong variation based on target image (0.81 {[}0.51, 1.28{]}), which
+again exceeded participant variation (0.62 {[}0.43, 0.83{]}).
 
 \subsubsection{Additional predictors}\label{additional-predictors}
 
@@ -444,6 +484,23 @@ not predictive in Experiment 2a (OR = 1.05 {[}0.94, 1.17{]}), but longer
 descriptions were slightly beneficial in Experiment 2b (OR = 1.10
 {[}1.01, 1.20{]}).
 
+The pattern of results for when conventions became more opaque was
+similar to the pattern of which game conditions produced descriptions
+that diverged the most in semantic space in Boyce et al. (2024). As a
+post-hoc test of whether opacity might be related to semantic
+divergence, we used the mean semantic similarity between an utterance
+and other utterances in the same condition as an additional predictor of
+accuracy.\footnote{Semantic similarity was operationalized as cosine
+  similarity between S-BERT embeddings (\textbf{reimers2019?}), the
+  measure of semantic distance used in Boyce et al. (2024).} Similarity
+to other utterances was strongly predictive of increased accuracy in
+both experiments (Expt 2a: OR = 12.49 {[}4.70, 33.64{]}, Expt 2b: OR =
+14.75 {[}5.93, 36.87{]}) and was more predictive for the last round
+descriptions (Expt 2a: OR = 3.49 {[}1.09, 10.92{]}, Expt 2b: OR = 4.78
+{[}1.61, 14.25{]}). While exploratory, this analysis suggests that
+referring expressions that are further from shared semantic priors are
+harder for naive listeners to understand.
+
 \subsection{Model results}\label{model-results}
 
 As a computational comparison, we looked at the CLIP-MLP model's
@@ -454,46 +511,44 @@ Experiment 2.\footnote{correct \({\sim}\) group\_size \({\times}\)
   thickness \({\times}\) round~\({+}\) (group\_size \({\times}\)
   thickness \({\times}\) round\textbar correct\_tangram)} The CLIP-MLP
 model was far above chance, but had lower accuracy than the human
-participants (OR = 0.60 {[}0.45, 0.82{]}).
+participants (OR = 0.60 {[}0.45, 0.82{]}). The strongest predictor of
+accuracy was later round (OR = roundround\_6: 1.32 {[}0.94, 1.83{]}),
+but even this was uncertain. There was substantial by-target image
+variation (0.46 {[}0.27, 0.76{]}).
 
-None of the fixed effects in the model were significant, and there was
-wide uncertainty for all of them. There was substantial by-target image
-variation (1.58 {[}1.31, 2.15{]}) and substantial by-target variation in
-the effect of later round (1.56 {[}1.29, 2.09{]}).
-
-As additional predictors, we checked the effect of in-game matcher
-accuracy and the length of the description. CLIP-MLP had higher accuracy
-when in-game matcher accuracy was higher (OR = 1.52 {[}1.35, 1.71{]}),
-and the model did better on shorter descriptions (OR for log words =
-0.85 {[}0.82, 0.90{]}). Long descriptions may be more difficult because
-they are further further from the model's training distribution of image
-captions.
+In additional models, we checked the effect of in-game matcher accuracy,
+length of the description, and semantic divergence. CLIP-MLP had higher
+accuracy when in-game matcher accuracy was higher (OR = 1.52 {[}1.35,
+1.71{]}), and the model did better on shorter descriptions (OR for log
+words = 0.85 {[}0.82, 0.90{]}). Long descriptions may be difficult
+because they are further further from the model's training distribution
+of image captions. Semantic similarity to other descriptions from the
+same type of games was predictive of higher accuracy (OR = 11.85
+{[}6.51, 21.06{]}), especially for last round utterances (OR = 3.46
+{[}1.65, 7.36{]}).
 
 \subsection{Discussion}\label{discussion}
 
 Overall, naïve human matchers were fairly accurate overall, but less
-accurate than matchers in the original game. Perhaps surprisingly, this
-level of accuracy was fairly consistent across descriptions from
-different times in the game and different game conditions. Accuracy rose
-from earlier to later rounds for human matchers in the 6-player medium
-condition. The reverse was true for human matchers reading descriptions
-from 2-player medium games and both thick conditions, and human matchers
-showed minimal difference across time-points for descriptions from the
-thin condition. The largest source of variability in accuracy was from
-the target images; while there was some variabiliity in accuracy by
-images for the original matchers, there was substantially more
-variability for naïve matchers. The computational model showed a similar
-pattern of large effects of image, but had overall lower accuracy than
-naïve human matchers.
+accurate than matchers in the original game. The computational model was
+less accurate, but still far above chance. The largest source of
+variability in accuracy was from target images, and whether earlier or
+later utterances were more opaque varied by game condition. While not a
+pre-planned analysis, the level of semantic divergence from other
+expressions was strongly predictive of the opacity of the expression
+(for both humans and the model), suggesting that descriptions that were
+closer to shared semantic priors were more transparent.
 
 \section{Experiment 3}\label{experiment-3}
 
 The experiment of naïve matchers in Experiment 2 differed from in-game
 matchers in several ways. In-game matchers recieved descriptions from a
 consistent group, recieved descriptions in the order they were created,
-and were present participants during the game. In Experiment 3, we focus
-on the role of context and group-specific interaction history to tease
-apart some of these differences.
+and were present participants during the game. In Experiment 3, we
+focused on the role of context and group-specific interaction history to
+tease apart some of these differences. Our primary question of interest
+was how much seeing the entire the conversation history in order would
+help participants understand later round descriptions.
 
 \subsection{Methods}\label{methods-2}
 
@@ -505,13 +560,13 @@ a randomized order. This is the same yoking but a different shuffling
 than that used in Hawkins et al. (2023).
 
 Because some descriptions are already fairly comprehensible in
-isolation, we focused on the role of context for games that showed
-strong group-specificity. We hand-picked 10 games from Boyce et al.
-(2024) on the basis of high in-game matcher accuracy, strong patterns of
-descriptions shortening over repetition, and the use of idiosyncratic or
-non-modal referring expressions. Thus, these games showed the hallmarks
-of strong conventionalization to terms that were more likely to be
-opaque to outsiders.
+isolation, we focused on games that showed strong group-specificity. We
+hand-picked 10 games from Boyce et al. (2024) on the basis of high
+in-game matcher accuracy, strong patterns of descriptions shortening
+over repetition, and the use of idiosyncratic or non-modal referring
+expressions. Thus, these games showed the hallmarks of strong
+conventionalization to terms that were more likely to be opaque to
+outsiders.
 
 We recruited 196 participants (99 in the yoked condition and 97 in
 shuffled) who each saw all 72 trials of one of the 10 games. This
@@ -535,9 +590,9 @@ here.
 
 \subsection{Results and discussion}\label{results-and-discussion-1}
 
-Our primary question of interest was how much having the conversation
-history would help make later round descriptions more understandable to
-participants in the yoked condition.
+Our primary question of interest was how much seeing the conversation
+history unfold in order would help participants interpret descriptions,
+especially those from later rounds after conventions had formed.
 
 We compared accuracy across the yoked and shuffled conditions with a
 Bayesian mixed effects logistic regression.\footnote{correct \({\sim}\)
@@ -581,6 +636,14 @@ sees every description as a one-shot task.
 
 \section{General discussion}\label{general-discussion}
 
+Real-world conventions vary in whether they are opaque to outsiders
+(``rizz'') or comprehensible even to those who don't produce them
+(``roundabout''). Convention formation in the real world is subject to a
+number of pressures (including communicative ones and social ones), but
+is also difficult to study. As a controlled experimental situation,
+iterated reference games provide a way of studying convention formation
+driven by communicative needs.
+
 Conventions are formed in reference games in a partner-specific way,
 where different groups follow different paths through semantic space as
 they form conventions. However, the referential descriptions used over
@@ -590,27 +653,18 @@ that naïve human matchers were far above chance accuracy at identifying
 the targets, with variation explained more by the target image than the
 round or game condition the descriptions came from. Even for games
 selected for strong conventionalization, naïve matchers had high
-accuracy that was aided if they saw the descriptions in order.
+accuracy overall, although this accuracy was increased if they followed
+the process of conventionalization and saw utterances in order.
+
+There were suggestive patterns that descriptions that were further from
+the norm were more opaque.
 
 We also tested a computational model built on CLIP with a multi-layer
 perceptron readout as a way of approximating the context-independent
 semantic distance between descriptions and images. The CLIP-MLP model
-was far above chance in its assignment of probabilities to target
-images, and although its probabilities were lower than human matcher
-accuracies, the model mirrored the qualitative pattern of larger effects
-from target image than from description source.
-
-Our experimental and computational results were only on a specific set
-of iterated reference game transcripts targeting a specific set of 12
-images and so numeric results may not generalize to other reference
-games with different array sizes and sets of images. There are potential
-non-measured differences between in-game matchers and naïve matchers
-because naïve matchers did not have to wait for descriptions to appear
-and thus had more choice about how closely to read descriptions or how
-long to spend looking at images. We also cannot know whether naïve
-matchers (or for that matter, in-game matchers) fully ``comprehended''
-the language in the descriptions, or were making inferences about the
-meaning on a more analytic level.
+was far above chance in its assignment of probabilities to target images
+and correlated with human accuracies, although its probabilities were
+lower than human matcher accuracies.
 
 This work suggests that conventions formed within a small group may
 still be fairly comprehensible to those outside the group, who may
@@ -618,28 +672,42 @@ produce different descriptions themselves. This finding raises questions
 around how well-calibrated describers are to their matcher's level of
 knowledge, and whether the process of convention formation is actually
 efficient. Even naïve matchers can often understand the shorthand
-descriptions, but in reference games, describers choose elaborated
-descriptions with new matchers. In a game, norms of cooperation and
-conversation may lead describers to start new matchers with elaborated
-descriptions designed to give them a high level of confidence in target
-selection. Describers are also constrained by their need to come up with
-a description in real time. However, the high level of understanding and
+descriptions, especially when there has not been a lot of semantic
+drift, but in reference games, describers choose elaborated descriptions
+with new matchers. In a game, norms of cooperation and conversation may
+lead describers to start new matchers with elaborated descriptions
+designed to give them a high level of confidence in target selection.
+Describers are also constrained by their need to come up with a
+description in real time. However, the high level of understanding and
 the lack of substantial benefit from early round descriptions does raise
 empirical questions about how calibrated describers are to the level of
 information necessary.
 
-We found large variation in how accurate the computation model and naïve
-matchers were on different target images. This effect raises questions
-about what makes some images much easier to identify. They might be more
-iconic, with a narrower prior over different ways they could be
-conceptualized, or they may be further from competitors within this pool
-of images. We are limited by the 12 images we used, but future work
-sampling across larger sets of images (such as Ji et al., 2022) could
-probe image-level factors. Future work could also explore
+Our experimental and computational results were only on a specific set
+of iterated reference game transcripts targeting a specific set of 12
+images. There are potential non-measured differences between in-game
+matchers and naïve matchers, particularly in terms of effort and time
+spent on the task.
+
+Some images may lend themselves to more transparent descriptions because
+they are more iconic, with a narrower prior over different ways they
+could be conceptualized, or they may be further from competitors within
+this pool of images. We are limited by the 12 images we used, but future
+work sampling across larger sets of images (such as Ji et al., 2022)
+could probe image-level factors. Future work could also explore
 within-description sources of variation and how the structure and word
 choice of utterance correlates with naïve matcher accuracy.
 Computational models could be especially beneficial because they could
 be run on subsets or ablations of descriptive text.
+
+A difficulty with scaling up computational models like CHAI and RSA to
+be a generative model of natural language reference games is the issue
+of how to handle baseline semantics. Even without a generative model,
+the lexical uncertainty approach is a useful one for understanding how
+information is conveyed and conventions formed in iterated reference
+games. It also provide a useful lens for examining flexibility of
+semantics and how new meanings arise and are understood. TODO could use
+another concluding sentence!
 
 \section{References}\label{references}
 
@@ -690,6 +758,13 @@ Hawkins, R. D., Frank, M. C., \& Goodman, N. D. (2020). Characterizing
 the dynamics of learning in repeated reference games.
 \emph{arXiv:1912.07199 {[}Cs{]}}. \url{https://arxiv.org/abs/1912.07199}
 
+\bibitem[\citeproctext]{ref-hawkins2021a}
+Hawkins, R. D., Franke, M., Frank, M. C., Goldberg, A. E., Smith, K.,
+Griffiths, T. L., \& Goodman, N. D. (2021). \emph{From partners to
+populations: {A} hierarchical {Bayesian} account of coordination and
+convention} (arXiv:2104.05857). arXiv.
+\url{https://doi.org/10.48550/arXiv.2104.05857}
+
 \bibitem[\citeproctext]{ref-hawkins2021}
 Hawkins, R. D., Liu, I., Goldberg, A. E., \& Griffiths, T. G. (2021).
 Respect the code: {Speakers} expect novel conventions to generalize
@@ -726,11 +801,11 @@ Leeuw, J. R. de, Gilbert, R. A., \& Luchterhandt, B. (2023). {jsPsych}:
 Experiments}. \emph{Journal of Open Source Software}, \emph{8}(85),
 5351. \url{https://doi.org/10.21105/joss.05351}
 
-\bibitem[\citeproctext]{ref-leung2024}
-Leung, A., Yurovsky, D., \& Hawkins, R. D. (2024). Parents spontaneously
-scaffold the formation of conversational pacts with their children.
-\emph{Child Development}, \emph{n/a}(n/a).
-\url{https://doi.org/10.1111/cdev.14186}
+\bibitem[\citeproctext]{ref-misyak2016}
+Misyak, J., Noguchi, T., \& Chater, N. (2016). Instantaneous
+{Conventions}: {The Emergence} of {Flexible Communicative Signals}.
+\emph{Psychological Science}, \emph{27}(12), 1550--1561.
+\url{https://doi.org/10.1177/0956797616661199}
 
 \bibitem[\citeproctext]{ref-murfitt2001}
 Murfitt, T., \& McAllister, J. (2001). The {Effect} of {Production
@@ -766,6 +841,12 @@ Natural Language Supervision}} (arXiv:2103.00020). arXiv.
 Schober, M. F., \& Clark, H. H. (1989). Understanding by addressees and
 overhearers. \emph{Cognitive Psychology}, \emph{21}(2), 211--232.
 \url{https://doi.org/10.1016/0010-0285(89)90008-X}
+
+\bibitem[\citeproctext]{ref-schuster2020}
+Schuster, S., \& Degen, J. (2020). I know what you're probably going to
+say: {Listener} adaptation to variable use of uncertainty expressions.
+\emph{Cognition}, \emph{203}, 104285.
+\url{https://doi.org/10.1016/j.cognition.2020.104285}
 
 \bibitem[\citeproctext]{ref-wilkes-gibbs1992}
 Wilkes-Gibbs, D., \& Clark, H. (1992). Coordinating beliefs in
