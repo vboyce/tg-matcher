@@ -11,8 +11,9 @@ reference games are interpretable by naïve humans and vision--language
 models}
 
 \usepackage{booktabs}
+\raggedbottom
 
-\author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Ben Prystawski (benpry@stanford.edu)} \\Department of Psychology \\ Stanford University \AND {\large \bf Alvin Wei Ming Tan (tanawm@stanford.edu)} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
+\author{anon}
 
 
 \begin{document}
@@ -72,27 +73,27 @@ belief distributions after each interaction, to account for the dynamics
 of repeated interaction in iterated reference games (Hawkins, Franke, et
 al., 2021). A key factor permitting variation in referential expressions
 is lexical uncertainty; RSA models incorporating lexical uncertainty
-{[}citation TODO{]} treat listeners as Bayesian agents who jointly infer
-the meaning of a speaker's utterance and their model of the speaker's
-lexicon. Models incorporating lexical uncertainty have been used to
-model children's word learning {[}citation TODO{]} as well as person-
-and group-level differences {[}TODO citations{]}. Usually the scope of
-person-to-person variation in lexicons is constrained, so it is more
-akin to learning a hierarchical set of tweaks to a lexicon so some words
-have slightly different extensions for different speakers and different
-circumstances, rather than learning completely arbitrary meanings for
-each person (Hawkins, Franke, et al., 2021; Schuster \& Degen, 2020; but
-see Misyak et al., 2016).
+(Bergen et al., 2016; Potts et al., 2015) treat listeners as Bayesian
+agents who jointly infer the meaning of a speaker's utterance and their
+model of the speaker's lexicon. Models incorporating lexical uncertainty
+have been used to model children's word learning (Bohn et al., 2022;
+Frank \& Goodman, 2014) as well as person- and group-level differences
+(Hawkins, Franke, et al., 2021; Schuster \& Degen, 2020). Usually the
+scope of person-to-person variation in lexicons is constrained, so it is
+more akin to learning a hierarchical set of tweaks to a lexicon so some
+words have slightly different extensions for different speakers and
+different circumstances, rather than learning completely arbitrary
+meanings for each person (Hawkins, Franke, et al., 2021; Schuster \&
+Degen, 2020; but see Misyak et al., 2016).
 
 Conventions in iterated reference games are formed between people
 without a salient shared group identity prior to the interaction, but
-people do not use the conventions with new partners {[}TODO could put
-citations here again{]}. How opaque are the temporary linguistic
-conventions created in reference games: are they opaque like ``rizz'' or
-interpretable like ``roundabout''? From a theoretical perspective,
-measuring this opacity can help inform the development of models like
-CHAI that aim to account for lexical change in conversation. We attempt
-to answer this question here.
+people do not use the conventions with new partners. How opaque are the
+temporary linguistic conventions created in reference games: are they
+opaque like ``rizz'' or interpretable like ``roundabout''? From a
+theoretical perspective, measuring this opacity can help inform the
+development of models like CHAI that aim to account for lexical change
+in conversation. We attempt to answer this question here.
 
 One way to measure the opacity of a referring expression is to look at
 the semantic distance between the signifier and the referent.
@@ -119,7 +120,7 @@ such embeddings can be treated as the default context- and
 speaker-independent lexicon, since they are not updated to account for
 convention formation within an iterated reference game.
 
-An second option for measuring the transparency of referring expressions
+A second option for measuring the transparency of referring expressions
 is to measure how often naïve humans, who were not part of the group who
 formed the convention, can correctly associate the target referent with
 the referring expression. Prior work with naïve matchers has been
@@ -134,11 +135,10 @@ trials from a single game rather than trials sampled across 10 games
 accuracy than in-game matchers, but their performance was still far
 above chance, suggesting that the convention--target relationship is not
 purely arbitrary. In fact, even when pairs of participants try to
-obfuscate their meaning to match images with each other but not an
-overhearer, an overhearing participant can still do quite well (Clark \&
-Schaefer, 1987). Nonetheless, receiving more context from an
-interaction---and in particular, having that context be in order---is
-beneficial to matchers.
+obfuscate their meaning, overhearers can still do quite well at
+identifying the target referents (Clark \& Schaefer, 1987). Nonetheless,
+receiving more context from an interaction---and in particular, having
+that context be in order---is beneficial to matchers.
 
 In the current work, we measure the opacity of the referring expressions
 created in iterated reference games. We use conversations from Boyce et
@@ -199,12 +199,13 @@ randomized the order of trials, subject to the constraint that the same
 target could not repeat on adjacent trials. The task was implemented in
 jsPsych (Leeuw et al., 2023). We paid participants \$10 an hour plus a
 bonus of 5 cents per correct response. All our experimental code is at
-TODO OSF LINK GOES HERE.
+\href{https://osf.io/bfk8y/?view_only=165b81c5d69446f18e1bfd23e3d9cb5f}{anonymized
+repo}.
 
 \subsection{Computational models}\label{computational-models}
 
 We used the Contrastive Language-Image Pretraining model (CLIP;
-\texttt{clip-vit-large-patch14}) as a listener model for our domain
+\texttt{clip-vit-large-patch14}) as a comprehender model for our domain
 (Radford et al., 2021). CLIP is a vision-language model that uses a text
 transformer and a vision transformer to embed text and images into the
 same space, trained to maximize the similarity between representations
@@ -255,7 +256,7 @@ To improve the performance of base CLIP, we trained a set of readout
 models to assign probabilities to images using CLIP's logits as
 features. Models were trained to maximize task performance (i.e., to
 assign high probability to the target tangram given the concatenated
-speaker utterance). We compared four types of models: random forest,
+describer utterance). We compared four types of models: random forest,
 logistic regression, multi-layer perceptron (MLP), and gradient-boosted
 tree. Classifiers were implemented in the \texttt{scikit-learn} and
 \texttt{XGBoost} libraries (Chen \& Guestrin, 2016; Pedregosa et al.,
@@ -296,7 +297,9 @@ and choosing approximately 22 utterances per decile, spanning the 12
 different possible target images. We recruited 61 participants who each
 saw 64 trials randomly sampled from the 217 tested trials. On average,
 each trial was seen by 18 participants. This experiment was
-pre-registered at \url{https://osf.io/6pv5e}.
+pre-registered at
+\href{https://osf.io/6pv5e/?view_only=0bc61ddeda83493c844ca554f463ba85}{anonymized
+link}.
 
 \subsection{Results and discussion}\label{results-and-discussion}
 
@@ -318,7 +321,7 @@ a computational comparison.
 
 }
 
-\caption[Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description]{Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description. Facets are the communication thickness of the original game and x-axis is when in the game the transcript came form. Point estimates and 95\% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-condition}}\label{fig:fig-condition}
+\caption[Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description]{Accuracies for naïve human matchers and the CLIP-MLP model for Experiments 2a and 2b, grouped by the source of the referential description. Facets are the communication thickness of the original game and x-axis is when in the game the transcript came from. Point estimates and 95\% CrI are predictions from the fixed effects of logistic and beta regressions. Bootstrapped mean accuracy from the original matchers is included as a ceiling, and random chance as a baseline. \label{expt2-condition}}\label{fig:fig-condition}
 \end{figure}
 \end{CodeChunk}
 
@@ -359,7 +362,9 @@ matchers could send text messages to the chat, the describer role
 rotated each round, and matchers received limited feedback. We recruited
 60 participants who each saw 60 trials (15 in each of the 4 conditions).
 Overall, participants saw 774 transcripts from 40 games. This experiment
-was pre-registered at \url{https://osf.io/k45dr}.
+was pre-registered at
+\href{https://osf.io/k45dr/?view_only=1f4bbadb8e6b4b5f8d04cf04392967dd}{anonymized
+link}.
 
 \subsubsection{Experiment 2b}\label{experiment-2b}
 
@@ -377,7 +382,9 @@ emoji did not have referential content, we did not include them in the
 transcripts shown to naïve matchers. For experiment 2b, we recruited 60
 participants who each saw 64 trials (8 in each of the 8 conditions).
 Overall, participants saw 2392 transcripts from 163 games. This
-experiment was pre-registered at \url{https://osf.io/rdp5k}.
+experiment was pre-registered at
+\href{https://osf.io/rdp5k/?view_only=87452ac1a7894f98b51b5642346e9e3d}{anonymized
+link}.
 
 \subsection{Results}\label{results}
 
@@ -446,7 +453,7 @@ both experiments (Expt 2a: OR = 12.49 {[}4.70, 33.64{]}, Expt 2b: OR =
 descriptions (Expt 2a: OR = 3.49 {[}1.09, 10.92{]}, Expt 2b: OR = 4.78
 {[}1.61, 14.25{]}). While exploratory, this analysis suggests that
 referring expressions that are further from shared semantic priors
-(i.e., more idiosyncratic) are harder for naïve listeners to understand.
+(i.e., more idiosyncratic) are harder for naïve matchers to understand.
 
 \subsection{Model results}\label{model-results}
 
@@ -518,10 +525,11 @@ outsiders.
 
 We recruited 196 participants (99 in the yoked condition and 97 in
 shuffled) who each saw all 72 trials of one of the 10 games. This
-experiment was pre-registered at \url{https://osf.io/zqwp5}.
-Participants read the transcripts in a modified self-paced reading
-procedure where they uncovered the text word-by-word (revealed words
-stayed visible); only after uncovering the entire transcript could
+experiment was pre-registered at
+\href{https://osf.io/zqwp5/?view_only=87420dc86f0a4a56a395cd464aa3a5c1}{anonymized
+link}. Participants read the transcripts in a modified self-paced
+reading procedure where they uncovered the text word-by-word (revealed
+words stayed visible); only after uncovering the entire transcript could
 participants select an image. We do not analyze the reading time data
 here.
 
@@ -606,7 +614,7 @@ findings are consistent with a lexical uncertainty approach, where
 expressions that are closer to overall priors are easier to understand,
 and groups that have fewer people and thicker channels are more able to
 break away from these priors and have conventions that drift farther
-from typical in semantic space.
+apart in semantic space.
 
 Limiting the generality of our findings, our experimental and
 computational results were only on a specific set of iterated reference
@@ -637,6 +645,17 @@ and ever-evolving landscape of communication.
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-bergen2016}
+Bergen, L., Levy, R., \& Goodman, N. (2016). Pragmatic reasoning through
+semantic inference. \emph{Semantics and Pragmatics}, \emph{9}, 20:1--91.
+\url{https://doi.org/10.3765/sp.9.20}
+
+\bibitem[\citeproctext]{ref-bohn2022}
+Bohn, M., Schmidt, L. S., Schulze, C., Frank, M. C., \& Tessler, M. H.
+(2022). Modeling {Individual Differences} in {Children}'s {Information
+Integration During Pragmatic Word Learning}. \emph{Open Mind}, \emph{6},
+311--326. \url{https://doi.org/10.1162/opmi_a_00069}
+
 \bibitem[\citeproctext]{ref-boyce2024}
 Boyce, V., Hawkins, R., Goodman, N. D., \& Frank, M. C. (2024).
 \emph{Interaction structure constrains the emergence of conventions in
@@ -664,6 +683,11 @@ collaborative process}.
 Frank, M. C., \& Goodman, N. D. (2012). Predicting {Pragmatic Reasoning}
 in {Language Games}. \emph{Science}, \emph{336}(6084), 998--998.
 \url{https://doi.org/10.1126/science.1218633}
+
+\bibitem[\citeproctext]{ref-frank2014}
+Frank, M. C., \& Goodman, N. D. (2014). Inferring word meanings by
+assuming that speakers are informative. \emph{Cognitive Psychology},
+\emph{75}, 80--96. \url{https://doi.org/10.1016/j.cogpsych.2014.08.002}
 
 \bibitem[\citeproctext]{ref-goodman2016}
 Goodman, N. D., \& Frank, M. C. (2016). Pragmatic {Language
@@ -759,6 +783,12 @@ Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B.,
 Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., et
 al. (2011). Scikit-learn: {Machine} learning in python. \emph{The
 Journal of Machine Learning Research}, \emph{12}, 2825--2830.
+
+\bibitem[\citeproctext]{ref-potts2015}
+Potts, C., Lassiter, D., Levy, R., \& Frank, M. C. (2015). Embedded
+{Implicatures} as {Pragmatic Inferences} under {Compositional Lexical
+Uncertainty}. \emph{Journal of Semantics}, ffv012.
+\url{https://doi.org/10.1093/jos/ffv012}
 
 \bibitem[\citeproctext]{ref-radford2021}
 Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S.,
