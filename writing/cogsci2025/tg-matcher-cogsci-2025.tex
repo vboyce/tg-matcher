@@ -68,9 +68,9 @@ about how listeners will interpret their utterance and vice versa. This
 process is described in Bayesian pragmatics models such as the Rational
 Speech Acts model (RSA) (Frank \& Goodman, 2012; Goodman \& Frank,
 2016). The Continual Hierarchical Adaptation through Inference model
-(CHAI) builds on RSA by adding rules for how agents can update their
-belief distributions after each interaction, to account for the dynamics
-of repeated interaction in iterated reference games (Hawkins, Franke, et
+(CHAI) builds on RSA by adding rules for how agents update their belief
+distributions after each interaction, to account for the dynamics of
+repeated interaction in iterated reference games (Hawkins, Franke, et
 al., 2021). A key factor permitting variation in referring expressions
 is lexical uncertainty; RSA models incorporating lexical uncertainty
 (Bergen et al., 2016; Potts et al., 2016) treat listeners as Bayesian
@@ -79,7 +79,7 @@ model of the speaker's lexicon. Models incorporating lexical uncertainty
 have been used to model children's word learning (Bohn et al., 2022) as
 well as person- and group-level differences (Hawkins, Franke, et al.,
 2021; Schuster \& Degen, 2020). Usually the scope of person-to-person
-variation in lexicons is constrained, so it is more akin to learning a
+variation in lexica is constrained, so it is more akin to learning a
 hierarchical set of tweaks to a lexicon so some words have slightly
 different extensions for different speakers and different circumstances,
 rather than learning completely arbitrary meanings for each person
@@ -137,7 +137,7 @@ above chance, suggesting that the convention--target relationship is not
 purely arbitrary. In fact, even when pairs of participants try to
 obfuscate their meaning, overhearers can still do quite well at
 identifying the target referents (Clark \& Schaefer, 1987). Nonetheless,
-receiving more context from an interaction---and in particular, having
+receiving more context from an interaction---and in particular having
 that context be in order---is beneficial to matchers.
 
 In the current work, we measure the opacity of the referring expressions
@@ -149,8 +149,8 @@ images. Games varied in how large the describer--matcher groups were
 (2--6 participants) and how ``thick'' the communication channels were
 (for example, if matchers could send back messages or just emoji). The
 varied conditions within a consistent framework allowed us to test how
-opacity of referring expressions varies depending on the conditions the
-referring expressions came from.
+the opacity of referring expressions varies depending on the conditions
+the referring expressions came from.
 
 We use both human experiments and models to assess when and why
 expressions are opaque or understandable to outside observers. We first
@@ -181,10 +181,10 @@ transcripts presented in order versus out of order (Experiment 3).
 We drew our referring expressions from Boyce et al. (2024), excluding
 utterances that were marked as not containing referential content. For
 our naïve matcher experiments, we sampled different subsets of this
-corpus, and within the subsets, we excluded transcripts that contained
-swear words or crude or sexual language. For the computational model, we
-used the entire corpus, and pre-processed the text by concatenating all
-the referential messages sent by the describer for a given trial.
+corpus. Within the subsets, we excluded transcripts that contained swear
+words or crude or sexual language. For the computational model, we used
+the entire corpus, and pre-processed the text by concatenating all the
+referential messages sent by the describer for a given trial.
 
 \subsection{Experimental procedure}\label{experimental-procedure}
 
@@ -199,8 +199,8 @@ randomized the order of trials, subject to the constraint that the same
 target could not repeat on adjacent trials. The task was implemented in
 jsPsych (Leeuw et al., 2023). We paid participants \$10 an hour plus a
 bonus of 5 cents per correct response. All our experimental code is at
-\href{https://osf.io/bfk8y/?view_only=165b81c5d69446f18e1bfd23e3d9cb5f}{anonymized
-repo}.
+\href{https://osf.io/bfk8y/?view_only=165b81c5d69446f18e1bfd23e3d9cb5f}{this
+anonymized repo}.
 
 \subsection{Computational models}\label{computational-models}
 
@@ -212,9 +212,9 @@ same space, trained to maximize the similarity between representations
 of images and their English captions. It is a natural choice for
 reference games, as the model is trained to estimate the correspondence
 between images and phrases in natural language. We ran CLIP for the
-concatenated describer utterances and all 12 tangram shapes. For a given
-utterance, we then computed probabilities for each tangram shape using
-logit scores from CLIP. The simplest way to do this is simply taking the
+concatenated describer utterances and all 12 tangram shapes. For each
+utterance, we computed probabilities for each tangram shape using logit
+scores from CLIP. The simplest way to do this is simply taking the
 softmax of the logits. However, tangram shapes are outside of the
 training distribution for the model, perhaps explaining why it favored
 some images over others regardless of the content of the text.
@@ -277,7 +277,7 @@ use the MLP trained on all the data.
 
 }
 
-\caption[Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1]{Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1.  Points are individual descriptions, colored by decile of CLIP-MLP probability, black line is the bootstrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
+\caption[Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1]{Correlation between human accuracy and CLIP-MLP probability of target in Experiment 1.  Small points are individual descriptions, colored by decile of CLIP-MLP probability, large points and error bars are the bootstrapped mean and 95\% CI across descriptions for each decile. \label{calibration}}\label{fig:fig-calibration}
 \end{figure}
 \end{CodeChunk}
 
@@ -298,8 +298,8 @@ different possible target images. We recruited 61 participants who each
 saw 64 trials randomly sampled from the 217 tested trials. On average,
 each trial was seen by 18 participants. This experiment was
 pre-registered at
-\href{https://osf.io/6pv5e/?view_only=0bc61ddeda83493c844ca554f463ba85}{anonymized
-link}.
+\href{https://osf.io/6pv5e/?view_only=0bc61ddeda83493c844ca554f463ba85}{this
+anonymized link}.
 
 \subsection{Results and discussion}\label{results-and-discussion}
 
@@ -354,7 +354,7 @@ larger groups with thinner communication channels.
 \subsubsection{Experiment 2a}\label{experiment-2a}
 
 To establish a baseline of how well naïve matchers could understand
-descriptions without context, we ran a 2 \(\times\) 2 within subjects
+descriptions without context, we ran a 2 \(\times\) 2 within-subjects
 experiment, drawing target transcripts from 2- and 6-player games from
 Experiment 1 of Boyce et al. (2024) and from the first and last blocks
 of these games. These games had medium-thick communication channels,
@@ -363,15 +363,15 @@ rotated each round, and matchers received limited feedback. We recruited
 60 participants who each saw 60 trials (15 in each of the 4 conditions).
 Overall, participants saw 774 transcripts from 40 games. This experiment
 was pre-registered at
-\href{https://osf.io/k45dr/?view_only=1f4bbadb8e6b4b5f8d04cf04392967dd}{anonymized
-link}.
+\href{https://osf.io/k45dr/?view_only=1f4bbadb8e6b4b5f8d04cf04392967dd}{this
+anonymized link}.
 
 \subsubsection{Experiment 2b}\label{experiment-2b}
 
 After observing limited condition differences in Experiment 2a, we ran a
 follow-up experiment on descriptions from Experiment 3 of Boyce et al.
 (2024), where the communication channel thicknesses were more extreme.
-Here, we used a 2 \(\times\) 2 \(\times\) 2 within subjects design,
+Here, we used a 2 \(\times\) 2 \(\times\) 2 within-subjects design,
 drawing our transcripts from the first and last rounds of thick and
 thin, 2- and 6- person games. In the ``thick'' condition, matchers could
 send text messages to the chat, one person was the describer for the
@@ -383,14 +383,14 @@ not include them in the transcripts shown to naïve matchers. For
 experiment 2b, we recruited 60 participants who each saw 64 trials (8 in
 each of the 8 conditions). Overall, participants saw 2392 transcripts
 from 163 games. This experiment was pre-registered at
-\href{https://osf.io/rdp5k/?view_only=87452ac1a7894f98b51b5642346e9e3d}{anonymized
-link}.
+\href{https://osf.io/rdp5k/?view_only=87452ac1a7894f98b51b5642346e9e3d}{this
+anonymized link}.
 
 \subsection{Results}\label{results}
 
 \subsubsection{Experiment 2a}\label{experiment-2a-1}
 
-For Experiment 2a, we ran a Bayesian mixed effects logistic model of
+For Experiment 2a, we ran a Bayesian mixed-effects logistic model of
 naïve matcher accuracy in \texttt{brms} (Bürkner, 2018).\footnote{correct
   \({\sim}\) group\_size \({\times}\) round~\({+}\) trial\_order~\({+}\)
   (group\_size \({\times}\) round\textbar correct\_tangram)~\({+}\)
@@ -413,7 +413,7 @@ images were much easier to identify as the target than others (Figure
 
 \subsubsection{Experiment 2b}\label{experiment-2b-1}
 
-For Experiment 2b we ran a similar Bayesian mixed effects logistic
+For Experiment 2b, we ran a similar Bayesian mixed-effects logistic
 model.\footnote{correct \({\sim}\) group\_size \({\times}\) thickness
   \({\times}\) round~\({+}\) trial\_order~\({+}\) (group\_size
   \({\times}\) thickness \({\times}\)
@@ -421,7 +421,7 @@ model.\footnote{correct \({\sim}\) group\_size \({\times}\) thickness
   thickness \({\times}\) round~\({+}\) trial\_order\textbar workerid)}
 Naïve matchers were above chance (OR = 1.81 {[}1.06, 3.08{]}, Figure
 \ref{expt2-condition}). As in Experiment 2a, there were not substantial
-effects of condition. Last round descriptions had slightly lower
+effects of condition. Last-round descriptions had slightly lower
 accuracy (OR of last round = 0.64 {[}0.47, 0.85{]}), but there was an
 interaction with thickness, where for thin games, last round
 descriptions were less opaque (OR = 1.55 {[}1.02, 2.33{]}). Again there
@@ -459,7 +459,7 @@ referring expressions that are further from shared semantic priors
 
 As a computational comparison, we used the probability the CLIP-MLP
 model assigned to the correct target as our dependent measure and fit a
-Bayesian mixed effects beta regression on the descriptions from
+Bayesian mixed-effects beta regression on the descriptions from
 Experiment 2.\footnote{correct \({\sim}\) group\_size \({\times}\)
   thickness \({\times}\) round~\({+}\) (group\_size \({\times}\)
   thickness \({\times}\) round\textbar correct\_tangram)} The CLIP-MLP
@@ -472,13 +472,13 @@ uncertain. There was substantial by-target image variation (SD = 0.46
 In additional models, we checked the effect of in-game matcher accuracy,
 length of the description, and semantic divergence. CLIP-MLP had higher
 accuracy when in-game matcher accuracy was higher (OR = 1.52 {[}1.35,
-1.71{]}), and when the descriptions were shorter (OR for log words =
-0.85 {[}0.82, 0.90{]}). The model may perform poorly on long
-descriptions because they are further from the model's training
-distribution of image captions. A description's semantic similarity to
-other descriptions was predictive of higher accuracy (OR = 11.85
-{[}6.51, 21.06{]}), especially for last round utterances (OR = 3.46
-{[}1.65, 7.36{]}), in line with the human results.
+1.71{]}), and when descriptions were shorter (OR for log words = 0.85
+{[}0.82, 0.90{]}). The model may perform poorly on long descriptions
+because they are further from the model's training distribution of image
+captions. A description's semantic similarity to other descriptions was
+predictive of higher accuracy (OR = 11.85 {[}6.51, 21.06{]}), especially
+for last round utterances (OR = 3.46 {[}1.65, 7.36{]}), in line with the
+human results.
 
 \subsection{Discussion}\label{discussion}
 
@@ -488,8 +488,8 @@ The computational model was less accurate, but still far above chance.
 The largest source of variability in accuracy was from target images,
 and whether earlier or later utterances were more opaque varied by game
 condition. The level of semantic divergence from other expressions was
-strongly predictive of the opacity of the expression; while this
-analysis was not prespecified, it still provides some suggestion that
+strongly predictive of the opacity of the expression.While this analysis
+was not prespecified, it still provides some suggestion that
 descriptions that were closer to shared semantic priors were also more
 interpretable.
 
@@ -526,12 +526,12 @@ outsiders.
 We recruited 196 participants (99 in the yoked condition and 97 in
 shuffled) who each saw all 72 trials of one of the 10 games. This
 experiment was pre-registered at
-\href{https://osf.io/zqwp5/?view_only=87420dc86f0a4a56a395cd464aa3a5c1}{anonymized
-link}. Participants read the transcripts in a modified self-paced
-reading procedure where they uncovered the text word-by-word (revealed
-words stayed visible); only after uncovering the entire transcript could
-participants select an image. We do not analyze the reading time data
-here.
+\href{https://osf.io/zqwp5/?view_only=87420dc86f0a4a56a395cd464aa3a5c1}{this
+anonymized link}. Participants read the transcripts in a modified
+self-paced reading procedure where they uncovered the text word-by-word
+(revealed words stayed visible); only after uncovering the entire
+transcript could participants select an image. We do not analyze the
+reading time data here.
 
 \begin{CodeChunk}
 \begin{figure}[t]
@@ -551,7 +551,7 @@ history unfold in order would help participants interpret descriptions,
 especially those from later rounds.
 
 We compared accuracy across the yoked and shuffled conditions with a
-Bayesian mixed effects logistic regression.\footnote{correct \({\sim}\)
+Bayesian mixed-effects logistic regression.\footnote{correct \({\sim}\)
   orig\_repNum \({\times}\) condition~\({+}\) matcher\_trialNum~\({+}\)
   (1\textbar gameId)~\({+}\) (1\textbar correct\_tangram)~\({+}\)
   (1\textbar workerid)}. The descriptions were more transparent when
