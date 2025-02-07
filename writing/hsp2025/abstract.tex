@@ -28,7 +28,7 @@
 % \toggletrue{anonymous} with \togglefalse{anonymous} to de-anonymize.
 \usepackage{etoolbox}
 \newtoggle{anonymous}
-\toggletrue{anonymous}
+\togglefalse{anonymous}
 \usepackage{ulem}
 \renewcommand{\title}[1]{\textbf{#1}\\}
 \newcommand{\authors}[1]{\iftoggle{anonymous}{\phantom{#1}}{#1}\\}
@@ -37,10 +37,8 @@
 \begin{document}
 
 
-
 \noindent\title{Context matters: History and informativity affect understanding of opaque references}
 \authors{Veronica Boyce (vboyce@stanford.edu), Ben Prystawski, Alvin Tan, Michael C. Frank \\Stanford University}
-\newline
 
 \noindent\textbf{Background:} Word predictability (often measured as surprisal) is a predictor of language processing times, but how rapidly do comprehenders adapt to changing contexts that may license expressions that are globally uncommon? Does the use of an unfamiliar shorthand become unsurprising with repeated exposure (based on very local context), or does it stay surprising based on overall unexpectedness? 
 
@@ -48,7 +46,7 @@
 
 \smallskip
 
-\noindent \textbf{Methods:} For the present experiment, we selected 10 games with above average accuracy, and above average reduction to in-group nicknames, to test how well outsiders could understand the shorthand descriptions and examine their reading time profile. We recruited 198 English-speaking participants who each read trial transcripts and guessed the intended target. Participants first read the transcript by uncovering it word by word in a modified self-paced reading paradigm, and then selected a target image (Figure 1). In the \textbf{yoked} condition, a participant saw all the trials from one game in the order they occurred (72 trials, 6 descriptions of each of 12 targets). In the \textbf{shuffled} condition, a participant saw all the trials from one game in a randomized order.
+\noindent \textbf{Methods:} For the present experiment, we selected 10 games with above average accuracy, and above average reduction to in-group nicknames, to test how well outsiders could understand the shorthand descriptions and examine their reading time profile. We recruited 198 English-speaking participants who each read trial transcripts and guessed the intended target. Participants first read the transcript by uncovering it word by word in a modified self-paced reading paradigm, and then selected a target image (Figure 1). In the \textbf{yoked} condition, a participant saw all the trials from one game in the order they occurred (72 trials, 6 descriptions of each of 12 targets). In the \textbf{shuffled} condition, a participant saw all the trials from one game in a randomized order. Materials, data, and code at \url{github.com/vboyce/tg-matcher}.
 
 \smallskip
 
