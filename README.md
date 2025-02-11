@@ -10,7 +10,8 @@ On the human experiment side:
 - data contains resultant data from human experiments
 
 On the computational model side:
-- model-code contains code for running the computational models
+- model-code contains code for running the computational models, along with a requirements.txt file
+- `evaluate_pretrained_model.py` contains code for getting predictions from a CLIP model, `classifier_comparison.py` contains code for fitting and evaluating the different classifiers that use logits from the CLIP model, and `stimulus_probabilities_from_classifier.py` contains code for getting probabilities of each tangram from a classifier fit to the CLIP model's logits. Other files contain code that supports these main functions.
 - model-code/model_predictions contains the output "data" from the computational models
 
 Both: 
