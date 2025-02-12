@@ -21,12 +21,14 @@ Both:
 # How to reproduce cogsci paper
 The cogsci paper sources analysis-code/helper_cogsci.R. 
 
-Together they rely on data files from the data folder ("expt1_full_data", "expt_2_full_data", "tgmatchercalibration-trials","tgmatcheryoked-trials") and model outputs from model-code/model_predictions ("mlp_best). It also sources data from the original reference game experiments that are used as materials (Boyce et al 2024) by pulling data from that github repo. For some alignment of dataset, it pulls labels from expt_prep_code/labelled.csv. The comparison between different computational models draws from a file in model-code.
+Together they rely on data files from the data folder ("expt1_full_data", "expt_2_full_data", "tgmatchercalibration-trials","tgmatcheryoked-trials") and model outputs from model-code/model_predictions ("mlp_best). It also sources data from the original reference game experiments that are used as materials (Boyce et al 2024) by pulling data from that github repo. For some alignment of dataset, it pulls labels from expt_prep_code/labelled.csv. The comparison between different computational models is performed by classifier_comparison.py in model_code.
 
 The stimulus images are pulled from one of the experiment source code folders.
 
 The predictions and summarized results from the Bayesian regressions are saved and loaded from analysis-code/models (created by prep_mods_cogsci.R).
 
+# Sources for HSP abstract
+The HSP abstract presents some of the shuffled-yoked experiment (called experiment 4 in the repo) -- see analysis-code/analysis4.Rmd for the source. It draws both on the experiment 4 data in data/ and analysis-code/predictors for the llm and vlm results.
 
 # Note about experiment numbering
 The human experiments were run in a different chronological order than the order presented in the cogsci paper. Thus there is inconsistency in how files associated with the experiments are named. 

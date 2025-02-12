@@ -27,7 +27,7 @@ options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 dat_loc <- "data/tgmatcheryoked-trials.csv"
-pred_loc <- "code/predictors"
+pred_loc <- "analysis-code/predictors"
 ```
 
 
@@ -286,7 +286,7 @@ good_stuff |>
     panel.grid = element_blank()
   )
 
-ggsave(here("writing/hsp2.png"), width = 5, height = 3)
+#ggsave(here("writing/hsp2.png"), width = 5, height = 3)
 
 summary <- good_stuff |>
   filter(type == "selection") |>
@@ -315,7 +315,7 @@ good_stuff |>
     axis.text = element_text(size = 14)
   )
 
-ggsave(here("writing/hsp1.png"), width = 5, height = 3)
+#ggsave(here("writing/hsp1.png"), width = 5, height = 3)
 ```
 TODO 
 
@@ -323,23 +323,6 @@ Logistic model of target selection accuracy: Accuracy ~ original_rep_num * condi
 
 Time to selection:  Selection_time ~ original_rep_num * condition + viewing_order + (1 | gameId) + (1 | tangram) + (1 | participant)
 
-
-```{r}
-for_acc_mod <- good_stuff |>
-  filter(type == "selection") |>
-  mutate(correct = as.numeric(correct)) |>
-  select(workerid, correct, orig_repNum, condition, matcher_trialNum, gameId, correct_tangram)
-
-acc_priors <- c(
-  set_prior("normal(0, 1)", class = "b"),
-  set_prior("normal(0,1)", class = "sd")
-)
-
-library(lme4)
-# test <- glmer(correct~orig_repNum*condition + matcher_trialNum +     (1|gameId)+(1|correct_tangram)+(1|workerid), family=binomial(), data=for_acc_mod)
-
-foo <- brm(correct ~ orig_repNum * condition + matcher_trialNum + (1 | gameId) + (1 | correct_tangram) + (1 | workerid), family = bernoulli(link = "logit"), data = for_acc_mod, prior = acc_priors, file = "acc1.rds")
-```
 
 # SPR
 
@@ -408,13 +391,13 @@ vlm_concat_probs <- read_csv(here(pred_loc, "vlm_probs_concat.csv")) |>
   mutate(surprisal_vlm_concat = logprob * log2(exp(1)) * -1) |>
   select(correct_tangram, gameId, orig_repNum = repNum, word_speaker_index, surprisal_vlm_concat)
 
-llm_as_seen_probs <- read_csv(here(pred_loc, "llm_probs_as_seen.csv")) |>
-  group_by(full_text, word_idx, word) |>
-  summarize(logprob = mean(logprob)) |>
-  mutate(overall_index = word_idx + 1, words = full_text) |>
-  left_join(read_csv(here(pred_loc, "expt_4_games_as_seen.csv"))) |>
-  mutate(surprisal_llm_as_seen = logprob * log2(exp(1)) * -1) |>
-  select(correct_tangram, gameId, orig_repNum = repNum, overall_index, surprisal_llm_as_seen, word)
+# llm_as_seen_probs <- read_csv(here(pred_loc, "llm_probs_as_seen.csv")) |>
+#   group_by(full_text, word_idx, word) |>
+#   summarize(logprob = mean(logprob)) |>
+#   mutate(overall_index = word_idx + 1, words = full_text) |>
+#   left_join(read_csv(here(pred_loc, "expt_4_games_as_seen.csv"))) |>
+#   mutate(surprisal_llm_as_seen = logprob * log2(exp(1)) * -1) |>
+#   select(correct_tangram, gameId, orig_repNum = repNum, overall_index, surprisal_llm_as_seen, word)
 
 word_freq <- read_csv(here(pred_loc, "word_freq.csv"))
 
