@@ -12,8 +12,9 @@ models}
 
 \usepackage{booktabs}
 \raggedbottom
+\cogscifinalcopy
 
-\author{anon}
+\author{{\large \bf Veronica Boyce} (vboyce@stanford.edu) \\ Psychology Department, Stanford University \And {\large \bf Ben Prystawski}  \\ Psychology Department, Stanford University \AND {\large \bf Alvin Tan}  \\ Psychology Department, Stanford University \And {\large \bf Michael C. Frank}  \\ Psychology Department, Stanford University}
 
 
 \begin{document}
@@ -49,8 +50,8 @@ ones to have in-group naming conventions; many communities form stable
 linguistic conventions including professional jargon, regionalisms, and
 of course slang.
 
-The formation of linguistic conventions between individuals is often
-studied experimentally in iterated reference games. In these games, a
+Iterated reference games are commonly used a as model system for
+studying the formation of linguistic conventions. In these games, a
 describer tells their partner how to sort or match a series of abstract
 images (e.g., Clark \& Wilkes-Gibbs, 1986; Hawkins et al., 2020). Over
 repeated rounds of referring to the same targets, pairs develop
@@ -60,7 +61,9 @@ nicknames for the same targets. When describing the targets to a new
 person, describers return to more elaborated descriptions, indicating an
 expectation that prior conventions are not appropriate descriptions to
 use for new matchers (Hawkins, Liu, et al., 2021; Wilkes-Gibbs \& Clark,
-1992; Yoon \& Brown-Schmidt, 2018).
+1992; Yoon \& Brown-Schmidt, 2018). This partner specificity is
+generally interpreted to be efficient, implying that conventions are not
+understandable to those outside of the formation process.
 
 For one-shot reference games, the choice of referring expression can be
 described as a process of recursive inference, in which speakers reason
@@ -73,37 +76,40 @@ distributions after each interaction, to account for the dynamics of
 repeated interaction in iterated reference games (Hawkins, Franke, et
 al., 2021). A key factor permitting variation in referring expressions
 is lexical uncertainty; RSA models incorporating lexical uncertainty
-(Bergen et al., 2016; Potts et al., 2016) treat listeners as Bayesian
+(Bergen et al., 2016; Potts et al., 2015) treat listeners as Bayesian
 agents who jointly infer the meaning of a speaker's utterance and their
 model of the speaker's lexicon. Models incorporating lexical uncertainty
 have been used to model children's word learning (Bohn et al., 2022) as
 well as person- and group-level differences (Hawkins, Franke, et al.,
-2021; Schuster \& Degen, 2020). Usually the scope of person-to-person
-variation in lexica is constrained, so it is more akin to learning a
-hierarchical set of tweaks to a lexicon so some words have slightly
-different extensions for different speakers and different circumstances,
-rather than learning completely arbitrary meanings for each person
-(Hawkins, Franke, et al., 2021; Schuster \& Degen, 2020; but see Misyak
-et al., 2016).
+2021; Schuster \& Degen, 2020). Usually models assume that
+person-to-person variation in lexica is small, so the agent is learning
+a general meaning and a hierarchical set of tweaks to account for
+slightly different word extensions based on speaker and circumstance,
+rather than learning arbitrary meanings for each person (Hawkins,
+Franke, et al., 2021; Schuster \& Degen, 2020; but see Misyak et al.,
+2016).
 
 Conventions in iterated reference games are formed between people
 without a salient shared group identity prior to the interaction, but
 people do not use the conventions with new partners. How opaque are the
 temporary linguistic conventions created in reference games: are they
 opaque like ``rizz'' or interpretable like ``roundabout''? From a
-theoretical perspective, measuring this opacity can help inform the
-development of models like CHAI that aim to account for lexical change
-in conversation. We attempt to answer this question here.
+theoretical perspective, measuring this opacity can inform the
+development of models to account for lexical change in conversation. We
+attempt to answer this question here.
 
-One way to measure the opacity of a referring expression is to look at
-the semantic distance between the signifier and the referent.
-Expressions that are more transparent are those where signifiers and
-referents are semantically close, such that anyone with the same general
-lexicon can identify the appropriate referent given the signifier. In
-contrast, expressions that are opaque have signifiers and referents that
-are semantically distant in the lexicon, such that the relations are
+We consider opacity of references to be a measure of the semantic
+distance between the referring expression and the target. Transparent
+expressions (those with low opacity) have signifiers and referents that
+are semantically close, such that anyone with the same general lexicon
+can identify the appropriate referent given the signifier. In contrast,
+expressions that are opaque have signifiers and referents that are
+semantically distant in the lexicon, such that the relations are
 arbitrary and inaccessible without additional clues such as the
-partner-specific conversation history.
+partner-specific conversation history. We clarify that properties of
+utterance such as groundedness or compositionality and properties of the
+target such as iconicity and nameability may load on opacity but are not
+the same as opacity.
 
 One option for measuring the transparency of referring expressions is to
 use vision--language models to operationalize a shared semantic space
@@ -124,21 +130,19 @@ A second option for measuring the transparency of referring expressions
 is to measure how often naïve humans, who were not part of the group who
 formed the convention, can correctly associate the target referent with
 the referring expression. Prior work with naïve matchers has been
-limited and has focused on the role of conversational history. In this
-work, naïve matchers tend to do better the more their observation
-history resembles that of the original conversation---when hearing
-descriptions in order instead of in reverse order (Murfitt \&
-McAllister, 2001), when listening to the entire game instead of starting
-in the third round (Schober \& Clark, 1989), and when seeing yoked
-trials from a single game rather than trials sampled across 10 games
-(Hawkins et al., 2023). In these studies, naïve matchers had worse
-accuracy than in-game matchers, but their performance was still far
-above chance, suggesting that the convention--target relationship is not
-purely arbitrary. In fact, even when pairs of participants try to
-obfuscate their meaning, overhearers can still do quite well at
-identifying the target referents (Clark \& Schaefer, 1987). Nonetheless,
-receiving more context from an interaction---and in particular having
-that context be in order---is beneficial to matchers.
+limited and has focused on the role of conversational history. Naïve
+matchers tend to do better the more their observation history resembles
+that of the original conversation---when hearing descriptions in order
+instead of in reverse order (Murfitt \& McAllister, 2001), when
+listening to the entire game instead of starting in the third round
+(Schober \& Clark, 1989), and when seeing yoked trials from a single
+game rather than trials sampled across 10 games (Hawkins et al., 2023).
+In these studies, naïve matchers had worse accuracy than in-game
+matchers, but their performance was still far above chance, suggesting
+that the convention--target relationship is not purely arbitrary. In
+fact, even when pairs of participants try to obfuscate their meaning,
+overhearers can often still identify the target referents (Clark \&
+Schaefer, 1987).
 
 In the current work, we measure the opacity of the referring expressions
 created in iterated reference games. We use conversations from Boyce et
@@ -395,21 +399,22 @@ naïve matcher accuracy in \texttt{brms} (Bürkner, 2018).\footnote{correct
   \({\sim}\) group\_size \({\times}\) round~\({+}\) trial\_order~\({+}\)
   (group\_size \({\times}\) round\textbar correct\_tangram)~\({+}\)
   (group\_size \({\times}\) round~\({+}\) trial\_order\textbar workerid)}
-Overall, naïve matchers were right 62\% of the time, far above the 1/12
-= 8.3\% expected by random chance (OR = 1.93 {[}1.05, 3.62{]}). There
-were no large effects of condition (Figure \ref{expt2-condition} middle
-panel). Participants tended to be less accurate at descriptions from the
-last round (OR of last round = 0.77 {[}0.53, 1.10{]}). There was no
-clear effect of original group size (OR of 6-player game = 1.15 {[}0.89,
-1.47{]}), but there was an interaction between round and group size (OR
-= 1.49 {[}1.06, 2.10{]}). Later transcripts from larger games were
-easier to understand, but earlier transcripts from smaller games were
-easier to understand. Much of the variation in accuracy was driven by
-the target image, which accounted for more variation than participant
-differences (standard deviation of image distribution = 0.98 {[}0.63,
-1.51{]}; SD of participant distribution = 0.64 {[}0.42, 0.88{]}). Some
-images were much easier to identify as the target than others (Figure
-\ref{expt2-tangram}).
+For this and other models, we report the model estimate and 95\%
+credible interval. Overall, naïve matchers were right 62\% of the time,
+far above the 1/12 = 8.3\% expected by random chance (OR = 1.93 {[}1.05,
+3.62{]}). There were no large effects of condition (Figure
+\ref{expt2-condition} middle panel). Participants tended to be less
+accurate at descriptions from the last round (OR of last round = 0.77
+{[}0.53, 1.10{]}). There was no clear effect of original group size (OR
+of 6-player game = 1.15 {[}0.89, 1.47{]}), but there was an interaction
+between round and group size (OR = 1.49 {[}1.06, 2.10{]}). Later
+transcripts from larger games were easier to understand, but earlier
+transcripts from smaller games were easier to understand. Much of the
+variation in accuracy was driven by the target image, which accounted
+for more variation than participant differences (standard deviation of
+image distribution = 0.98 {[}0.63, 1.51{]}; SD of participant
+distribution = 0.64 {[}0.42, 0.88{]}). Some images were much easier to
+identify as the target than others (Figure \ref{expt2-tangram}).
 
 \subsubsection{Experiment 2b}\label{experiment-2b-1}
 
@@ -441,18 +446,18 @@ were slightly beneficial in Experiment 2b (OR = 1.10 {[}1.01, 1.20{]}).
 The pattern of which conditions became more opaque in later rounds
 resembled the pattern of which conditions produced descriptions that
 diverged the most in semantic space in Boyce et al. (2024). As a
-post-hoc test of whether opacity might be related to semantic
-divergence, we used the mean semantic similarity between an utterance
-and other utterances in the same condition as an additional predictor of
-accuracy.\footnote{Semantic similarity was operationalized as cosine
-  similarity between S-BERT embeddings (Reimers \& Gurevych, 2019), the
-  measure of semantic distance used in Boyce et al. (2024).} Similarity
-to other utterances was strongly predictive of increased accuracy in
-both experiments (Expt 2a: OR = 12.49 {[}4.70, 33.64{]}, Expt 2b: OR =
-14.75 {[}5.93, 36.87{]}) and was more predictive for the last round
-descriptions (Expt 2a: OR = 3.49 {[}1.09, 10.92{]}, Expt 2b: OR = 4.78
-{[}1.61, 14.25{]}). While exploratory, this analysis suggests that
-referring expressions that are further from shared semantic priors
+post-hoc test of whether opacity might be related to semantic divergence
+from other descriptions, we used the mean semantic similarity between an
+utterance and other utterances in the same condition as an additional
+predictor of accuracy.\footnote{Semantic similarity was operationalized
+  as cosine similarity between S-BERT embeddings (Reimers \& Gurevych,
+  2019), the measure of semantic distance used in Boyce et al. (2024).}
+Similarity to other utterances was strongly predictive of increased
+accuracy in both experiments (Expt 2a: OR = 12.49 {[}4.70, 33.64{]},
+Expt 2b: OR = 14.75 {[}5.93, 36.87{]}) and was more predictive for the
+last round descriptions (Expt 2a: OR = 3.49 {[}1.09, 10.92{]}, Expt 2b:
+OR = 4.78 {[}1.61, 14.25{]}). While exploratory, this analysis suggests
+that referring expressions that are further from shared semantic priors
 (i.e., more idiosyncratic) are harder for naïve matchers to understand.
 
 \subsection{Model results}\label{model-results}
@@ -488,8 +493,8 @@ The computational model was less accurate, but still far above chance.
 The largest source of variability in accuracy was from target images,
 and whether earlier or later utterances were more opaque varied by game
 condition. The level of semantic divergence from other expressions was
-strongly predictive of the opacity of the expression.While this analysis
-was not prespecified, it still provides some suggestion that
+strongly predictive of the opacity of the expression. While this
+analysis was not prespecified, it still provides some suggestion that
 descriptions that were closer to shared semantic priors were also more
 interpretable.
 
@@ -627,14 +632,14 @@ probe image-level factors.
 
 Nonetheless, this work has demonstrated the utility of adopting a
 broader perspective on convention comprehension. In particular, the use
-of computational modelling allowed for a means to estimate semantics
-under lexical uncertainty without requiring symbolic semantic
-representations. Future work could capitalize on this approach to better
-understand semantic dynamics underlying convention formation, as well as
-provide further quantitative investigations of pragmatics models like
-RSA and CHAI. These directions will help us to better understand the
-nature of reference and conventions, and how humans navigate the complex
-and ever-evolving landscape of communication.
+of computational modelling enabled estimating semantics under lexical
+uncertainty without symbolic semantic representations. Future work could
+capitalize on this approach to better understand semantic dynamics
+underlying convention formation, as well as provide further quantitative
+investigations of pragmatics models like RSA and CHAI. These directions
+will help us to better understand the nature of reference and
+conventions, and how humans navigate the complex and ever-evolving
+landscape of communication.
 
 \section{References}\label{references}
 
@@ -780,9 +785,9 @@ al. (2011). Scikit-learn: {Machine} learning in python. \emph{The
 Journal of Machine Learning Research}, \emph{12}, 2825--2830.
 
 \bibitem[\citeproctext]{ref-potts2016}
-Potts, C., Lassiter, D., Levy, R., \& Frank, M. C. (2016). Embedded
+Potts, C., Lassiter, D., Levy, R., \& Frank, M. C. (2015). Embedded
 {Implicatures} as {Pragmatic Inferences} under {Compositional Lexical
-Uncertainty}. \emph{Journal of Semantics}, \emph{33}(4), 755--802.
+Uncertainty}. \emph{Journal of Semantics}, ffv012.
 \url{https://doi.org/10.1093/jos/ffv012}
 
 \bibitem[\citeproctext]{ref-radford2021}
