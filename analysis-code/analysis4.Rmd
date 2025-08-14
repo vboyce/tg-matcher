@@ -110,6 +110,10 @@ selections <- good_stuff |>
   filter(type == "selection") |>
   mutate(correct = as.numeric(selected == correct_tangram))
 
+selections |> group_by(workerid) |> summarize(RT=sum(button_rt)/1000) |> 
+  left_join(spr_sum) |> group_by(workerid) |> summarize(RT=sum(RT/60)) |> ggplot(aes(x=RT))+geom_histogram()
+
+
 selections |> ggplot(aes(x = orig_repNum, y = button_rt / 1000, color = condition)) +
   geom_jitter(alpha = .05) +
   stat_summary() +
@@ -880,6 +884,7 @@ nolag <- brm(
 ```
 
 ```{r}
+foo <- read_rds(here("analysis-code/models/everything_lag3_normalized.rds"))
 blah <- fixef(foo) |>
   as_tibble(rownames = "term") |>
   mutate(
@@ -905,6 +910,9 @@ blah <- fixef(foo) |>
     type = factor(type, levels = c("Length", "Freq.", "Freq. x Len.", "LLM surp.", "VLM surp.", "KL", "conditionyoked", "orig_repNum", "orig_repNum:conditionyoked", "matcher_trialNum")),
     type = fct_rev(type)
   )
+
+write_rds(blah, here("analysis-code/models/everything_lag3_normalized_summary.rds"))
+
 
 ggplot(blah |> filter(term != "Intercept"), aes(x = type, y = Estimate, ymin = `Q2.5`, ymax = `Q97.5`, col = as.factor(lag))) +
   geom_hline(yintercept = 0, lty = "dotted") +
