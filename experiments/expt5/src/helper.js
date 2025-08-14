@@ -77,7 +77,7 @@ export function do_backwards_across_stimuli(stimuli, yoked) {
     let target_items = stimuli.filter((i) => i.gameId == target_condition);
     return target_items.reverse();
   }
-  if (yoked == "across") {
+  if (yoked == "random") {
     let target_items = [];
     for (let i = 0; i < 6; i++) {
       let rep_list = [];
@@ -92,7 +92,8 @@ export function do_backwards_across_stimuli(stimuli, yoked) {
       shuffle(rep_list);
       target_items = target_items.concat(rep_list);
     }
-    return target_items;
+    shuffle(target_items);
+    return no_repetitions(target_items);
   }
 }
 

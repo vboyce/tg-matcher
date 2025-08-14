@@ -47,9 +47,9 @@ import {
 const NUM_ITEMS = 72;
 const BONUS = 5;
 
-let yoked = Math.random() > 0.5 ? "backwards" : "across";
+let yoked = Math.random() > 0.5 ? "backwards" : "random";
 const select_stimuli = do_backwards_across_stimuli(stimuli, yoked);
-//console.log(select_stimuli);
+console.log(select_stimuli);
 const trials = select_stimuli.length;
 export async function run({
   assetPaths,
