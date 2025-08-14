@@ -59,8 +59,8 @@ good_stuff <- raw |>
   mutate(
     matcher_trialNum = (trial_index - 3) %/% 3,
     matcher_repNum = matcher_trialNum %/% 12
-  ) #|>
-# filter(workerid!="4957") # did not finish
+  ) |>
+  filter(workerid != "4957") # did not finish
 ```
 
 ```{r}
@@ -75,13 +75,13 @@ good_stuff |>
 
 <!--##  Bonus-->
 ```{r, eval=F}
-worker <- read_csv(here("data/tgmatcher5-workerids.csv")) |> mutate(workerid = as.factor(workerid))
-#
-bonuses <- good_stuff |>
-  filter(type == "selection") |>
-  group_by(workerid) |>
-  summarize(bonus = round(sum(correct) * .05, 2)) |>
-  left_join(worker)
+# worker <- read_csv(here("data/tgmatcher5-workerids.csv")) |> mutate(workerid = as.factor(workerid))
+# #
+# bonuses <- good_stuff |>
+#   filter(type == "selection") |>
+#   group_by(workerid) |>
+#   summarize(bonus = round(sum(correct) * .05, 2)) |>
+#   left_join(worker) |>
 #   select(prolific_participant_id, bonus) |>
 #   write_csv(here("bonus.csv"))
 #
